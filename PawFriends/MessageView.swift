@@ -9,10 +9,16 @@ import SwiftUI
 
 struct MessageView: View {
     var body: some View {
-        Text("Hello, this is the message view.")
+        NavigationSplitView {
+            MessageList()
+        } detail: {
+            Text("Select an item")
+                .navigationTitle("Nachrichten")
+        }
     }
 }
 
 #Preview {
     MessageView()
+        .modelContainer(for: Message.self, inMemory: true)
 }
