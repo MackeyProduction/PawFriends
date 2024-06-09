@@ -13,7 +13,8 @@ struct PawFriendsApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Advertisement.self,
-            Favorite.self
+            Favorite.self,
+            Message.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
