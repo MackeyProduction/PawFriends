@@ -14,11 +14,13 @@ struct ContentView: View {
                 .tabItem {
                     Label("Suche", systemImage: "magnifyingglass")
                 }
+                .modelContainer(for: Advertisement.self, inMemory: true)
             
             FavoriteView()
                 .tabItem {
                     Label("Favoriten", systemImage: "heart")
                 }
+                .modelContainer(for: Favorite.self, inMemory: true)
             
             MessageView()
                 .tabItem {
@@ -35,5 +37,4 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Advertisement.self, inMemory: true)
 }

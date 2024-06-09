@@ -9,10 +9,16 @@ import SwiftUI
 
 struct FavoriteView: View {
     var body: some View {
-        Text("Hello, this is the favorite view.")
+        NavigationSplitView {
+            FavoriteList()
+        } detail: {
+            Text("Select an item")
+                .navigationTitle("Favoriten")
+        }
     }
 }
 
 #Preview {
     FavoriteView()
+        .modelContainer(for: Favorite.self, inMemory: true)
 }
