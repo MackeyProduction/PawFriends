@@ -1,6 +1,10 @@
 xcuserdata/
 .git/*
 .DS_Store
-node_modules/
+
+# amplify
+node_modules
 .amplify
 swiftpm/
+amplify_outputs*
+amplifyconfiguration*
