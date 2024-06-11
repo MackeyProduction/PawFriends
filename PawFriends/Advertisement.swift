@@ -17,4 +17,11 @@ final class Advertisement {
         self.title = title
         self.timestamp = timestamp
     }
+    
+    static let sampleData = [
+        Advertisement(title: "Anzeige 1",
+                      timestamp: Date(timeIntervalSinceReferenceDate: -402_000_000)),
+        Advertisement(title: "Anzeige 2",
+              timestamp: Date(timeIntervalSinceReferenceDate: -20_000_000))
+    ]
 }
