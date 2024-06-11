@@ -5,9 +5,27 @@
 //  Created by Til Anheier on 31.05.24.
 //
 
+import Amplify
+import Authenticator
 import SwiftUI
 
 struct ContentView: View {
+    var body: some View {
+        Authenticator { state in
+            AppView()
+            
+            VStack {
+                Button("Sign out") {
+                    Task {
+                        await state.signOut()
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct AppView: View {
     var body: some View {
         TabView {
             SearchView()
@@ -38,4 +56,8 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+}
+
+#Preview("ContentView:App") {
+    AppView()
 }

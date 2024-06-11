@@ -5,6 +5,9 @@
 //  Created by Til Anheier on 29.05.24.
 //
 
+import Amplify
+import Authenticator
+import AWSCognitoAuthPlugin
 import SwiftUI
 import SwiftData
 
@@ -30,5 +33,14 @@ struct PawFriendsApp: App {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
+    }
+    
+    init() {
+        do {
+            try Amplify.add(plugin: AWSCognitoAuthPlugin())
+            try Amplify.configure(with: .amplifyOutputs)
+        } catch {
+            print("Unable to configure Amplify \(error)")
+        }
     }
 }
