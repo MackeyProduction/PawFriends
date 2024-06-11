@@ -1,2 +1,6 @@
+xcuserdata/
 .git/*
 .DS_Store
+node_modules/
+.amplify
+swiftpm/
