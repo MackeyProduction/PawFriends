@@ -34,13 +34,13 @@ amplifyconfiguration*
 
 # amplify artifacts
 AmplifyPlugins/**/amplify
-PawFriendsCore/\#current-cloud-backend
-PawFriendsCore/.config/local-*
-PawFriendsCore/logs
-PawFriendsCore/mock-data
-PawFriendsCore/backend/amplify-meta.json
-PawFriendsCore/backend/awscloudformation
-PawFriendsCore/backend/.temp
+amplify/\#current-cloud-backend
+amplify/.config/local-*
+amplify/logs
+amplify/mock-data
+amplify/backend/amplify-meta.json
+amplify/backend/awscloudformation
+amplify/backend/.temp
 build/
 dist/
 aws-exports.js
