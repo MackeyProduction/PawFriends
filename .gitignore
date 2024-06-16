@@ -11,6 +11,8 @@ Amplify.xcodeproj/xcuserdata
 Amplify.xcworkspace/xcuserdata
 xcuserdata
 
+Package.resolved
+
 # OS generated files
 .COMPONENT_CACHED
 .DS_Store
