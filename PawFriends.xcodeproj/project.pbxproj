@@ -11,7 +11,8 @@
 		3E402F802C0A2D6C00D46819 /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E402F7F2C0A2D6C00D46819 /* FavoriteView.swift */; };
 		3E402F822C0A2E4D00D46819 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E402F812C0A2E4D00D46819 /* MessageView.swift */; };
 		3E402F842C0A2ECD00D46819 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E402F832C0A2ECD00D46819 /* ProfileView.swift */; };
-		3E53925E2C1F847C009FC0E5 /* amplify in Resources */ = {isa = PBXBuildFile; fileRef = 3E53925D2C1F847C009FC0E5 /* amplify */; };
+		3E76D3872C20BB3600DD604B /* PawFriendsCore in Resources */ = {isa = PBXBuildFile; fileRef = 3E76D3862C20BB3600DD604B /* PawFriendsCore */; };
+		3E76D3892C20BB6800DD604B /* amplify_outputs.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E76D3882C20BB6800DD604B /* amplify_outputs.json */; };
 		3E8012FA2C15DED50058144D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8012F92C15DED50058144D /* Message.swift */; };
 		3E8012FC2C15DF6E0058144D /* MessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8012FB2C15DF6E0058144D /* MessageList.swift */; };
 		3E82B8062C15CBFC0059A1BC /* AdvertisementList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E82B8052C15CBFC0059A1BC /* AdvertisementList.swift */; };
@@ -25,7 +26,6 @@
 		3E9C94FE2C07A30100F91BFB /* PawFriendsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C94FD2C07A30100F91BFB /* PawFriendsTests.swift */; };
 		3E9C95082C07A30100F91BFB /* PawFriendsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C95072C07A30100F91BFB /* PawFriendsUITests.swift */; };
 		3E9C950A2C07A30100F91BFB /* PawFriendsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C95092C07A30100F91BFB /* PawFriendsUITestsLaunchTests.swift */; };
-		3EAC3BA42C17758E008129A4 /* amplify_outputs.json in Resources */ = {isa = PBXBuildFile; fileRef = 3EAC3BA32C17758E008129A4 /* amplify_outputs.json */; };
 		3EAC3BA72C177781008129A4 /* AWSCognitoAuthPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 3EAC3BA62C177781008129A4 /* AWSCognitoAuthPlugin */; };
 		3EAC3BAA2C177BDE008129A4 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = 3EAC3BA92C177BDE008129A4 /* Authenticator */; };
 		3EBD0EDB2C204ABB008D404B /* PawFriendsDomain in Resources */ = {isa = PBXBuildFile; fileRef = 3EBD0EDA2C204ABB008D404B /* PawFriendsDomain */; };
@@ -55,7 +55,8 @@
 		3E402F7F2C0A2D6C00D46819 /* FavoriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteView.swift; sourceTree = "<group>"; };
 		3E402F812C0A2E4D00D46819 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		3E402F832C0A2ECD00D46819 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
-		3E53925D2C1F847C009FC0E5 /* amplify */ = {isa = PBXFileReference; lastKnownFileType = folder; path = amplify; sourceTree = "<group>"; };
+		3E76D3862C20BB3600DD604B /* PawFriendsCore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PawFriendsCore; sourceTree = "<group>"; };
+		3E76D3882C20BB6800DD604B /* amplify_outputs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = amplify_outputs.json; path = PawFriendsCore/amplify_outputs.json; sourceTree = SOURCE_ROOT; };
 		3E8012F92C15DED50058144D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		3E8012FB2C15DF6E0058144D /* MessageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageList.swift; sourceTree = "<group>"; };
 		3E82B8052C15CBFC0059A1BC /* AdvertisementList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisementList.swift; sourceTree = "<group>"; };
@@ -72,7 +73,6 @@
 		3E9C95032C07A30100F91BFB /* PawFriendsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PawFriendsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E9C95072C07A30100F91BFB /* PawFriendsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PawFriendsUITests.swift; sourceTree = "<group>"; };
 		3E9C95092C07A30100F91BFB /* PawFriendsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PawFriendsUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		3EAC3BA32C17758E008129A4 /* amplify_outputs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = amplify_outputs.json; sourceTree = SOURCE_ROOT; };
 		3EBD0EDA2C204ABB008D404B /* PawFriendsDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PawFriendsDomain; sourceTree = "<group>"; };
 		B5BBB60F2C18CE3C000F490F /* AdvertisementDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvertisementDetail.swift; sourceTree = "<group>"; };
 		B5BBB6112C18CE4F000F490F /* SampleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
@@ -108,8 +108,8 @@
 		3E9C94DE2C07A2FF00F91BFB = {
 			isa = PBXGroup;
 			children = (
+				3E76D3862C20BB3600DD604B /* PawFriendsCore */,
 				3EBD0EDA2C204ABB008D404B /* PawFriendsDomain */,
-				3E53925D2C1F847C009FC0E5 /* amplify */,
 				3E9C94E92C07A2FF00F91BFB /* PawFriends */,
 				3E9C94FC2C07A30100F91BFB /* PawFriendsTests */,
 				3E9C95062C07A30100F91BFB /* PawFriendsUITests */,
@@ -146,7 +146,7 @@
 				3E82B80D2C15D6450059A1BC /* FavoriteList.swift */,
 				3E8012F92C15DED50058144D /* Message.swift */,
 				3E8012FB2C15DF6E0058144D /* MessageList.swift */,
-				3EAC3BA32C17758E008129A4 /* amplify_outputs.json */,
+				3E76D3882C20BB6800DD604B /* amplify_outputs.json */,
 			);
 			path = PawFriends;
 			sourceTree = "<group>";
@@ -288,10 +288,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3EAC3BA42C17758E008129A4 /* amplify_outputs.json in Resources */,
-				3E53925E2C1F847C009FC0E5 /* amplify in Resources */,
 				3E9C94F42C07A30100F91BFB /* Preview Assets.xcassets in Resources */,
 				3EBD0EDB2C204ABB008D404B /* PawFriendsDomain in Resources */,
+				3E76D3892C20BB6800DD604B /* amplify_outputs.json in Resources */,
+				3E76D3872C20BB3600DD604B /* PawFriendsCore in Resources */,
 				3E9C94F12C07A30100F91BFB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
