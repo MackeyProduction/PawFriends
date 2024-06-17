@@ -7,9 +7,118 @@ specifies that any unauthenticated user can "create", "read", "update",
 and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-  Todo: a
+  UserProfile: a
     .model({
-      content: a.string(),
+      userProfileId: a.id(),
+      description: a.string(),
+      activeSince: a.date(),
+      profileImage: a.boolean().default(false),
+      location: a.string(),
+      author: a.string(),
+      tags: a.hasMany('UserProfileTag', 'userProfileId'),
+      pets: a.hasMany('UserProfilePet', 'userProfileId'),
+      watchLists: a.hasMany('WatchList', 'userProfileId'),
+      advertisements: a.hasMany('UserProfileAdvertisement', 'userProfileId'),
+      chats: a.hasMany('Chat', 'userProfileId')
+    })
+    .authorization((allow) => [allow.ownerDefinedIn('author')]),
+  Pet: a
+    .model({
+      petId: a.id(),
+      description: a.string(),
+      name: a.string(),
+      age: a.integer(),
+      petImage: a.boolean(),
+      currentPetType: a.hasOne('PetType', 'petTypeId'),
+      currentPetBreed: a.hasOne('PetBreed', 'petBreedId'),
+      userProfiles: a.hasMany('UserProfilePet', 'petId')
+    })
+    .authorization((allow) => [allow.guest()]),
+  PetType: a
+    .model({
+      petTypeId: a.id(),
+      description: a.string(),
+      pet: a.belongsTo('Pet', 'petTypeId')
+    })
+    .authorization((allow) => [allow.guest()]),
+  PetBreed: a
+    .model({
+      petBreedId: a.id(),
+      description: a.string(),
+      pet: a.belongsTo('Pet', 'petBreedId')
+    })
+    .authorization((allow) => [allow.guest()]),
+  Chat: a
+    .model({
+      message: a.string(),
+      author: a.string(),
+      recipient: a.string(),
+      userProfileId: a.id().required(),
+      advertisementId: a.id().required(),
+      userProfile: a.belongsTo('UserProfile', 'userProfileId'),
+      advertisement: a.belongsTo('Advertisement', 'advertisementId')
+    })
+    .authorization((allow) => [allow.ownerDefinedIn('author'), allow.ownerDefinedIn('recipient')]),
+  Advertisement: a
+    .model({
+      advertisementId: a.id(),
+      title: a.string(),
+      releaseDate: a.datetime(),
+      visitor: a.integer(),
+      description: a.string(),
+      advertisementImage: a.boolean(),
+      tags: a.hasMany('AdvertisementTag', 'advertisementId'),
+      watchLists: a.hasMany('WatchList', 'advertisementId'),
+      userProfiles: a.hasMany('UserProfileAdvertisement', 'advertisementId'),
+      chats: a.hasMany('Chat', 'advertisementId'),
+    })
+    .authorization((allow) => [allow.guest()]),
+  Tag: a
+    .model({
+      tagId: a.id(),
+      description: a.string(),
+      userProfiles: a.hasMany('UserProfileTag', 'tagId'),
+      advertisements: a.hasMany('AdvertisementTag', 'tagId')
+    })
+    .authorization((allow) => [allow.guest()]),
+  UserProfileTag: a
+    .model({
+      userProfileId: a.id().required(),
+      tagId: a.id().required(),
+      userProfile: a.belongsTo('UserProfile', 'userProfileId'),
+      tag: a.belongsTo('Tag', 'tagId')
+    })
+    .authorization((allow) => [allow.guest()]),
+  AdvertisementTag: a
+    .model({
+      advertisementId: a.id().required(),
+      tagId: a.id().required(),
+      advertisement: a.belongsTo('Advertisement', 'advertisementId'),
+      tag: a.belongsTo('Tag', 'tagId')
+    })
+    .authorization((allow) => [allow.guest()]),
+  WatchList: a
+    .model({
+      userProfileId: a.id().required(),
+      advertisementId: a.id().required(),
+      userProfile: a.belongsTo('UserProfile', 'userProfileId'),
+      advertisement: a.belongsTo('Advertisement', 'advertisementId')
+    })
+    .authorization((allow) => [allow.guest()]),
+  UserProfilePet: a
+    .model({
+      userProfileId: a.id().required(),
+      petId: a.id().required(),
+      userProfile: a.belongsTo('UserProfile', 'userProfileId'),
+      pet: a.belongsTo('Pet', 'petId')
+    })
+    .authorization((allow) => [allow.guest()]),
+  UserProfileAdvertisement: a
+    .model({
+      userProfileId: a.id().required(),
+      advertisementId: a.id().required(),
+      userProfile: a.belongsTo('UserProfile', 'userProfileId'),
+      advertisement: a.belongsTo('Advertisement', 'advertisementId')
     })
     .authorization((allow) => [allow.guest()]),
 });
