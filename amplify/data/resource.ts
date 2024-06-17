@@ -120,6 +120,7 @@ const schema = a.schema({
       userProfile: a.belongsTo('UserProfile', 'userProfileId'),
       advertisement: a.belongsTo('Advertisement', 'advertisementId')
     })
+    .authorization((allow) => [allow.guest()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
