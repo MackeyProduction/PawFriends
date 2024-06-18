@@ -6,8 +6,9 @@ extension PetBreed {
   // MARK: - CodingKeys 
    public enum CodingKeys: String, ModelKey {
     case id
+    case petId
     case description
-    case pet
+    case pets
     case createdAt
     case updatedAt
   }
@@ -31,8 +32,9 @@ extension PetBreed {
     
     model.fields(
       .field(petBreed.id, is: .required, ofType: .string),
+      .field(petBreed.petId, is: .optional, ofType: .string),
       .field(petBreed.description, is: .optional, ofType: .string),
-      .belongsTo(petBreed.pet, is: .optional, ofType: Pet.self, targetNames: ["petBreedId"]),
+      .hasMany(petBreed.pets, is: .optional, ofType: Pet.self, associatedFields: [Pet.keys.petType]),
       .field(petBreed.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(petBreed.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
     )
@@ -50,11 +52,14 @@ extension ModelPath where ModelType == PetBreed {
   public var id: FieldPath<String>   {
       string("id") 
     }
+  public var petId: FieldPath<String>   {
+      string("petId") 
+    }
   public var description: FieldPath<String>   {
       string("description") 
     }
-  public var pet: ModelPath<Pet>   {
-      Pet.Path(name: "pet", parent: self) 
+  public var pets: ModelPath<Pet>   {
+      Pet.Path(name: "pets", isCollection: true, parent: self) 
     }
   public var createdAt: FieldPath<Temporal.DateTime>   {
       datetime("createdAt") 

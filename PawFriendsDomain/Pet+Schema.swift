@@ -6,13 +6,12 @@ extension Pet {
   // MARK: - CodingKeys 
    public enum CodingKeys: String, ModelKey {
     case id
-    case petId
     case description
     case name
     case age
     case petImage
-    case currentPetType
-    case currentPetBreed
+    case petType
+    case petBreed
     case userProfiles
     case createdAt
     case updatedAt
@@ -37,13 +36,12 @@ extension Pet {
     
     model.fields(
       .field(pet.id, is: .required, ofType: .string),
-      .field(pet.petId, is: .optional, ofType: .string),
       .field(pet.description, is: .optional, ofType: .string),
       .field(pet.name, is: .optional, ofType: .string),
       .field(pet.age, is: .optional, ofType: .int),
       .field(pet.petImage, is: .optional, ofType: .bool),
-      .hasOne(pet.currentPetType, is: .optional, ofType: PetType.self, associatedFields: [PetType.keys.pet]),
-      .hasOne(pet.currentPetBreed, is: .optional, ofType: PetBreed.self, associatedFields: [PetBreed.keys.pet]),
+      .belongsTo(pet.petType, is: .optional, ofType: PetType.self, targetNames: ["petId"]),
+      .belongsTo(pet.petBreed, is: .optional, ofType: PetBreed.self, targetNames: ["petId"]),
       .hasMany(pet.userProfiles, is: .optional, ofType: UserProfilePet.self, associatedFields: [UserProfilePet.keys.pet]),
       .field(pet.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(pet.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
@@ -62,9 +60,6 @@ extension ModelPath where ModelType == Pet {
   public var id: FieldPath<String>   {
       string("id") 
     }
-  public var petId: FieldPath<String>   {
-      string("petId") 
-    }
   public var description: FieldPath<String>   {
       string("description") 
     }
@@ -77,11 +72,11 @@ extension ModelPath where ModelType == Pet {
   public var petImage: FieldPath<Bool>   {
       bool("petImage") 
     }
-  public var currentPetType: ModelPath<PetType>   {
-      PetType.Path(name: "currentPetType", parent: self) 
+  public var petType: ModelPath<PetType>   {
+      PetType.Path(name: "petType", parent: self) 
     }
-  public var currentPetBreed: ModelPath<PetBreed>   {
-      PetBreed.Path(name: "currentPetBreed", parent: self) 
+  public var petBreed: ModelPath<PetBreed>   {
+      PetBreed.Path(name: "petBreed", parent: self) 
     }
   public var userProfiles: ModelPath<UserProfilePet>   {
       UserProfilePet.Path(name: "userProfiles", isCollection: true, parent: self) 
