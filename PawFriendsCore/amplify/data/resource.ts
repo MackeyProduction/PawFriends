@@ -29,8 +29,8 @@ const schema = a.schema({
       name: a.string(),
       age: a.integer(),
       petImage: a.boolean(),
-      currentPetType: a.hasOne('PetType', 'petId'),
-      currentPetBreed: a.hasOne('PetBreed', 'petId'),
+      petType: a.belongsTo('PetType', 'petId'),
+      petBreed: a.belongsTo('PetBreed', 'petId'),
       userProfiles: a.hasMany('UserProfilePet', 'petId')
     })
     .authorization((allow) => [allow.guest()]),
@@ -38,14 +38,14 @@ const schema = a.schema({
     .model({
       petId: a.id(),
       description: a.string(),
-      pet: a.belongsTo('Pet', 'petId')
+      pets: a.hasMany('Pet', 'petId')
     })
     .authorization((allow) => [allow.guest()]),
   PetBreed: a
     .model({
       petId: a.id(),
       description: a.string(),
-      pet: a.belongsTo('Pet', 'petId')
+      pets: a.hasMany('Pet', 'petId')
     })
     .authorization((allow) => [allow.guest()]),
   Chat: a
