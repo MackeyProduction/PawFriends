@@ -5,19 +5,24 @@
 //
 
 import SwiftUI
+import Amplify
 import PhotosUI
 
 struct AdvertisementDetail: View {
-    @Bindable var advertisement: Advertisement
+    @Binding var advertisement: Advertisement
     let isNew: Bool
     @State var selectedItems: [PhotosPickerItem] = []
+    @State private var title: String = ""
+    @State private var releaseDate: Date = Date()
     
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var modelContext
     
-    init(advertisement: Advertisement, isNew: Bool = false) {
-        self.advertisement = advertisement
+    init(advertisement: Binding<Advertisement>, isNew: Bool = false) {
+        self._advertisement = advertisement
         self.isNew = isNew
+        self.selectedItems = []
+        self.title = ""
+        self.releaseDate = Date()
     }
     
     
@@ -37,27 +42,33 @@ struct AdvertisementDetail: View {
         }
         
         Form {
-            TextField("Anzeige Titel", text: $advertisement.title)
+            TextField("Anzeige Titel", text: $title)
             
-            DatePicker("Veröffentlichungsdatum", selection: $advertisement.timestamp, displayedComponents: .date)
+            DatePicker("Veröffentlichungsdatum", selection: $releaseDate, displayedComponents: .date)
         }
         .navigationTitle(isNew ? "Neue Anzeige" : "Anzeige")
         .toolbar {
             if isNew {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
+                        saveAdvertisement()
                         dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
-                        modelContext.delete(advertisement)
+                        //modelContext.delete(advertisement)
                         dismiss()
                     }
                 }
             }
         }
+    }
+    
+    private func saveAdvertisement() {
+        advertisement.title = title.isEmpty ? nil : title
+        advertisement.releaseDate = Temporal.DateTime(releaseDate)
     }
 }
 
@@ -105,16 +116,18 @@ struct FittedImagesView: View
 
 #Preview {
     NavigationStack {
-        AdvertisementDetail(advertisement: SampleData.shared.advertisement)
+        @State var sampleAdvertisement = AdvertisementViewModel.sampleData()[0]
+        
+        AdvertisementDetail(advertisement: $sampleAdvertisement)
     }
-    .modelContainer(SampleData.shared.modelContainer)
 }
 
-#Preview("New Movie") {
+#Preview("New Advertisement") {
     NavigationStack {
-        AdvertisementDetail(advertisement: SampleData.shared.advertisement, isNew: true)
+        @State var sampleAdvertisement = AdvertisementViewModel.sampleData()[0]
+        
+        AdvertisementDetail(advertisement: $sampleAdvertisement, isNew: true)
             .navigationBarTitleDisplayMode(.inline)
     }
-    .modelContainer(SampleData.shared.modelContainer)
     
 }

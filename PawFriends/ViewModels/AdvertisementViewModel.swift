@@ -13,6 +13,11 @@ class AdvertisementViewModel: ObservableObject {
     @Published var advertisements: [Advertisement] = []
     @Published var advertisement: Advertisement
     
+    init() {
+        advertisements = AdvertisementViewModel.sampleData()
+        advertisement = AdvertisementViewModel.sampleData()[0]
+    }
+    
     func listAdvertisements() {
         let request = GraphQLRequest<Advertisement>.list(Advertisement.self)
         Task {
@@ -55,5 +60,12 @@ class AdvertisementViewModel: ObservableObject {
                 print("Unexpected error: \(error)")
             }
         }
+    }
+    
+    static func sampleData() -> [Advertisement] {
+        return [
+            Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige", advertisementImage: false, tags: nil, watchLists: nil, userProfiles: nil, chats: nil),
+            Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige", advertisementImage: false, tags: nil, watchLists: nil, userProfiles: nil, chats: nil)
+        ]
     }
 }
