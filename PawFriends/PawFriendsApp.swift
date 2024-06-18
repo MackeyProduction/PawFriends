@@ -8,6 +8,7 @@
 import Amplify
 import Authenticator
 import AWSCognitoAuthPlugin
+import AWSAPIPlugin
 import SwiftUI
 import SwiftData
 
@@ -15,7 +16,6 @@ import SwiftData
 struct PawFriendsApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Advertisement.self,
             Favorite.self,
             Message.self
         ])
@@ -36,9 +36,12 @@ struct PawFriendsApp: App {
     }
     
     init() {
+        let awsApiPlugin = AWSAPIPlugin(modelRegistration: AmplifyModels())
         do {
             try Amplify.add(plugin: AWSCognitoAuthPlugin())
+            try Amplify.add(plugin: awsApiPlugin)
             try Amplify.configure(with: .amplifyOutputs)
+            print("Initialized Amplify");
         } catch {
             print("Unable to configure Amplify \(error)")
         }
