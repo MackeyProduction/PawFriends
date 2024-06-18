@@ -29,23 +29,23 @@ const schema = a.schema({
       name: a.string(),
       age: a.integer(),
       petImage: a.boolean(),
-      currentPetType: a.hasOne('PetType', 'petTypeId'),
-      currentPetBreed: a.hasOne('PetBreed', 'petBreedId'),
+      currentPetType: a.hasOne('PetType', 'petId'),
+      currentPetBreed: a.hasOne('PetBreed', 'petId'),
       userProfiles: a.hasMany('UserProfilePet', 'petId')
     })
     .authorization((allow) => [allow.guest()]),
   PetType: a
     .model({
-      petTypeId: a.id(),
+      petId: a.id(),
       description: a.string(),
-      pet: a.belongsTo('Pet', 'petTypeId')
+      pet: a.belongsTo('Pet', 'petId')
     })
     .authorization((allow) => [allow.guest()]),
   PetBreed: a
     .model({
-      petBreedId: a.id(),
+      petId: a.id(),
       description: a.string(),
-      pet: a.belongsTo('Pet', 'petBreedId')
+      pet: a.belongsTo('Pet', 'petId')
     })
     .authorization((allow) => [allow.guest()]),
   Chat: a
