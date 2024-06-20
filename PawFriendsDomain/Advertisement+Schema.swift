@@ -11,7 +11,7 @@ extension Advertisement {
     case releaseDate
     case visitor
     case description
-    case advertisementImage
+    case advertisementImages
     case tags
     case watchLists
     case userProfiles
@@ -44,7 +44,7 @@ extension Advertisement {
       .field(advertisement.releaseDate, is: .optional, ofType: .dateTime),
       .field(advertisement.visitor, is: .optional, ofType: .int),
       .field(advertisement.description, is: .optional, ofType: .string),
-      .field(advertisement.advertisementImage, is: .optional, ofType: .bool),
+      .field(advertisement.advertisementImages, is: .optional, ofType: .embeddedCollection(of: String.self)),
       .hasMany(advertisement.tags, is: .optional, ofType: AdvertisementTag.self, associatedFields: [AdvertisementTag.keys.advertisement]),
       .hasMany(advertisement.watchLists, is: .optional, ofType: WatchList.self, associatedFields: [WatchList.keys.advertisement]),
       .hasMany(advertisement.userProfiles, is: .optional, ofType: UserProfileAdvertisement.self, associatedFields: [UserProfileAdvertisement.keys.advertisement]),
@@ -81,8 +81,8 @@ extension ModelPath where ModelType == Advertisement {
   public var description: FieldPath<String>   {
       string("description") 
     }
-  public var advertisementImage: FieldPath<Bool>   {
-      bool("advertisementImage") 
+  public var advertisementImages: FieldPath<String>   {
+      string("advertisementImages") 
     }
   public var tags: ModelPath<AdvertisementTag>   {
       AdvertisementTag.Path(name: "tags", isCollection: true, parent: self) 
