@@ -5,36 +5,27 @@
 //
 
 import SwiftUI
-<<<<<<< Updated upstream
 import Amplify
-import PhotosUI
-
-struct AdvertisementDetail: View {
-    @Binding var advertisement: Advertisement
-    let isNew: Bool
-    @State var selectedItems: [PhotosPickerItem] = []
-    @State private var title: String = ""
-    @State private var releaseDate: Date = Date()
-=======
 import SwiftData
 import PhotosUI
 
+
 struct AdvertisementDetail: View {
     @Query(sort: \Advertisement.title) private var ads: [Advertisement]
-    @Bindable var advertisement: Advertisement
+    @Binding var advertisement: Advertisement
     let isNew: Bool
->>>>>>> Stashed changes
     
     @StateObject private var viewModel = PhotoPickerViewModel()
     @State var imageSelections: [PhotosPickerItem] = []
-
-
+    
+    @State private var title: String = ""
+    @State private var releaseDate: Date = Date()
+    
     @Environment(\.dismiss) private var dismiss
     
     init(advertisement: Binding<Advertisement>, isNew: Bool = false) {
         self._advertisement = advertisement
         self.isNew = isNew
-        self.selectedItems = []
         self.title = ""
         self.releaseDate = Date()
     }
@@ -55,7 +46,7 @@ struct AdvertisementDetail: View {
     }
     
     var body: some View {
-    
+        
         VStack(spacing: 10) {
             //Image("TestImage2")
             if isNew {
@@ -105,30 +96,10 @@ struct AdvertisementDetail: View {
                         }
                                      .buttonStyle(.borderless)
                     }
-<<<<<<< Updated upstream
-        }
-        
-        Form {
-            TextField("Anzeige Titel", text: $title)
+            }
             
-            DatePicker("Veröffentlichungsdatum", selection: $releaseDate, displayedComponents: .date)
-        }
-        .navigationTitle(isNew ? "Neue Anzeige" : "Anzeige")
-        .toolbar {
-            if isNew {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") {
-                        saveAdvertisement()
-                        dismiss()
-                    }
-                }
-                
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        //modelContext.delete(advertisement)
-                        dismiss()
-=======
-            } else {
+            
+            else {
                 if ads[0].images != nil {
                     SliderView(images: dataToUiimages(data: ads[0].images!))
                         .overlay(alignment: .topTrailing) {
@@ -162,9 +133,9 @@ struct AdvertisementDetail: View {
             
             if isNew {
                 Form {
-                    TextField("Anzeige Titel", text: $advertisement.title)
+                    TextField("Anzeige Titel", text: $title)
                     
-                    DatePicker("Veröffentlichungsdatum", selection: $advertisement.timestamp, displayedComponents: .date)
+                    DatePicker("Veröffentlichungsdatum", selection: $releaseDate, displayedComponents: .date)
                 }
                 .toolbar {
                     //if isNew {
@@ -172,7 +143,6 @@ struct AdvertisementDetail: View {
                         Button("Done") {
                             dismiss()
                         }
->>>>>>> Stashed changes
                     }
                     
                     ToolbarItem(placement: .cancellationAction) {
@@ -196,45 +166,46 @@ struct AdvertisementDetail: View {
     }
 }
 
-
-
-struct LikeAndShare: View
-{
-    var color: Color = Color.white
-
-    var body: some View {
-
-        HStack {
-            FittedImage(imageName: "heart", width: 25, height: 25)
-                .padding(.trailing, 5)
-                .foregroundStyle(color)
-            FittedImage(imageName: "square.and.arrow.up", width: 30, height: 30)
-                .padding(.bottom, 5)
-                .foregroundStyle(color)
-        }
-        .padding(.trailing, 10)
-        .padding(.top, 5)
-    }
-    
-}
-
-#Preview {
-    NavigationStack {
-        @State var sampleAdvertisement = AdvertisementViewModel.sampleData()[0]
-        
-        AdvertisementDetail(advertisement: $sampleAdvertisement)
-    }
-}
-
-#Preview("New Advertisement") {
-    NavigationStack {
-        @State var sampleAdvertisement = AdvertisementViewModel.sampleData()[0]
-        
-        AdvertisementDetail(advertisement: $sampleAdvertisement, isNew: true)
-            .navigationBarTitleDisplayMode(.inline)
-    }
-    
-}
-
-
-
+            
+            
+            struct LikeAndShare: View
+            {
+                var color: Color = Color.white
+                
+                var body: some View {
+                    
+                    HStack {
+                        FittedImage(imageName: "heart", width: 25, height: 25)
+                            .padding(.trailing, 5)
+                            .foregroundStyle(color)
+                        FittedImage(imageName: "square.and.arrow.up", width: 30, height: 30)
+                            .padding(.bottom, 5)
+                            .foregroundStyle(color)
+                    }
+                    .padding(.trailing, 10)
+                    .padding(.top, 5)
+                }
+                
+            }
+            
+            #Preview {
+                NavigationStack {
+                    @State var sampleAdvertisement = AdvertisementViewModel.sampleData()[0]
+                    
+                    AdvertisementDetail(advertisement: $sampleAdvertisement)
+                }
+            }
+            
+            #Preview("New Advertisement") {
+                NavigationStack {
+                    @State var sampleAdvertisement = AdvertisementViewModel.sampleData()[0]
+                    
+                    AdvertisementDetail(advertisement: $sampleAdvertisement, isNew: true)
+                        .navigationBarTitleDisplayMode(.inline)
+                }
+                
+            }
+            
+            
+            
+  
