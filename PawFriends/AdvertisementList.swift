@@ -29,11 +29,20 @@ struct AdvertisementList: View {
         Group {
             if !advertisementViewModel.advertisements.isEmpty {
                 List {
+<<<<<<< Updated upstream
                     ForEach(advertisementViewModel.advertisements, id: \.id) { item in
                         NavigationLink {
                             Text("Item at \(String(describing: item.title))")
                         } label: {
                             Text(item.title ?? "")
+=======
+                    ForEach(ads) { advertisement in
+                        NavigationLink {
+                            AdvertisementDetail(advertisement: advertisement)
+                        } label: {
+                            Text(advertisement.title)
+                            //Text(advertisement.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+>>>>>>> Stashed changes
                         }
                     }
                     .onDelete(perform: deleteItems)
@@ -78,5 +87,12 @@ struct AdvertisementList: View {
 }
 
 #Preview {
+    NavigationStack {
+        AdvertisementList()
+            .modelContainer(SampleData.shared.modelContainer)
+    }
+}
+
+#Preview("Empty List") {
     AdvertisementList()
 }
