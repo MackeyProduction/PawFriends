@@ -30,7 +30,7 @@ struct AdvertisementDetail: View {
         self.releaseDate = Date()
     }
     
-    func dataToUiimages(data: [Data]) -> [UIImage]{
+    func dataToUiimages(data: [Data]) -> [UIImage]{ // images to uiimages?
         var uiimages: [UIImage] = []
         for image in data {
             uiimages.append(UIImage(data: image)!)
@@ -38,10 +38,10 @@ struct AdvertisementDetail: View {
         return uiimages
     }
     
-    func getTimestamp(timestamp: Date) -> String {
+    func releaseDateToString(releaseDate: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        let dateString = formatter.string(from: timestamp)
+        let dateString = formatter.string(from: releaseDate)
         return dateString
     }
     
@@ -101,7 +101,7 @@ struct AdvertisementDetail: View {
             
             else {
                 if ads[0].images != nil {
-                    SliderView(images: dataToUiimages(data: ads[0].images!))
+                    SliderView(images: dataToUiimages(data: ads[0].images!)) //images to uiimages?
                         .overlay(alignment: .topTrailing) {
                             LikeAndShare(color: Color.white)
                         }
@@ -126,7 +126,7 @@ struct AdvertisementDetail: View {
                 Text("Ort")
                     .padding(.leading)
                 Spacer()
-                Text(getTimestamp(timestamp: ads[0].timestamp))
+                Text(releaseDateToString(releaseDate: ads[0].releaseDate))
                     .padding(.trailing)
             }
             
