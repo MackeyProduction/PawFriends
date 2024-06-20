@@ -9,7 +9,7 @@ public struct Advertisement: Model {
   public var releaseDate: Temporal.DateTime?
   public var visitor: Int?
   public var description: String?
-  public var advertisementImage: Bool?
+  public var advertisementImages: [String?]?
   public var tags: List<AdvertisementTag>?
   public var watchLists: List<WatchList>?
   public var userProfiles: List<UserProfileAdvertisement>?
@@ -23,7 +23,7 @@ public struct Advertisement: Model {
       releaseDate: Temporal.DateTime? = nil,
       visitor: Int? = nil,
       description: String? = nil,
-      advertisementImage: Bool? = nil,
+      advertisementImages: [String?]? = nil,
       tags: List<AdvertisementTag>? = [],
       watchLists: List<WatchList>? = [],
       userProfiles: List<UserProfileAdvertisement>? = [],
@@ -34,7 +34,7 @@ public struct Advertisement: Model {
       releaseDate: releaseDate,
       visitor: visitor,
       description: description,
-      advertisementImage: advertisementImage,
+      advertisementImages: advertisementImages,
       tags: tags,
       watchLists: watchLists,
       userProfiles: userProfiles,
@@ -48,7 +48,7 @@ public struct Advertisement: Model {
       releaseDate: Temporal.DateTime? = nil,
       visitor: Int? = nil,
       description: String? = nil,
-      advertisementImage: Bool? = nil,
+      advertisementImages: [String?]? = nil,
       tags: List<AdvertisementTag>? = [],
       watchLists: List<WatchList>? = [],
       userProfiles: List<UserProfileAdvertisement>? = [],
@@ -61,7 +61,7 @@ public struct Advertisement: Model {
       self.releaseDate = releaseDate
       self.visitor = visitor
       self.description = description
-      self.advertisementImage = advertisementImage
+      self.advertisementImages = advertisementImages
       self.tags = tags
       self.watchLists = watchLists
       self.userProfiles = userProfiles
