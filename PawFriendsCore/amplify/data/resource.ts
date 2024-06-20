@@ -66,7 +66,7 @@ const schema = a.schema({
       releaseDate: a.datetime(),
       visitor: a.integer(),
       description: a.string(),
-      advertisementImage: a.boolean(),
+      advertisementImages: a.string().array(),
       tags: a.hasMany('AdvertisementTag', 'advertisementId'),
       watchLists: a.hasMany('WatchList', 'advertisementId'),
       userProfiles: a.hasMany('UserProfileAdvertisement', 'advertisementId'),
