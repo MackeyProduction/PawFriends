@@ -32,7 +32,6 @@ struct AppView: View {
                 .tabItem {
                     Label("Suche", systemImage: "magnifyingglass")
                 }
-                .modelContainer(for: Advertisement.self, inMemory: true)
             
             FavoriteView()
                 .tabItem {

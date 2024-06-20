@@ -10,27 +10,30 @@ import SwiftData
 
 struct AdvertisementList: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var ads: [Advertisement]
+    @StateObject var advertisementViewModel = AdvertisementViewModel()
+    //@Query private var ads: [AdvertisementViewModel]
     
-    @State private var newAdvertisement: Advertisement?
+    @State private var newAdvertisement: AdvertisementViewModel?
     
     init(titleFilter: String = "") {
-        let predicate = #Predicate<Advertisement> { ad in
+        /*
+        let predicate = #Predicate<AdvertisementViewModel> { ad in
             titleFilter.isEmpty || ad.title.localizedStandardContains(titleFilter)
         }
             
-        _ads = Query(filter: predicate, sort: \Advertisement.title)
+        _advertisementViewModel.$advertisements = Query(filter: predicate, sort: \AdvertisementViewModel.title)
+         */
     }
     
     var body: some View {
         Group {
-            if !ads.isEmpty {
+            if !advertisementViewModel.advertisements.isEmpty {
                 List {
-                    ForEach(ads) { item in
+                    ForEach(advertisementViewModel.advertisements, id: \.id) { item in
                         NavigationLink {
-                            Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
+                            Text("Item at \(String(describing: item.title))")
                         } label: {
-                            Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                            Text(item.title ?? "")
                         }
                     }
                     .onDelete(perform: deleteItems)
@@ -52,26 +55,28 @@ struct AdvertisementList: View {
                 }
             }
         }
+        .task {
+            //await advertisementViewModel.listAdvertisements()
+        }
     }
     
     private func addItem() {
-        withAnimation {
+        /*withAnimation {
             let newItem = Advertisement(title: "New Item", timestamp: Date())
             modelContext.insert(newItem)
             newAdvertisement = newItem
-        }
+        }*/
     }
 
     private func deleteItems(offsets: IndexSet) {
-        withAnimation {
+        /*withAnimation {
             for index in offsets {
                 modelContext.delete(ads[index])
             }
-        }
+        }*/
     }
 }
 
 #Preview {
     AdvertisementList()
-        .modelContainer(for: Advertisement.self, inMemory: true)
 }
