@@ -6,111 +6,122 @@
 //
 
 import SwiftUI
+import Amplify
 
 struct ProfileView: View {
+    @StateObject private var userProfileViewModel: UserProfileViewModel = UserProfileViewModel()
+    
     var body: some View {
         NavigationSplitView {
-            VStack {
-                HStack {
-                    Text("Profil")
-                        .font(.largeTitle)
-                        .bold()
-                    
-                    Spacer()
-                }
-                
-                HStack {
-                    Image(systemName: "person.fill")
-                        .resizable()
-                        .frame(width: 100, height: 100, alignment: .center)
-                        .clipShape(Circle())
-                    
-                    VStack(alignment: .leading) {
-                        Text("Markus")
+            if let userProfile = userProfileViewModel.userProfile {
+                VStack {
+                    HStack {
+                        Text("Profil")
                             .font(.largeTitle)
+                            .bold()
                         
-                        HStack {
-                            Image(systemName: "bookmark")
-                            Text("Aktiv seit: xx.xx.xxxx")
-                                .foregroundStyle(.secondary)
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Image(systemName: "person.fill")
+                            .resizable()
+                            .frame(width: 100, height: 100, alignment: .center)
+                            .clipShape(Circle())
+                        
+                        VStack(alignment: .leading) {
+                            Text("\(userProfile.author ?? "")")
+                                .font(.largeTitle)
+                            
+                            HStack {
+                                Image(systemName: "bookmark")
+                                Text("Aktiv seit: \(userProfile.activeSince ?? Temporal.Date.now())")
+                                    .foregroundStyle(.secondary)
+                            }
                         }
                     }
+                    
+                    HStack {
+                        Image(systemName: "person.3.fill")
+                        Text("2 Follower")
+                        Spacer()
+                    }
+                    .padding([.top, .bottom], 5)
+                    
+                    HStack {
+                        Image(systemName: "bookmark")
+                        Text("Tags")
+                        Spacer()
+                    }
+                    .padding([.top, .bottom], 5)
                 }
+                .padding(.all)
+                .frame(maxWidth: .infinity)
+                .background(.green)
+                .foregroundStyle(.white)
                 
-                HStack {
-                    Image(systemName: "person.3.fill")
-                    Text("2 Follower")
-                    Spacer()
+                VStack {
+                    HStack {
+                        Text("Beschreibung")
+                            .font(.largeTitle)
+                        
+                        Spacer()
+                        
+                        Image(systemName: "pencil")
+                    }
+                    
+                    HStack {
+                        Text("\(userProfile.description ?? "")")
+                        Spacer()
+                    }
+                    
                 }
-                .padding([.top, .bottom], 5)
+                .padding(.all)
                 
-                HStack {
-                    Image(systemName: "bookmark")
-                    Text("Tags")
-                    Spacer()
+                VStack {
+                    HStack {
+                        Text("Tiere")
+                            .font(.largeTitle)
+                        
+                        Spacer()
+                        
+                        Image(systemName: "plus.square")
+                    }
+                    
+                    HStack {
+                        if let pets = userProfile.pets {
+                            Text("\(pets.elements[0])")
+                            Spacer()
+                        }
+                    }
+                    
                 }
-                .padding([.top, .bottom], 5)
+                .padding(.all)
+                
+                VStack {
+                    HStack {
+                        Text("Anzeigen")
+                            .font(.largeTitle)
+                        
+                        Spacer()
+                        
+                        Image(systemName: "plus.square")
+                    }
+                    
+                    HStack {
+                        if let advertisements = userProfile.advertisements {
+                            ForEach(advertisements.elements, id: \.id) { item in
+                                Text("\(item._advertisement)")
+                                Spacer()
+                            }
+                        }
+                    }
+                    
+                }
+                .padding(.all)
+                
+                Spacer()
             }
-            .padding(.all)
-            .frame(maxWidth: .infinity)
-            .background(.green)
-            .foregroundStyle(.white)
-            
-            VStack {
-                HStack {
-                    Text("Beschreibung")
-                        .font(.largeTitle)
-                    
-                    Spacer()
-                    
-                    Image(systemName: "pencil")
-                }
-                
-                HStack {
-                    Text("Lorem Ipsum")
-                    Spacer()
-                }
-                
-            }
-            .padding(.all)
-            
-            VStack {
-                HStack {
-                    Text("Tiere")
-                        .font(.largeTitle)
-                    
-                    Spacer()
-                    
-                    Image(systemName: "plus.square")
-                }
-                
-                HStack {
-                    Text("Lorem Ipsum")
-                    Spacer()
-                }
-                
-            }
-            .padding(.all)
-            
-            VStack {
-                HStack {
-                    Text("Anzeigen")
-                        .font(.largeTitle)
-                    
-                    Spacer()
-                    
-                    Image(systemName: "plus.square")
-                }
-                
-                HStack {
-                    Text("Lorem Ipsum")
-                    Spacer()
-                }
-                
-            }
-            .padding(.all)
-            
-            Spacer()
         } detail: {
             Text("Select an item")
                 .navigationTitle("Profil")
