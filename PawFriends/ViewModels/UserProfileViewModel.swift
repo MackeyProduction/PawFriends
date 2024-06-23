@@ -187,14 +187,17 @@ class UserProfileViewModel: ObservableObject {
                 ],
             watchLists:
                 [
-                    WatchList(id: UUID().uuidString, advertisement: Advertisement(title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
+                    WatchList(id: UUID().uuidString, advertisement: Advertisement(title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
                 ],
             advertisements:
                 [
-                    UserProfileAdvertisement(id: UUID().uuidString, advertisement: Advertisement(id: UUID().uuidString, title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
+                    UserProfileAdvertisement(advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
                 ],
             chats: [
-                Chat(id: UUID().uuidString, message: "Hey, ich habe gesehen, dass du einen Hundesitter suchst. Bisher konnte ich nur wenig Erfahrung sammeln, aber ich könnte mir zutrauen auf deinen Chihuahua aufzupassen.", author: "markus99", recipient: "anna96", advertisement: Advertisement(title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
+                Chat(id: UUID().uuidString, message: "Hey, ich habe gesehen, dass du einen Hundesitter suchst. Bisher konnte ich nur wenig Erfahrung sammeln, aber ich könnte mir zutrauen auf deinen Chihuahua aufzupassen.", author: "markus99", recipient: "anna96", advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now()),
+                Chat(id: UUID().uuidString, message: "Hey, das klingt super! Wir können gerne ein Treffen ausmachen. Wann hättest du Zeit?", author: "anna96", recipient: "markus99", advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now()),
+                Chat(id: UUID().uuidString, message: "Bei mir würde morgen, um 17:00 Uhr passen. Passt das bei dir?", author: "markus99", recipient: "anna96", advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now()),
+                Chat(id: UUID().uuidString, message: "Ja, das passt! Bis morgen!", author: "anna96", recipient: "markus99", advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now())
             ]
         ),
         UserProfile(
@@ -211,14 +214,17 @@ class UserProfileViewModel: ObservableObject {
                 ],
             watchLists:
                 [
-                    WatchList(id: UUID().uuidString, advertisement: Advertisement(title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
+                    WatchList(id: UUID().uuidString, advertisement: Advertisement(title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
                 ],
             advertisements:
                 [
-                    UserProfileAdvertisement(id: UUID().uuidString, advertisement: Advertisement(id: UUID().uuidString, title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
+                    UserProfileAdvertisement(id: UUID().uuidString, advertisement: Advertisement(id: UUID().uuidString, title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
                 ],
             chats: [
-                Chat(id: UUID().uuidString, message: "Hey, ich habe gesehen, dass du einen Hundesitter suchst. Bisher konnte ich nur wenig Erfahrung sammeln, aber ich könnte mir zutrauen auf deinen Chihuahua aufzupassen.", author: "markus99", recipient: "anna96", advertisement: Advertisement(title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
+                Chat(id: UUID().uuidString, message: "Hey, ich habe gesehen, dass du einen Hundesitter suchst. Bisher konnte ich nur wenig Erfahrung sammeln, aber ich könnte mir zutrauen auf deinen Chihuahua aufzupassen.", author: "markus99", recipient: "anna96", advertisement: Advertisement(title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now()),
+                Chat(id: UUID().uuidString, message: "Hey, das klingt super! Wir können gerne ein Treffen ausmachen. Wann hättest du Zeit?", author: "anna96", recipient: "markus99", advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now()),
+                Chat(id: UUID().uuidString, message: "Bei mir würde morgen, um 17:00 Uhr passen. Passt das bei dir?", author: "markus99", recipient: "anna96", advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now()),
+                Chat(id: UUID().uuidString, message: "Ja, das passt! Bis morgen!", author: "anna96", recipient: "markus99", advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now())
             ]
         )
     ]

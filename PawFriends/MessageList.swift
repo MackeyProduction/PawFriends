@@ -6,23 +6,25 @@
 //
 
 import SwiftUI
-import SwiftData
+import Amplify
 
 struct MessageList: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var messages: [Message]
+    @StateObject private var userProfileViewModel: UserProfileViewModel = UserProfileViewModel()
+    @State private var chats: [Chat] = []
     
     var body: some View {
         Group {
-            if !messages.isEmpty {
+            if let chats = userProfileViewModel.userProfile?.chats {
                 List {
-                    ForEach(messages) { message in
-                        NavigationLink {
-                            Text("Item at \(message.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                        } label: {
-                            Text(message.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                    // TODO: Chats müssen nach den Anzeigen gefiltert werden
+                    ForEach($chats, id: \.id) { chat in
+                        NavigationLink(destination: MessageDetail(vm: userProfileViewModel, chats: $chats)) {
+                            MessageRow(chat: chat)
                         }
                     }
+                }
+                .onAppear {
+                    self.chats = chats.elements // Synchronisieren der lokalen Chat-Liste
                 }
             } else {
                 ContentUnavailableView {
@@ -31,10 +33,36 @@ struct MessageList: View {
             }
         }
         .navigationTitle("Nachrichten")
+        
     }
+    
+    var filteredChats: [Chat] {
+        // Filterfunktion funktioniert nicht... erstmal weg gelassen
+        get async throws {
+            guard let chats = userProfileViewModel.userProfile?.chats else {
+                return []
+            }
+            
+            var filteredChats: [Chat] = []
+            
+            for chat in chats {
+                do {
+                    if let advertisement = try await chat._advertisement.get() {
+                        if let _ = userProfileViewModel.userProfile?.chats?.first(where: { $0.id == advertisement.id }) {
+                            filteredChats.append(chat)
+                        }
+                    }
+                } catch {
+                    print("Error fetching advertisement: \(error)")
+                }
+            }
+            
+            return filteredChats
+        }
+    }
+
 }
 
 #Preview {
     MessageList()
-        .modelContainer(for: Message.self, inMemory: true)
 }
