@@ -45,6 +45,7 @@
 		3E69EA7E2C289C04005327B6 /* SlidingTabView in Frameworks */ = {isa = PBXBuildFile; productRef = 3E69EA7D2C289C04005327B6 /* SlidingTabView */; };
 		3E6F58992C273E3600656CC3 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6F58982C273E3600656CC3 /* UserProfileViewModel.swift */; };
 		3E76D3892C20BB6800DD604B /* amplify_outputs.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E76D3882C20BB6800DD604B /* amplify_outputs.json */; };
+		3E8012FA2C15DED50058144D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8012F92C15DED50058144D /* Message.swift */; };
 		3E8012FC2C15DF6E0058144D /* MessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8012FB2C15DF6E0058144D /* MessageList.swift */; };
 		3E82B8062C15CBFC0059A1BC /* AdvertisementList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E82B8052C15CBFC0059A1BC /* AdvertisementList.swift */; };
 		3E82B80C2C15D3D00059A1BC /* Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E82B80B2C15D3D00059A1BC /* Favorite.swift */; };
@@ -58,7 +59,15 @@
 		3E9C950A2C07A30100F91BFB /* PawFriendsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C95092C07A30100F91BFB /* PawFriendsUITestsLaunchTests.swift */; };
 		3EAC3BA72C177781008129A4 /* AWSCognitoAuthPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 3EAC3BA62C177781008129A4 /* AWSCognitoAuthPlugin */; };
 		3EAC3BAA2C177BDE008129A4 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = 3EAC3BA92C177BDE008129A4 /* Authenticator */; };
+		B52AE9942C24CD4100604A33 /* amplify_outputs.json in Resources */ = {isa = PBXBuildFile; fileRef = B52AE9932C24CD4100604A33 /* amplify_outputs.json */; };
+		B52AE9962C24CDE100604A33 /* amplify_outputs.json in Resources */ = {isa = PBXBuildFile; fileRef = B52AE9952C24CDE100604A33 /* amplify_outputs.json */; };
+		B52AE9982C261D2400604A33 /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52AE9972C261D2300604A33 /* extensions.swift */; };
+		B548DA192C264E60005C8BF7 /* SwipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B548DA182C264E60005C8BF7 /* SwipeView.swift */; };
+		B548DA1B2C27458A005C8BF7 /* LikeAndShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = B548DA1A2C27458A005C8BF7 /* LikeAndShare.swift */; };
+		B548DA1D2C277FA4005C8BF7 /* TagCloudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B548DA1C2C277FA3005C8BF7 /* TagCloudView.swift */; };
 		B5BBB6102C18CE3C000F490F /* AdvertisementDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BBB60F2C18CE3C000F490F /* AdvertisementDetail.swift */; };
+		B5BBB6162C1DD75A000F490F /* FittedImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BBB6152C1DD75A000F490F /* FittedImagesView.swift */; };
+		B5BBB6182C1DEA5E000F490F /* PhotoPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BBB6172C1DEA5E000F490F /* PhotoPickerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,11 +92,9 @@
 		3E0C87962C282FD800E45A85 /* MessageDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDetail.swift; sourceTree = "<group>"; };
 		3E2D3D152C21A86F0049EBFA /* resource.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = resource.ts; sourceTree = "<group>"; };
 		3E2D3D172C21A86F0049EBFA /* resource.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = resource.ts; sourceTree = "<group>"; };
-		3E2D3D192C21A86F0049EBFA /* amplify_outputs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = amplify_outputs.json; sourceTree = "<group>"; };
 		3E2D3D1A2C21A86F0049EBFA /* backend.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = backend.ts; sourceTree = "<group>"; };
 		3E2D3D1B2C21A86F0049EBFA /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
 		3E2D3D1C2C21A86F0049EBFA /* tsconfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tsconfig.json; sourceTree = "<group>"; };
-		3E2DAA0E2C21A8700049EBFA /* amplify_outputs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = amplify_outputs.json; sourceTree = "<group>"; };
 		3E2DAA0F2C21A8700049EBFA /* package-lock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "package-lock.json"; sourceTree = "<group>"; };
 		3E2DAA102C21A8700049EBFA /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
 		3E38ACE52C21ABA90078899C /* Advertisement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Advertisement.swift; sourceTree = "<group>"; };
@@ -124,6 +131,7 @@
 		3E69EA7A2C289518005327B6 /* FollowingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingListView.swift; sourceTree = "<group>"; };
 		3E6F58982C273E3600656CC3 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		3E76D3882C20BB6800DD604B /* amplify_outputs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = amplify_outputs.json; path = PawFriendsCore/amplify_outputs.json; sourceTree = SOURCE_ROOT; };
+		3E8012F92C15DED50058144D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		3E8012FB2C15DF6E0058144D /* MessageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageList.swift; sourceTree = "<group>"; };
 		3E82B8052C15CBFC0059A1BC /* AdvertisementList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisementList.swift; sourceTree = "<group>"; };
 		3E82B80B2C15D3D00059A1BC /* Favorite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favorite.swift; sourceTree = "<group>"; };
@@ -138,7 +146,15 @@
 		3E9C95032C07A30100F91BFB /* PawFriendsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PawFriendsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E9C95072C07A30100F91BFB /* PawFriendsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PawFriendsUITests.swift; sourceTree = "<group>"; };
 		3E9C95092C07A30100F91BFB /* PawFriendsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PawFriendsUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		B52AE9932C24CD4100604A33 /* amplify_outputs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = amplify_outputs.json; path = PawFriendsCore/amplify_outputs.json; sourceTree = SOURCE_ROOT; };
+		B52AE9952C24CDE100604A33 /* amplify_outputs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = amplify_outputs.json; path = PawFriendsCore/amplify_outputs.json; sourceTree = SOURCE_ROOT; };
+		B52AE9972C261D2300604A33 /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
+		B548DA182C264E60005C8BF7 /* SwipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeView.swift; sourceTree = "<group>"; };
+		B548DA1A2C27458A005C8BF7 /* LikeAndShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAndShare.swift; sourceTree = "<group>"; };
+		B548DA1C2C277FA3005C8BF7 /* TagCloudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCloudView.swift; sourceTree = "<group>"; };
 		B5BBB60F2C18CE3C000F490F /* AdvertisementDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvertisementDetail.swift; sourceTree = "<group>"; };
+		B5BBB6152C1DD75A000F490F /* FittedImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittedImagesView.swift; sourceTree = "<group>"; };
+		B5BBB6172C1DEA5E000F490F /* PhotoPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,7 +207,6 @@
 			children = (
 				3E2D3D162C21A86F0049EBFA /* auth */,
 				3E2D3D182C21A86F0049EBFA /* data */,
-				3E2D3D192C21A86F0049EBFA /* amplify_outputs.json */,
 				3E2D3D1A2C21A86F0049EBFA /* backend.ts */,
 				3E2D3D1B2C21A86F0049EBFA /* package.json */,
 				3E2D3D1C2C21A86F0049EBFA /* tsconfig.json */,
@@ -203,8 +218,8 @@
 			isa = PBXGroup;
 			children = (
 				3E2D3D1D2C21A86F0049EBFA /* amplify */,
-				3E2DAA0E2C21A8700049EBFA /* amplify_outputs.json */,
 				3E2DAA0F2C21A8700049EBFA /* package-lock.json */,
+				B52AE9952C24CDE100604A33 /* amplify_outputs.json */,
 				3E2DAA102C21A8700049EBFA /* package.json */,
 			);
 			path = PawFriendsCore;
@@ -276,6 +291,7 @@
 		3E9C94E92C07A2FF00F91BFB /* PawFriends */ = {
 			isa = PBXGroup;
 			children = (
+				B52AE9932C24CD4100604A33 /* amplify_outputs.json */,
 				3E607AB32C21C9F300F56B49 /* ViewModels */,
 				3E9C94EA2C07A2FF00F91BFB /* PawFriendsApp.swift */,
 				3E9C94EC2C07A2FF00F91BFB /* SearchView.swift */,
@@ -286,7 +302,12 @@
 				3E402F812C0A2E4D00D46819 /* MessageView.swift */,
 				3E402F832C0A2ECD00D46819 /* ProfileView.swift */,
 				B5BBB60F2C18CE3C000F490F /* AdvertisementDetail.swift */,
+				B548DA1C2C277FA3005C8BF7 /* TagCloudView.swift */,
+				B548DA182C264E60005C8BF7 /* SwipeView.swift */,
+				B5BBB6172C1DEA5E000F490F /* PhotoPickerView.swift */,
+				B5BBB6152C1DD75A000F490F /* FittedImagesView.swift */,
 				3E82B8052C15CBFC0059A1BC /* AdvertisementList.swift */,
+				B548DA1A2C27458A005C8BF7 /* LikeAndShare.swift */,
 				3E82B80B2C15D3D00059A1BC /* Favorite.swift */,
 				3E82B80D2C15D6450059A1BC /* FavoriteList.swift */,
 				3E8012FB2C15DF6E0058144D /* MessageList.swift */,
@@ -295,6 +316,7 @@
 				3E0C87962C282FD800E45A85 /* MessageDetail.swift */,
 				3E69EA782C2894F4005327B6 /* WatchlistView.swift */,
 				3E69EA7A2C289518005327B6 /* FollowingListView.swift */,
+				B52AE9972C261D2300604A33 /* extensions.swift */,
 			);
 			path = PawFriends;
 			sourceTree = "<group>";
@@ -439,8 +461,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B52AE9942C24CD4100604A33 /* amplify_outputs.json in Resources */,
+				B52AE9962C24CDE100604A33 /* amplify_outputs.json in Resources */,
 				3E9C94F42C07A30100F91BFB /* Preview Assets.xcassets in Resources */,
-				3E76D3892C20BB6800DD604B /* amplify_outputs.json in Resources */,
 				3E9C94F12C07A30100F91BFB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -471,6 +494,7 @@
 				3E69EA792C2894F4005327B6 /* WatchlistView.swift in Sources */,
 				3E402F822C0A2E4D00D46819 /* MessageView.swift in Sources */,
 				3E38AD0E2C21ABA90078899C /* UserProfile.swift in Sources */,
+				B548DA192C264E60005C8BF7 /* SwipeView.swift in Sources */,
 				3E38AD072C21ABA90078899C /* Pet+Schema.swift in Sources */,
 				3E38AD102C21ABA90078899C /* UserProfileAdvertisement.swift in Sources */,
 				3E38AD082C21ABA90078899C /* PetBreed.swift in Sources */,
@@ -478,8 +502,11 @@
 				3E38AD012C21ABA90078899C /* AdvertisementTag.swift in Sources */,
 				3E38AD0A2C21ABA90078899C /* PetType.swift in Sources */,
 				3E82B8062C15CBFC0059A1BC /* AdvertisementList.swift in Sources */,
+				B548DA1D2C277FA4005C8BF7 /* TagCloudView.swift in Sources */,
 				3E38AD132C21ABA90078899C /* UserProfilePet+Schema.swift in Sources */,
+				B548DA1B2C27458A005C8BF7 /* LikeAndShare.swift in Sources */,
 				3E38AD0B2C21ABA90078899C /* PetType+Schema.swift in Sources */,
+				B5BBB6182C1DEA5E000F490F /* PhotoPickerView.swift in Sources */,
 				3E9C94ED2C07A2FF00F91BFB /* SearchView.swift in Sources */,
 				3E38AD122C21ABA90078899C /* UserProfilePet.swift in Sources */,
 				3E0C87972C282FD800E45A85 /* MessageDetail.swift in Sources */,
@@ -498,6 +525,7 @@
 				3E38AD002C21ABA90078899C /* Advertisement+Schema.swift in Sources */,
 				3E402F842C0A2ECD00D46819 /* ProfileView.swift in Sources */,
 				3E9C94EB2C07A2FF00F91BFB /* PawFriendsApp.swift in Sources */,
+				B52AE9982C261D2400604A33 /* extensions.swift in Sources */,
 				3E38AD152C21ABA90078899C /* UserProfileTag+Schema.swift in Sources */,
 				3E38AD052C21ABA90078899C /* Chat+Schema.swift in Sources */,
 				3E38AD142C21ABA90078899C /* UserProfileTag.swift in Sources */,
@@ -508,6 +536,7 @@
 				3E38AD172C21ABA90078899C /* WatchList+Schema.swift in Sources */,
 				3E607AB52C21CA1D00F56B49 /* AdvertisementViewModel.swift in Sources */,
 				3E38AD062C21ABA90078899C /* Pet.swift in Sources */,
+				B5BBB6162C1DD75A000F490F /* FittedImagesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
