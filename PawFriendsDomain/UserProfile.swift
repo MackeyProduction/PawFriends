@@ -11,9 +11,9 @@ public struct UserProfile: Model {
   public var location: String?
   public var author: String?
   public var tags: List<UserProfileTag>?
-  public var pets: List<UserProfilePet>?
+  public var pets: List<Pet>?
   public var watchLists: List<WatchList>?
-  public var advertisements: List<UserProfileAdvertisement>?
+  public var advertisements: List<Advertisement>?
   public var chats: List<Chat>?
   public var createdAt: Temporal.DateTime?
   public var updatedAt: Temporal.DateTime?
@@ -26,9 +26,9 @@ public struct UserProfile: Model {
       location: String? = nil,
       author: String? = nil,
       tags: List<UserProfileTag>? = [],
-      pets: List<UserProfilePet>? = [],
+      pets: List<Pet>? = [],
       watchLists: List<WatchList>? = [],
-      advertisements: List<UserProfileAdvertisement>? = [],
+      advertisements: List<Advertisement>? = [],
       chats: List<Chat>? = []) {
     self.init(id: id,
       userProfileId: userProfileId,
@@ -53,9 +53,9 @@ public struct UserProfile: Model {
       location: String? = nil,
       author: String? = nil,
       tags: List<UserProfileTag>? = [],
-      pets: List<UserProfilePet>? = [],
+      pets: List<Pet>? = [],
       watchLists: List<WatchList>? = [],
-      advertisements: List<UserProfileAdvertisement>? = [],
+      advertisements: List<Advertisement>? = [],
       chats: List<Chat>? = [],
       createdAt: Temporal.DateTime? = nil,
       updatedAt: Temporal.DateTime? = nil) {

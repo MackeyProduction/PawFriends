@@ -20,7 +20,12 @@ public struct Pet: Model {
         try await _petBreed.get()
       } 
     }
-  public var userProfiles: List<UserProfilePet>?
+  internal var _userProfile: LazyReference<UserProfile>
+  public var userProfile: UserProfile?   {
+      get async throws { 
+        try await _userProfile.get()
+      } 
+    }
   public var createdAt: Temporal.DateTime?
   public var updatedAt: Temporal.DateTime?
   
@@ -31,7 +36,7 @@ public struct Pet: Model {
       petImage: Bool? = nil,
       petType: PetType? = nil,
       petBreed: PetBreed? = nil,
-      userProfiles: List<UserProfilePet>? = []) {
+      userProfile: UserProfile? = nil) {
     self.init(id: id,
       description: description,
       name: name,
@@ -39,7 +44,7 @@ public struct Pet: Model {
       petImage: petImage,
       petType: petType,
       petBreed: petBreed,
-      userProfiles: userProfiles,
+      userProfile: userProfile,
       createdAt: nil,
       updatedAt: nil)
   }
@@ -50,7 +55,7 @@ public struct Pet: Model {
       petImage: Bool? = nil,
       petType: PetType? = nil,
       petBreed: PetBreed? = nil,
-      userProfiles: List<UserProfilePet>? = [],
+      userProfile: UserProfile? = nil,
       createdAt: Temporal.DateTime? = nil,
       updatedAt: Temporal.DateTime? = nil) {
       self.id = id
@@ -60,7 +65,7 @@ public struct Pet: Model {
       self.petImage = petImage
       self._petType = LazyReference(petType)
       self._petBreed = LazyReference(petBreed)
-      self.userProfiles = userProfiles
+      self._userProfile = LazyReference(userProfile)
       self.createdAt = createdAt
       self.updatedAt = updatedAt
   }
@@ -69,6 +74,9 @@ public struct Pet: Model {
   }
   public mutating func setPetBreed(_ petBreed: PetBreed? = nil) {
     self._petBreed = LazyReference(petBreed)
+  }
+  public mutating func setUserProfile(_ userProfile: UserProfile? = nil) {
+    self._userProfile = LazyReference(userProfile)
   }
   public init(from decoder: Decoder) throws {
       let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -79,7 +87,7 @@ public struct Pet: Model {
       petImage = try? values.decode(Bool?.self, forKey: .petImage)
       _petType = try values.decodeIfPresent(LazyReference<PetType>.self, forKey: .petType) ?? LazyReference(identifiers: nil)
       _petBreed = try values.decodeIfPresent(LazyReference<PetBreed>.self, forKey: .petBreed) ?? LazyReference(identifiers: nil)
-      userProfiles = try values.decodeIfPresent(List<UserProfilePet>?.self, forKey: .userProfiles) ?? .init()
+      _userProfile = try values.decodeIfPresent(LazyReference<UserProfile>.self, forKey: .userProfile) ?? LazyReference(identifiers: nil)
       createdAt = try? values.decode(Temporal.DateTime?.self, forKey: .createdAt)
       updatedAt = try? values.decode(Temporal.DateTime?.self, forKey: .updatedAt)
   }
@@ -92,7 +100,7 @@ public struct Pet: Model {
       try container.encode(petImage, forKey: .petImage)
       try container.encode(_petType, forKey: .petType)
       try container.encode(_petBreed, forKey: .petBreed)
-      try container.encode(userProfiles, forKey: .userProfiles)
+      try container.encode(_userProfile, forKey: .userProfile)
       try container.encode(createdAt, forKey: .createdAt)
       try container.encode(updatedAt, forKey: .updatedAt)
   }
