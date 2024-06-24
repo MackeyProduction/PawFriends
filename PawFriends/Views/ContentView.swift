@@ -53,7 +53,7 @@ struct AppView: View {
                     Label("Nachrichten", systemImage: "message")
                 }
             
-            ProfileView()
+            ProfileView(advertisementArray: [])
                 .tabItem {
                     Label("Profil", systemImage: "person")
                 }
