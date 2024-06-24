@@ -169,7 +169,7 @@ class UserProfileViewModel: ObservableObject {
     static let sampleData: [UserProfile] = [
         UserProfile(
             id: UUID().uuidString,
-            description: "Hallo, ich bin die Anna und komme aus der Stadt Musterhausen. In meiner Freizeit gehe ich mit meinem Hund und meinem Pferd spazieren.\n\nAktuell bin ich auf der Suche nach einem Hundesitter und einer Reitbeteiligung.",
+            description: "Hallo, ich bin die Anna und komme aus der Stadt Musterhausen. In meiner Freizeit gehe ich mit meinem Hund und meinem Pferd spazieren und streichel gerne meinen Kater.\n\nAktuell bin ich auf der Suche nach einem Hundesitter, Katzensitter und einer Reitbeteiligung.",
             activeSince: Temporal.Date.now(),
             profileImage: false,
             location: "Musterhausen",
