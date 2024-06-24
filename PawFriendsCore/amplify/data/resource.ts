@@ -16,22 +16,23 @@ const schema = a.schema({
       location: a.string(),
       author: a.string(),
       tags: a.hasMany('UserProfileTag', 'userProfileId'),
-      pets: a.hasMany('UserProfilePet', 'userProfileId'),
+      pets: a.hasMany('Pet', 'userProfileId'),
       watchLists: a.hasMany('WatchList', 'userProfileId'),
-      advertisements: a.hasMany('UserProfileAdvertisement', 'userProfileId'),
+      advertisements: a.hasMany('Advertisement', 'userProfileId'),
       chats: a.hasMany('Chat', 'userProfileId')
     })
     .authorization((allow) => [allow.ownerDefinedIn('author')]),
   Pet: a
     .model({
       petId: a.id(),
+      userProfileId: a.id(),
       description: a.string(),
       name: a.string(),
       age: a.integer(),
       petImage: a.boolean(),
       petType: a.belongsTo('PetType', 'petId'),
       petBreed: a.belongsTo('PetBreed', 'petId'),
-      userProfiles: a.hasMany('UserProfilePet', 'petId')
+      userProfile: a.belongsTo('UserProfile', 'userProfileId')
     })
     .authorization((allow) => [allow.guest()]),
   PetType: a
@@ -62,6 +63,7 @@ const schema = a.schema({
   Advertisement: a
     .model({
       advertisementId: a.id(),
+      userProfileId: a.id(),
       title: a.string(),
       releaseDate: a.datetime(),
       visitor: a.integer(),
@@ -69,7 +71,7 @@ const schema = a.schema({
       advertisementImages: a.string().array(),
       tags: a.hasMany('AdvertisementTag', 'advertisementId'),
       watchLists: a.hasMany('WatchList', 'advertisementId'),
-      userProfiles: a.hasMany('UserProfileAdvertisement', 'advertisementId'),
+      userProfile: a.belongsTo('UserProfile', 'userProfileId'),
       chats: a.hasMany('Chat', 'advertisementId'),
     })
     .authorization((allow) => [allow.guest()]),
@@ -98,22 +100,6 @@ const schema = a.schema({
     })
     .authorization((allow) => [allow.guest()]),
   WatchList: a
-    .model({
-      userProfileId: a.id().required(),
-      advertisementId: a.id().required(),
-      userProfile: a.belongsTo('UserProfile', 'userProfileId'),
-      advertisement: a.belongsTo('Advertisement', 'advertisementId')
-    })
-    .authorization((allow) => [allow.guest()]),
-  UserProfilePet: a
-    .model({
-      userProfileId: a.id().required(),
-      petId: a.id().required(),
-      userProfile: a.belongsTo('UserProfile', 'userProfileId'),
-      pet: a.belongsTo('Pet', 'petId')
-    })
-    .authorization((allow) => [allow.guest()]),
-  UserProfileAdvertisement: a
     .model({
       userProfileId: a.id().required(),
       advertisementId: a.id().required(),

@@ -12,7 +12,7 @@ extension Pet {
     case petImage
     case petType
     case petBreed
-    case userProfiles
+    case userProfile
     case createdAt
     case updatedAt
   }
@@ -42,7 +42,7 @@ extension Pet {
       .field(pet.petImage, is: .optional, ofType: .bool),
       .belongsTo(pet.petType, is: .optional, ofType: PetType.self, targetNames: ["petId"]),
       .belongsTo(pet.petBreed, is: .optional, ofType: PetBreed.self, targetNames: ["petId"]),
-      .hasMany(pet.userProfiles, is: .optional, ofType: UserProfilePet.self, associatedFields: [UserProfilePet.keys.pet]),
+      .belongsTo(pet.userProfile, is: .optional, ofType: UserProfile.self, targetNames: ["userProfileId"]),
       .field(pet.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(pet.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
     )
@@ -78,8 +78,8 @@ extension ModelPath where ModelType == Pet {
   public var petBreed: ModelPath<PetBreed>   {
       PetBreed.Path(name: "petBreed", parent: self) 
     }
-  public var userProfiles: ModelPath<UserProfilePet>   {
-      UserProfilePet.Path(name: "userProfiles", isCollection: true, parent: self) 
+  public var userProfile: ModelPath<UserProfile>   {
+      UserProfile.Path(name: "userProfile", parent: self) 
     }
   public var createdAt: FieldPath<Temporal.DateTime>   {
       datetime("createdAt") 
