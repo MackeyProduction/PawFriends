@@ -17,6 +17,8 @@ extension UserProfile {
     case watchLists
     case advertisements
     case chats
+    case follows
+    case followers
     case createdAt
     case updatedAt
   }
@@ -51,6 +53,8 @@ extension UserProfile {
       .hasMany(userProfile.watchLists, is: .optional, ofType: WatchList.self, associatedFields: [WatchList.keys.userProfile]),
       .hasMany(userProfile.advertisements, is: .optional, ofType: Advertisement.self, associatedFields: [Advertisement.keys.userProfile]),
       .hasMany(userProfile.chats, is: .optional, ofType: Chat.self, associatedFields: [Chat.keys.userProfile]),
+      .hasMany(userProfile.follows, is: .optional, ofType: UserProfileFollower.self, associatedFields: [UserProfileFollower.keys.follower]),
+      .hasMany(userProfile.followers, is: .optional, ofType: UserProfileFollower.self, associatedFields: [UserProfileFollower.keys.followed]),
       .field(userProfile.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(userProfile.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
     )
@@ -100,6 +104,12 @@ extension ModelPath where ModelType == UserProfile {
     }
   public var chats: ModelPath<Chat>   {
       Chat.Path(name: "chats", isCollection: true, parent: self) 
+    }
+  public var follows: ModelPath<UserProfileFollower>   {
+      UserProfileFollower.Path(name: "follows", isCollection: true, parent: self) 
+    }
+  public var followers: ModelPath<UserProfileFollower>   {
+      UserProfileFollower.Path(name: "followers", isCollection: true, parent: self) 
     }
   public var createdAt: FieldPath<Temporal.DateTime>   {
       datetime("createdAt") 
