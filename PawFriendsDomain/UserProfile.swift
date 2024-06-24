@@ -15,6 +15,8 @@ public struct UserProfile: Model {
   public var watchLists: List<WatchList>?
   public var advertisements: List<Advertisement>?
   public var chats: List<Chat>?
+  public var follows: List<UserProfileFollower>?
+  public var followers: List<UserProfileFollower>?
   public var createdAt: Temporal.DateTime?
   public var updatedAt: Temporal.DateTime?
   
@@ -29,7 +31,9 @@ public struct UserProfile: Model {
       pets: List<Pet>? = [],
       watchLists: List<WatchList>? = [],
       advertisements: List<Advertisement>? = [],
-      chats: List<Chat>? = []) {
+      chats: List<Chat>? = [],
+      follows: List<UserProfileFollower>? = [],
+      followers: List<UserProfileFollower>? = []) {
     self.init(id: id,
       userProfileId: userProfileId,
       description: description,
@@ -42,6 +46,8 @@ public struct UserProfile: Model {
       watchLists: watchLists,
       advertisements: advertisements,
       chats: chats,
+      follows: follows,
+      followers: followers,
       createdAt: nil,
       updatedAt: nil)
   }
@@ -57,6 +63,8 @@ public struct UserProfile: Model {
       watchLists: List<WatchList>? = [],
       advertisements: List<Advertisement>? = [],
       chats: List<Chat>? = [],
+      follows: List<UserProfileFollower>? = [],
+      followers: List<UserProfileFollower>? = [],
       createdAt: Temporal.DateTime? = nil,
       updatedAt: Temporal.DateTime? = nil) {
       self.id = id
@@ -71,6 +79,8 @@ public struct UserProfile: Model {
       self.watchLists = watchLists
       self.advertisements = advertisements
       self.chats = chats
+      self.follows = follows
+      self.followers = followers
       self.createdAt = createdAt
       self.updatedAt = updatedAt
   }

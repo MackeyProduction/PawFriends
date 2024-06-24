@@ -19,7 +19,9 @@ const schema = a.schema({
       pets: a.hasMany('Pet', 'userProfileId'),
       watchLists: a.hasMany('WatchList', 'userProfileId'),
       advertisements: a.hasMany('Advertisement', 'userProfileId'),
-      chats: a.hasMany('Chat', 'userProfileId')
+      chats: a.hasMany('Chat', 'userProfileId'),
+      follows: a.hasMany('UserProfileFollower', 'followerId'),
+      followers: a.hasMany('UserProfileFollower', 'followedId')
     })
     .authorization((allow) => [allow.ownerDefinedIn('author')]),
   Pet: a
@@ -105,6 +107,14 @@ const schema = a.schema({
       advertisementId: a.id().required(),
       userProfile: a.belongsTo('UserProfile', 'userProfileId'),
       advertisement: a.belongsTo('Advertisement', 'advertisementId')
+    })
+    .authorization((allow) => [allow.guest()]),
+  UserProfileFollower: a
+    .model({
+      followerId: a.id().required(),
+      followedId: a.id().required(),
+      follower: a.belongsTo('UserProfile', 'followerId'),
+      followed: a.belongsTo('UserProfile', 'followedId')
     })
     .authorization((allow) => [allow.guest()]),
 });
