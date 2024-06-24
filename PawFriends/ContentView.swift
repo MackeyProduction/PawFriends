@@ -20,17 +20,17 @@ let greenColorReverse = UIColor(named: "GreenColorReverse")
 
 struct ContentView: View {
     var body: some View {
-        Authenticator { state in
+        //Authenticator { state in
             AppView()
             
-            VStack {
+            /*VStack {
                 Button("Sign out") {
                     Task {
                         await state.signOut()
                     }
                 }
-            }
-        }
+            }*/
+        //}
     }
 }
 
@@ -53,7 +53,7 @@ struct AppView: View {
                     Label("Nachrichten", systemImage: "message")
                 }
             
-            ProfileView()
+            ProfileView(advertisementArray: [])
                 .tabItem {
                     Label("Profil", systemImage: "person")
                 }

@@ -10,6 +10,63 @@ import Amplify
 
 struct ProfileView: View {
     @StateObject private var userProfileViewModel: UserProfileViewModel = UserProfileViewModel()
+    @State private var advertisementArray: [Advertisement]
+
+    init(advertisementArray: [Advertisement]) {
+        
+        self.advertisementArray = advertisementArray
+    }
+//    func getPetName() async {
+//        do {
+//            let pet = Pet()
+//            
+//            let userProfile = UserProfile()
+//            
+//            if let ads = userProfile.advertisements {
+//                for ad in ads.elements {
+//                    let a = try await ad.advertisement
+//                }
+//            }
+//            
+//            
+//            let petBreed = try await pet.petBreed?.description
+//            
+//            if let breeds = try await pet._petBreed.get() {
+//                
+//            }
+//            
+//        } catch {
+//            
+//        }
+//    }
+    
+    func getAdvertisements() async -> [Advertisement] {
+        var advertisementsArray: [Advertisement] = []
+        do {
+            if let ads = userProfileViewModel.userProfile?.advertisements {
+                for ad in ads.elements {
+                    let a = try await ad.advertisement
+                    advertisementsArray.append(a!)
+                }
+            }
+        } catch {
+            
+        }
+        return advertisementsArray
+    }
+    
+    private lazy var breeds: [PetBreed] = {
+        let pet = Pet()
+        
+        Task {
+            if let breeds = try await pet._petBreed.get() {
+                
+            }
+        }
+        
+        
+        return []
+    }()
     
     func dateToString(releaseDate: Temporal.Date) -> String {
         let relativeDateFormatter = DateFormatter()
@@ -130,17 +187,20 @@ struct ProfileView: View {
                         }.padding(.bottom, 5)
                         
                         if let pets = userProfile.pets {
+                            
                             //Text("\(pets.elements[0])")
                             let pets: [String] = ["Momo","Momo Klon"]
                             ForEach(pets, id: \.self) { pet in
                                 //ForEach(pets.elements, id: \.id) { pet in
+                                
+                                
                                 ZStack {
                                     HStack {
                                         Image(systemName: "pawprint.circle.fill")
                                             .font(.title)
                                             .foregroundStyle(Color(greenColorReverse!))
                                         Text(pet)
-                                        //Text(pet.modelName)
+                                        //Text(pet._pet.get()?.name ?? "")
                                             .fontWeight(.medium)
                                         Spacer()
                                     }
@@ -177,14 +237,18 @@ struct ProfileView: View {
                         }.padding(.bottom, 5)
                         
                         
-
+                        
                         if let advertisements = userProfile.advertisements {
-//                            ForEach(advertisements.elements, id: \.id) { item in
-//                                Text("\(item._advertisement)")
-//                            }
+                            //                            ForEach(advertisements.elements, id: \.id) { item in
+                            //                                Text("\(item._advertisement)")
+                            //                            }
                             let anzeigen: [String] = ["Katzen-Sitter für Kater gesucht","Noch ein Anzeigen Titel"]
-                            ForEach(anzeigen, id: \.self) { advertisement in
+                            
+                            
+                            //ForEach(anzeigen, id: \.self) { advertisement in
                             //ForEach(advertisements.elements, id: \.id) { advertisement in
+                            ForEach(advertisementArray, id: \.id) { advertisement in
+                                
                                 VStack {
                                     HStack {
                                         Image(systemName: "photo.fill")
@@ -194,7 +258,7 @@ struct ProfileView: View {
                                         VStack {
                                             HStack {
                                                 //Text(advertisement.modelName)
-                                                Text(advertisement)
+                                                Text(advertisement.title ?? "")
                                                     .fontWeight(.medium)
                                                 Spacer()
                                                 
@@ -219,17 +283,25 @@ struct ProfileView: View {
                             }
                         }
                     }.padding(.top, 5).padding(.bottom, 5)
+                    
+                    Spacer()
                 }
-                Spacer()
             }
-            .padding(.leading)
-            .padding(.trailing)
-            .background(Color(mainColor!))
-        } detail: {
-            Text("Select an item")
-                .navigationTitle("Profil")
+                    .padding(.leading)
+                    .padding(.trailing)
+                    .background(Color(mainColor!))
+            } detail: {
+                Text("Select an item")
+                    .navigationTitle("Profil")
+            }
+            .onAppear {
+                Task {
+                    advertisementArray = await getAdvertisements()
+                }
+                
+            }
         }
-    }
+    
     
     private func shareItem(){
         
@@ -238,5 +310,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView()
+    ProfileView(advertisementArray: [])
 }

@@ -85,6 +85,7 @@ struct AdvertisementDetail: View {
                 VStack(spacing: 10) {
                     if advertisement.advertisementImages != nil {
                         let images: [UIImage] = stringToUiimages(strings: advertisement.advertisementImages)
+                        //SliderView(images: images)
                         Image(uiImage: images[0])
                             .resizable()
                             .scaledToFill()
