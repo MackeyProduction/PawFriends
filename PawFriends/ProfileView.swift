@@ -42,15 +42,10 @@ struct ProfileView: View {
     
     func getAdvertisements() async -> [Advertisement] {
         var advertisementsArray: [Advertisement] = []
-        do {
-            if let ads = userProfileViewModel.userProfile?.advertisements {
-                for ad in ads.elements {
-                    let a = try await ad.advertisement
-                    advertisementsArray.append(a!)
-                }
+        if let ads = userProfileViewModel.userProfile?.advertisements {
+            for ad in ads.elements {
+                advertisementsArray.append(ad)
             }
-        } catch {
-            
         }
         return advertisementsArray
     }
