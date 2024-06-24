@@ -168,7 +168,7 @@ class UserProfileViewModel: ObservableObject {
     
     static let sampleData: [UserProfile] = [
         UserProfile(
-            id: UUID().uuidString,
+            id: "11480ab1-4433-4129-b766-c07fda9652bd",
             description: "Hallo, ich bin die Anna und komme aus der Stadt Musterhausen. In meiner Freizeit gehe ich mit meinem Hund und meinem Pferd spazieren und streichel gerne meinen Kater.\n\nAktuell bin ich auf der Suche nach einem Hundesitter, Katzensitter und einer Reitbeteiligung.",
             activeSince: Temporal.Date.now(),
             profileImage: false,
@@ -187,7 +187,7 @@ class UserProfileViewModel: ObservableObject {
                 ],
             watchLists:
                 [
-                    WatchList(id: UUID().uuidString, advertisement: Advertisement(title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
+                    WatchList(id: UUID().uuidString, userProfile: UserProfile(id: "11480ab1-4433-4129-b766-c07fda9652bd"), advertisement: Advertisement(title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
                 ],
             advertisements:
                 [
@@ -201,7 +201,7 @@ class UserProfileViewModel: ObservableObject {
             ]
         ),
         UserProfile(
-            id: UUID().uuidString,
+            id: "f76c13f3-b814-49b4-b30b-096d65977cd9",
             description: "Hallo, ich bin Markus und komme aus der Stadt Entenhausen. Aktuell bin ich Vollzeit beschäftigt, sodass ich mich nicht traue einen eigenen Hund zu adoptieren.\n\nIch möchte gerne Erfahrung mit Hunden sammeln.",
             activeSince: Temporal.Date.now(),
             profileImage: false,
@@ -214,7 +214,7 @@ class UserProfileViewModel: ObservableObject {
                 ],
             watchLists:
                 [
-                    WatchList(id: UUID().uuidString, advertisement: Advertisement(title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
+                    WatchList(id: UUID().uuidString, userProfile: UserProfile(id: "f76c13f3-b814-49b4-b30b-096d65977cd9"), advertisement: Advertisement(title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
                 ],
             advertisements:
                 [

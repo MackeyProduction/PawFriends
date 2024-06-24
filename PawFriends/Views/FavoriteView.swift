@@ -20,5 +20,4 @@ struct FavoriteView: View {
 
 #Preview {
     FavoriteView()
-        .modelContainer(for: Favorite.self, inMemory: true)
 }

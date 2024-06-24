@@ -45,7 +45,6 @@
 		3E6F58992C273E3600656CC3 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6F58982C273E3600656CC3 /* UserProfileViewModel.swift */; };
 		3E8012FC2C15DF6E0058144D /* MessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8012FB2C15DF6E0058144D /* MessageList.swift */; };
 		3E82B8062C15CBFC0059A1BC /* AdvertisementList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E82B8052C15CBFC0059A1BC /* AdvertisementList.swift */; };
-		3E82B80C2C15D3D00059A1BC /* Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E82B80B2C15D3D00059A1BC /* Favorite.swift */; };
 		3E82B80E2C15D6450059A1BC /* FavoriteList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E82B80D2C15D6450059A1BC /* FavoriteList.swift */; };
 		3E9C94EB2C07A2FF00F91BFB /* PawFriendsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C94EA2C07A2FF00F91BFB /* PawFriendsApp.swift */; };
 		3E9C94ED2C07A2FF00F91BFB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C94EC2C07A2FF00F91BFB /* SearchView.swift */; };
@@ -130,7 +129,6 @@
 		3E76D3882C20BB6800DD604B /* amplify_outputs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = amplify_outputs.json; path = PawFriendsCore/amplify_outputs.json; sourceTree = SOURCE_ROOT; };
 		3E8012FB2C15DF6E0058144D /* MessageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageList.swift; sourceTree = "<group>"; };
 		3E82B8052C15CBFC0059A1BC /* AdvertisementList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisementList.swift; sourceTree = "<group>"; };
-		3E82B80B2C15D3D00059A1BC /* Favorite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favorite.swift; sourceTree = "<group>"; };
 		3E82B80D2C15D6450059A1BC /* FavoriteList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteList.swift; sourceTree = "<group>"; };
 		3E9C94E72C07A2FF00F91BFB /* PawFriends.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PawFriends.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E9C94EA2C07A2FF00F91BFB /* PawFriendsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PawFriendsApp.swift; sourceTree = "<group>"; };
@@ -336,7 +334,6 @@
 				3E9C94EA2C07A2FF00F91BFB /* PawFriendsApp.swift */,
 				3E9C94F02C07A30100F91BFB /* Assets.xcassets */,
 				3E9C94F22C07A30100F91BFB /* Preview Content */,
-				3E82B80B2C15D3D00059A1BC /* Favorite.swift */,
 				3E76D3882C20BB6800DD604B /* amplify_outputs.json */,
 			);
 			path = PawFriends;
@@ -543,7 +540,6 @@
 				3E38AD042C21ABA90078899C /* Chat.swift in Sources */,
 				3E402F802C0A2D6C00D46819 /* FavoriteView.swift in Sources */,
 				3E38AD0F2C21ABA90078899C /* UserProfile+Schema.swift in Sources */,
-				3E82B80C2C15D3D00059A1BC /* Favorite.swift in Sources */,
 				3E38AD002C21ABA90078899C /* Advertisement+Schema.swift in Sources */,
 				3E402F842C0A2ECD00D46819 /* ProfileView.swift in Sources */,
 				3E9C94EB2C07A2FF00F91BFB /* PawFriendsApp.swift in Sources */,

@@ -10,28 +10,13 @@ import Authenticator
 import AWSCognitoAuthPlugin
 import AWSAPIPlugin
 import SwiftUI
-import SwiftData
 
 @main
 struct PawFriendsApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Favorite.self
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(sharedModelContainer)
     }
     
     init() {

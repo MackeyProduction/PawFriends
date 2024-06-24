@@ -46,7 +46,6 @@ struct AppView: View {
                 .tabItem {
                     Label("Favoriten", systemImage: "heart")
                 }
-                .modelContainer(for: Favorite.self, inMemory: true)
             
             MessageView()
                 .tabItem {

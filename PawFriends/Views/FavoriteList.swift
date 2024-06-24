@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SlidingTabView
-import SwiftData
 
 struct FavoriteList: View {
     
@@ -15,7 +14,7 @@ struct FavoriteList: View {
     
     var body: some View {
         VStack {
-            SlidingTabView(selection: self.$selectedTabIndex, tabs: ["Merkliste", "Folge ich"]).padding()
+            SlidingTabView(selection: self.$selectedTabIndex, tabs: ["Merkliste", "Folge ich"])
             
             if selectedTabIndex == 0 {
                 WatchlistView()
@@ -31,5 +30,4 @@ struct FavoriteList: View {
 
 #Preview {
     FavoriteList()
-        .modelContainer(for: Favorite.self, inMemory: true)
 }

@@ -6,20 +6,60 @@
 //
 
 import SwiftUI
-import SwiftData
+import Amplify
 
 struct WatchlistView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var favorites: [Favorite]
+    @StateObject private var userProfileViewModel: UserProfileViewModel = UserProfileViewModel()
+    @State private var watchList: [WatchList] = []
+    @State private var advertisements: [Advertisement] = []
     
     var body: some View {
-        if !favorites.isEmpty {
+        if let watchList = userProfileViewModel.userProfile?.watchLists {
             List {
-                ForEach(favorites) { favorite in
-                    NavigationLink {
-                        Text("Item at \(favorite.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(favorite.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                ForEach($advertisements, id: \.id) { advertisement in
+                    NavigationLink(destination: AdvertisementDetail(advertisement: advertisement)) {
+                        HStack {
+                            Image("\(String(describing: advertisement.wrappedValue.advertisementImages?.first))")
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                            VStack(alignment: .leading) {
+                                Text("\(advertisement.wrappedValue.title ?? "Anzeige nicht gefunden")")
+                                    .font(.headline)
+                                if let userProfile = userProfileViewModel.userProfile {
+                                    Text("\(userProfile.location ?? "")")
+                                        .font(.subheadline)
+                                }
+                                Text(releaseDateToString(releaseDate: advertisement.wrappedValue.releaseDate ?? Temporal.DateTime(.distantPast)))
+                                    .font(.subheadline)
+                            }
+                            Spacer()
+                            Button(action: {
+                                //                                if let index = ads.firstIndex(where: { $0.id == ad.id }) {
+                                //                                    ads.remove(at: index)
+                                //                                }
+                            }) {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.red)
+                            }
+                        }
+                    }
+                }
+            }
+            .onAppear {
+                Task {
+                    do {
+                        self.advertisements = []
+                        self.watchList = watchList.elements
+                        for item in watchList {
+                            let advertisement = try await item.advertisement!
+                            let userProfile = try await item.userProfile!
+                            
+                            if userProfile.id == userProfileViewModel.userProfile?.id {
+                                advertisements.append(advertisement)
+                            }
+                        }
+                    } catch {
+                        print("Could not fetch data.")
                     }
                 }
             }
@@ -29,9 +69,26 @@ struct WatchlistView: View {
             }
         }
     }
+    
+    func releaseDateToString(releaseDate: Temporal.DateTime) -> String {
+        let relativeDateFormatter = DateFormatter()
+        relativeDateFormatter.timeStyle = .none
+        relativeDateFormatter.dateStyle = .medium
+        relativeDateFormatter.locale = Locale(identifier: "de_DE")
+        relativeDateFormatter.doesRelativeDateFormatting = true
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
+        
+        //let date = Date(timeIntervalSinceNow: -131231)
+        let timeString = timeFormatter.string(from: releaseDate.foundationDate)
+        let relativeDateString = relativeDateFormatter.string(from: releaseDate.foundationDate)
+        let RelativeDateTimeString = relativeDateString+", "+timeString
+        
+        return RelativeDateTimeString
+    }
 }
 
 #Preview {
     WatchlistView()
-        .modelContainer(for: Favorite.self, inMemory: true)
 }
