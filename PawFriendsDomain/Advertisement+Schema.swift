@@ -14,7 +14,7 @@ extension Advertisement {
     case advertisementImages
     case tags
     case watchLists
-    case userProfiles
+    case userProfile
     case chats
     case createdAt
     case updatedAt
@@ -47,7 +47,7 @@ extension Advertisement {
       .field(advertisement.advertisementImages, is: .optional, ofType: .embeddedCollection(of: String.self)),
       .hasMany(advertisement.tags, is: .optional, ofType: AdvertisementTag.self, associatedFields: [AdvertisementTag.keys.advertisement]),
       .hasMany(advertisement.watchLists, is: .optional, ofType: WatchList.self, associatedFields: [WatchList.keys.advertisement]),
-      .hasMany(advertisement.userProfiles, is: .optional, ofType: UserProfileAdvertisement.self, associatedFields: [UserProfileAdvertisement.keys.advertisement]),
+      .belongsTo(advertisement.userProfile, is: .optional, ofType: UserProfile.self, targetNames: ["userProfileId"]),
       .hasMany(advertisement.chats, is: .optional, ofType: Chat.self, associatedFields: [Chat.keys.advertisement]),
       .field(advertisement.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(advertisement.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
@@ -90,8 +90,8 @@ extension ModelPath where ModelType == Advertisement {
   public var watchLists: ModelPath<WatchList>   {
       WatchList.Path(name: "watchLists", isCollection: true, parent: self) 
     }
-  public var userProfiles: ModelPath<UserProfileAdvertisement>   {
-      UserProfileAdvertisement.Path(name: "userProfiles", isCollection: true, parent: self) 
+  public var userProfile: ModelPath<UserProfile>   {
+      UserProfile.Path(name: "userProfile", parent: self) 
     }
   public var chats: ModelPath<Chat>   {
       Chat.Path(name: "chats", isCollection: true, parent: self) 

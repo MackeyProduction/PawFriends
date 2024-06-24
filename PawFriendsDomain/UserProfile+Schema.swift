@@ -47,9 +47,9 @@ extension UserProfile {
       .field(userProfile.location, is: .optional, ofType: .string),
       .field(userProfile.author, is: .optional, ofType: .string),
       .hasMany(userProfile.tags, is: .optional, ofType: UserProfileTag.self, associatedFields: [UserProfileTag.keys.userProfile]),
-      .hasMany(userProfile.pets, is: .optional, ofType: UserProfilePet.self, associatedFields: [UserProfilePet.keys.userProfile]),
+      .hasMany(userProfile.pets, is: .optional, ofType: Pet.self, associatedFields: [Pet.keys.userProfile]),
       .hasMany(userProfile.watchLists, is: .optional, ofType: WatchList.self, associatedFields: [WatchList.keys.userProfile]),
-      .hasMany(userProfile.advertisements, is: .optional, ofType: UserProfileAdvertisement.self, associatedFields: [UserProfileAdvertisement.keys.userProfile]),
+      .hasMany(userProfile.advertisements, is: .optional, ofType: Advertisement.self, associatedFields: [Advertisement.keys.userProfile]),
       .hasMany(userProfile.chats, is: .optional, ofType: Chat.self, associatedFields: [Chat.keys.userProfile]),
       .field(userProfile.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(userProfile.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
@@ -89,14 +89,14 @@ extension ModelPath where ModelType == UserProfile {
   public var tags: ModelPath<UserProfileTag>   {
       UserProfileTag.Path(name: "tags", isCollection: true, parent: self) 
     }
-  public var pets: ModelPath<UserProfilePet>   {
-      UserProfilePet.Path(name: "pets", isCollection: true, parent: self) 
+  public var pets: ModelPath<Pet>   {
+      Pet.Path(name: "pets", isCollection: true, parent: self) 
     }
   public var watchLists: ModelPath<WatchList>   {
       WatchList.Path(name: "watchLists", isCollection: true, parent: self) 
     }
-  public var advertisements: ModelPath<UserProfileAdvertisement>   {
-      UserProfileAdvertisement.Path(name: "advertisements", isCollection: true, parent: self) 
+  public var advertisements: ModelPath<Advertisement>   {
+      Advertisement.Path(name: "advertisements", isCollection: true, parent: self) 
     }
   public var chats: ModelPath<Chat>   {
       Chat.Path(name: "chats", isCollection: true, parent: self) 

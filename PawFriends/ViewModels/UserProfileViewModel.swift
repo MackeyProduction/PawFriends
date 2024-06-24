@@ -182,8 +182,8 @@ class UserProfileViewModel: ObservableObject {
                 ],
             pets:
                 [
-                    UserProfilePet(id: UUID().uuidString, pet: Pet(id: UUID().uuidString, description: "Nemo ist ein kleiner, süßer Choco-Chihuahua, der es liebt zu kuscheln.", name: "Nemo", age: 5, petImage: false, petType: PetType(id: UUID().uuidString, description: "Hund"), petBreed: PetBreed(id: UUID().uuidString, description: "Chihuahua"))),
-                    UserProfilePet(id: UUID().uuidString, pet: Pet(id: UUID().uuidString, description: "Eddy ist mein Lieblingspony.", name: "Eddy", age: 10, petImage: false, petType: PetType(id: UUID().uuidString, description: "Pferd"), petBreed: PetBreed(id: UUID().uuidString, description: "Mini-Shetty")))
+                    Pet(id: UUID().uuidString, description: "Nemo ist ein kleiner, süßer Choco-Chihuahua, der es liebt zu kuscheln.", name: "Nemo", age: 5, petImage: false, petType: PetType(id: UUID().uuidString, description: "Hund"), petBreed: PetBreed(id: UUID().uuidString, description: "Chihuahua")),
+                    Pet(id: UUID().uuidString, description: "Eddy ist mein Lieblingspony.", name: "Eddy", age: 10, petImage: false, petType: PetType(id: UUID().uuidString, description: "Pferd"), petBreed: PetBreed(id: UUID().uuidString, description: "Mini-Shetty"))
                 ],
             watchLists:
                 [
@@ -191,7 +191,7 @@ class UserProfileViewModel: ObservableObject {
                 ],
             advertisements:
                 [
-                    UserProfileAdvertisement(advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
+                    Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige")
                 ],
             chats: [
                 Chat(id: UUID().uuidString, message: "Hey, ich habe gesehen, dass du einen Hundesitter suchst. Bisher konnte ich nur wenig Erfahrung sammeln, aber ich könnte mir zutrauen auf deinen Chihuahua aufzupassen.", author: "markus99", recipient: "anna96", advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now()),
@@ -218,7 +218,7 @@ class UserProfileViewModel: ObservableObject {
                 ],
             advertisements:
                 [
-                    UserProfileAdvertisement(id: UUID().uuidString, advertisement: Advertisement(id: UUID().uuidString, title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"))
+                    Advertisement(id: UUID().uuidString, title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige")
                 ],
             chats: [
                 Chat(id: UUID().uuidString, message: "Hey, ich habe gesehen, dass du einen Hundesitter suchst. Bisher konnte ich nur wenig Erfahrung sammeln, aber ich könnte mir zutrauen auf deinen Chihuahua aufzupassen.", author: "markus99", recipient: "anna96", advertisement: Advertisement(title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now()),
