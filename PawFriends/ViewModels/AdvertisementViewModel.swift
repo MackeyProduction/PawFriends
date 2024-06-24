@@ -64,8 +64,8 @@ class AdvertisementViewModel: ObservableObject {
     
     static func sampleData() -> [Advertisement] {
         return [
-            Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige", advertisementImage: false, tags: nil, watchLists: nil, userProfiles: nil, chats: nil),
-            Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige", advertisementImage: false, tags: nil, watchLists: nil, userProfiles: nil, chats: nil)
+            Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige", advertisementImages: [], tags: nil, watchLists: nil, userProfiles: nil, chats: nil),
+            Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige", advertisementImages: [], tags: nil, watchLists: nil, userProfiles: nil, chats: nil)
         ]
     }
 }

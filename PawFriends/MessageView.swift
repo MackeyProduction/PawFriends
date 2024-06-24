@@ -20,5 +20,4 @@ struct MessageView: View {
 
 #Preview {
     MessageView()
-        .modelContainer(for: Message.self, inMemory: true)
 }

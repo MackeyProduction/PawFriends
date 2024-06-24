@@ -43,7 +43,6 @@ struct AppView: View {
                 .tabItem {
                     Label("Nachrichten", systemImage: "message")
                 }
-                .modelContainer(for: Message.self, inMemory: true)
             
             ProfileView()
                 .tabItem {
