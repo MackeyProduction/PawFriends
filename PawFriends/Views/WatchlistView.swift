@@ -14,7 +14,7 @@ struct WatchlistView: View {
     @State private var advertisements: [Advertisement] = []
     
     var body: some View {
-        if let watchList = userProfileViewModel.userProfile?.watchLists {
+        if let watchList = userProfileViewModel.userProfile?.watchLists, !watchList.isEmpty {
             List {
                 ForEach($advertisements, id: \.id) { advertisement in
                     NavigationLink(destination: AdvertisementDetail(advertisement: advertisement)) {

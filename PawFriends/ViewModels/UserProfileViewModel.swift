@@ -198,6 +198,9 @@ class UserProfileViewModel: ObservableObject {
                 Chat(id: UUID().uuidString, message: "Hey, das klingt super! Wir können gerne ein Treffen ausmachen. Wann hättest du Zeit?", author: "anna96", recipient: "markus99", advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now()),
                 Chat(id: UUID().uuidString, message: "Bei mir würde morgen, um 17:00 Uhr passen. Passt das bei dir?", author: "markus99", recipient: "anna96", advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now()),
                 Chat(id: UUID().uuidString, message: "Ja, das passt! Bis morgen!", author: "anna96", recipient: "markus99", advertisement: Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"), updatedAt: Temporal.DateTime.now())
+            ],
+            follows: [
+                UserProfileFollower(id: UUID().uuidString, follower: UserProfile(id: "11480ab1-4433-4129-b766-c07fda9652bd", location: "Musterhausen", author: "anna96"), followed: UserProfile(id: "f76c13f3-b814-49b4-b30b-096d65977cd9", location: "Entenhausen", author: "markus99"))
             ]
         ),
         UserProfile(
