@@ -167,51 +167,7 @@ struct PickPhotoButton: View
     }
 }
 
-struct SliderView: View
-{
-    let images: [UIImage]
-    //@State public var tabViewSelection = 0
-    
-    var body: some View {
-//        var singleTabWidth = UIScreen.main.bounds.width / Double(images.count)
-//        
-//        ZStack(alignment: .bottomLeading) {
-//                    TabView(selection: $tabViewSelection) {
-//                        ForEach(images, id: \.self){ image in
-//                            Image(uiImage: image)
-//                                .resizable()
-//                                .scaledToFill()
-//                                .frame(maxWidth: .infinity, maxHeight: 250, alignment: .leading)
-//                                .clipped()
-//                                .tabItem {
-//                                    VStack {
-//                                        //Image(systemName: "circle.fill")
-//                                        TabIcon(icon: image)
-//                                    }
-//                                }
-//                        }
-//                    }
-//                    
-//                    Rectangle()
-//                        .offset(x: singleTabWidth * CGFloat(tabViewSelection))
-//                        .frame(width: singleTabWidth, height: 7)
-//                        .padding(.bottom, 2)
-//                        .animation(Animation.default, value: UUID())
-//                }
-        TabView {
-            ForEach(images, id: \.self){ image in
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(maxWidth: .infinity, maxHeight: 250, alignment: .leading)
-                    .clipped()
-            }
-        }
-        .tabViewStyle(PageTabViewStyle())
-        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-        .frame(maxWidth: .infinity, maxHeight: 250, alignment: .leading)
-    }
-}
+
 
 struct TabIcon: View {
     var icon: UIImage
