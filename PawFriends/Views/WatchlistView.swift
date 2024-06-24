@@ -47,20 +47,7 @@ struct WatchlistView: View {
             }
             .onAppear {
                 Task {
-                    do {
-                        self.advertisements = []
-                        self.watchList = watchList.elements
-                        for item in watchList {
-                            let advertisement = try await item.advertisement!
-                            let userProfile = try await item.userProfile!
-                            
-                            if userProfile.id == userProfileViewModel.userProfile?.id {
-                                advertisements.append(advertisement)
-                            }
-                        }
-                    } catch {
-                        print("Could not fetch data.")
-                    }
+                    self.advertisements = await getAdvertisements(watchList: watchList.elements)
                 }
             }
         } else {
@@ -68,6 +55,25 @@ struct WatchlistView: View {
                 Label("Keine Favoriten gefunden", systemImage: "heart")
             }
         }
+    }
+    
+    func getAdvertisements(watchList: [WatchList]) async -> [Advertisement] {
+        do {
+            self.advertisements = []
+            self.watchList = watchList
+            for item in watchList {
+                let advertisement = try await item.advertisement!
+                let userProfile = try await item.userProfile!
+                
+                if userProfile.id == userProfileViewModel.userProfile?.id {
+                    advertisements.append(advertisement)
+                }
+            }
+        } catch {
+            print("Could not fetch data.")
+        }
+        
+        return advertisements
     }
     
     func releaseDateToString(releaseDate: Temporal.DateTime) -> String {
