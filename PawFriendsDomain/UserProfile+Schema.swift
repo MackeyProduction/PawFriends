@@ -30,7 +30,8 @@ extension UserProfile {
     let userProfile = UserProfile.keys
     
     model.authRules = [
-      rule(allow: .owner, ownerField: "author", identityClaim: "cognito:username", provider: .userPools, operations: [.create, .update, .delete, .read])
+      rule(allow: .owner, ownerField: "author", identityClaim: "cognito:username", provider: .userPools, operations: [.create, .read, .update]),
+      rule(allow: .private, operations: [.create, .read])
     ]
     
     model.listPluralName = "UserProfiles"

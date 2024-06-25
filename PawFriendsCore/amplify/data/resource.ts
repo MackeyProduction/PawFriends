@@ -23,7 +23,7 @@ const schema = a.schema({
       follows: a.hasMany('UserProfileFollower', 'followerId'),
       followers: a.hasMany('UserProfileFollower', 'followedId')
     })
-    .authorization((allow) => [allow.ownerDefinedIn('author')]),
+    .authorization((allow) => [allow.ownerDefinedIn('author').to(['create', 'read', 'update']), allow.authenticated().to(['create', 'read'])]),
   Pet: a
     .model({
       petId: a.id(),
@@ -124,7 +124,7 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: 'iam',
+    defaultAuthorizationMode: 'userPool',
   },
 });
 
