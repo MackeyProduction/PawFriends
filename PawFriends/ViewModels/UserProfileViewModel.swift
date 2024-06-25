@@ -13,10 +13,10 @@ class UserProfileViewModel: ObservableObject {
     @Published var userProfile: UserProfile? = nil
     
     init(userProfile: UserProfile? = nil) {
-        self.userProfile = UserProfileViewModel.sampleData[0]
+        //self.userProfile = UserProfileViewModel.sampleData[0]
     }
     
-    func getProfile(id: UUID) {
+    func getProfile(id: UUID) async {
         let request = GraphQLRequest<UserProfile>.get(UserProfile.self, byId: id.uuidString)
         Task {
             do {
@@ -40,10 +40,29 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
-    func createProfile(userProfile: UserProfile) {
+    func fetchAttributes() async -> [AuthUserAttribute] {
+        do {
+            return try await Amplify.Auth.fetchUserAttributes()
+        } catch let error as AuthError{
+            print("Fetching user attributes failed with error \(error)")
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+        return []
+    }
+    
+    func createProfile(userProfile: UserProfile) async {
         Task {
             do {
-                let result = try await Amplify.API.mutate(request: .create(userProfile))
+                if let uuid = UUID(uuidString: userProfile.id) {
+                    await getProfile(id: uuid)
+                    guard self.userProfile == nil else {
+                        print("User already exists")
+                        return
+                    }
+                }
+                
+                let result = try await Amplify.API.mutate(request: .create(userProfile, authMode: .amazonCognitoUserPools))
                 switch result {
                 case .success(let userProfile):
                     print("Successfully created user profile: \(userProfile)")

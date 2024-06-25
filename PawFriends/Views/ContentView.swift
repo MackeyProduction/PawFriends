@@ -19,18 +19,44 @@ let greenColor = UIColor(named: "GreenColor")
 let greenColorReverse = UIColor(named: "GreenColorReverse")
 
 struct ContentView: View {
+    @StateObject private var userProfileViewModel: UserProfileViewModel = UserProfileViewModel()
+    @State private var userAttributes: [AuthUserAttribute] = []
+    @State private var userId: String? = nil
+    
     var body: some View {
-        Authenticator { state in
-            AppView()
-            
+        Authenticator(
+            headerContent: {
+                Image("PawFriendsLogo")
+            }
+        ) { state in
             VStack {
+                AppView()
+                
                 Button("Sign out") {
                     Task {
                         await state.signOut()
                     }
                 }
+            }.onAppear {
+                Task {
+                    self.userAttributes = await userProfileViewModel.fetchAttributes()
+                    self.userId = self.userAttributes.first(where: { $0.key.rawValue == "sub" })?.value
+                    
+                    if let uId = userId, let uuid = UUID(uuidString: uId) {
+                        await userProfileViewModel.createProfile(userProfile: UserProfile(id: uuid.uuidString, userProfileId: uuid.uuidString))
+                    }
+                }
             }
-        }
+        }.signUpFields([
+            .email(),
+            .text(
+                key: .preferredUsername,
+                label: "Username",
+                placeholder: "Enter your username",
+                isRequired: true
+            ),
+            .password()
+        ])
     }
 }
 
