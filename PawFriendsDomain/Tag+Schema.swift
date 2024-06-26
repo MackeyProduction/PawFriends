@@ -21,7 +21,8 @@ extension Tag {
     let tag = Tag.keys
     
     model.authRules = [
-      rule(allow: .public, provider: .iam, operations: [.create, .update, .delete, .read])
+      rule(allow: .owner, ownerField: "owner", identityClaim: "cognito:username", provider: .userPools, operations: [.read]),
+      rule(allow: .private, operations: [.read])
     ]
     
     model.listPluralName = "Tags"

@@ -6,6 +6,7 @@ extension WatchList {
   // MARK: - CodingKeys 
    public enum CodingKeys: String, ModelKey {
     case id
+    case author
     case userProfile
     case advertisement
     case createdAt
@@ -19,7 +20,8 @@ extension WatchList {
     let watchList = WatchList.keys
     
     model.authRules = [
-      rule(allow: .public, provider: .iam, operations: [.create, .update, .delete, .read])
+      rule(allow: .owner, ownerField: "author", identityClaim: "cognito:username", provider: .userPools, operations: [.create, .update, .delete, .read]),
+      rule(allow: .private, operations: [.read])
     ]
     
     model.listPluralName = "WatchLists"
@@ -31,6 +33,7 @@ extension WatchList {
     
     model.fields(
       .field(watchList.id, is: .required, ofType: .string),
+      .field(watchList.author, is: .optional, ofType: .string),
       .belongsTo(watchList.userProfile, is: .optional, ofType: UserProfile.self, targetNames: ["userProfileId"]),
       .belongsTo(watchList.advertisement, is: .optional, ofType: Advertisement.self, targetNames: ["advertisementId"]),
       .field(watchList.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
@@ -49,6 +52,9 @@ extension WatchList: ModelIdentifiable {
 extension ModelPath where ModelType == WatchList {
   public var id: FieldPath<String>   {
       string("id") 
+    }
+  public var author: FieldPath<String>   {
+      string("author") 
     }
   public var userProfile: ModelPath<UserProfile>   {
       UserProfile.Path(name: "userProfile", parent: self) 

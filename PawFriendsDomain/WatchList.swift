@@ -4,6 +4,7 @@ import Foundation
 
 public struct WatchList: Model {
   public let id: String
+  public var author: String?
   internal var _userProfile: LazyReference<UserProfile>
   public var userProfile: UserProfile?   {
       get async throws { 
@@ -20,20 +21,24 @@ public struct WatchList: Model {
   public var updatedAt: Temporal.DateTime?
   
   public init(id: String = UUID().uuidString,
+      author: String? = nil,
       userProfile: UserProfile? = nil,
       advertisement: Advertisement? = nil) {
     self.init(id: id,
+      author: author,
       userProfile: userProfile,
       advertisement: advertisement,
       createdAt: nil,
       updatedAt: nil)
   }
   internal init(id: String = UUID().uuidString,
+      author: String? = nil,
       userProfile: UserProfile? = nil,
       advertisement: Advertisement? = nil,
       createdAt: Temporal.DateTime? = nil,
       updatedAt: Temporal.DateTime? = nil) {
       self.id = id
+      self.author = author
       self._userProfile = LazyReference(userProfile)
       self._advertisement = LazyReference(advertisement)
       self.createdAt = createdAt
@@ -48,6 +53,7 @@ public struct WatchList: Model {
   public init(from decoder: Decoder) throws {
       let values = try decoder.container(keyedBy: CodingKeys.self)
       id = try values.decode(String.self, forKey: .id)
+      author = try? values.decode(String?.self, forKey: .author)
       _userProfile = try values.decodeIfPresent(LazyReference<UserProfile>.self, forKey: .userProfile) ?? LazyReference(identifiers: nil)
       _advertisement = try values.decodeIfPresent(LazyReference<Advertisement>.self, forKey: .advertisement) ?? LazyReference(identifiers: nil)
       createdAt = try? values.decode(Temporal.DateTime?.self, forKey: .createdAt)
@@ -56,6 +62,7 @@ public struct WatchList: Model {
   public func encode(to encoder: Encoder) throws {
       var container = encoder.container(keyedBy: CodingKeys.self)
       try container.encode(id, forKey: .id)
+      try container.encode(author, forKey: .author)
       try container.encode(_userProfile, forKey: .userProfile)
       try container.encode(_advertisement, forKey: .advertisement)
       try container.encode(createdAt, forKey: .createdAt)
