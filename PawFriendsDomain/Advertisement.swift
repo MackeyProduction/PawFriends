@@ -10,6 +10,7 @@ public struct Advertisement: Model {
   public var visitor: Int?
   public var description: String?
   public var advertisementImages: [String?]?
+  public var author: String?
   public var tags: List<AdvertisementTag>?
   public var watchLists: List<WatchList>?
   internal var _userProfile: LazyReference<UserProfile>
@@ -29,6 +30,7 @@ public struct Advertisement: Model {
       visitor: Int? = nil,
       description: String? = nil,
       advertisementImages: [String?]? = nil,
+      author: String? = nil,
       tags: List<AdvertisementTag>? = [],
       watchLists: List<WatchList>? = [],
       userProfile: UserProfile? = nil,
@@ -40,6 +42,7 @@ public struct Advertisement: Model {
       visitor: visitor,
       description: description,
       advertisementImages: advertisementImages,
+      author: author,
       tags: tags,
       watchLists: watchLists,
       userProfile: userProfile,
@@ -54,6 +57,7 @@ public struct Advertisement: Model {
       visitor: Int? = nil,
       description: String? = nil,
       advertisementImages: [String?]? = nil,
+      author: String? = nil,
       tags: List<AdvertisementTag>? = [],
       watchLists: List<WatchList>? = [],
       userProfile: UserProfile? = nil,
@@ -67,6 +71,7 @@ public struct Advertisement: Model {
       self.visitor = visitor
       self.description = description
       self.advertisementImages = advertisementImages
+      self.author = author
       self.tags = tags
       self.watchLists = watchLists
       self._userProfile = LazyReference(userProfile)
@@ -86,6 +91,7 @@ public struct Advertisement: Model {
       visitor = try? values.decode(Int?.self, forKey: .visitor)
       description = try? values.decode(String?.self, forKey: .description)
       advertisementImages = try? values.decode([String].self, forKey: .advertisementImages)
+      author = try? values.decode(String?.self, forKey: .author)
       tags = try values.decodeIfPresent(List<AdvertisementTag>?.self, forKey: .tags) ?? .init()
       watchLists = try values.decodeIfPresent(List<WatchList>?.self, forKey: .watchLists) ?? .init()
       _userProfile = try values.decodeIfPresent(LazyReference<UserProfile>.self, forKey: .userProfile) ?? LazyReference(identifiers: nil)
@@ -102,6 +108,7 @@ public struct Advertisement: Model {
       try container.encode(visitor, forKey: .visitor)
       try container.encode(description, forKey: .description)
       try container.encode(advertisementImages, forKey: .advertisementImages)
+      try container.encode(author, forKey: .author)
       try container.encode(tags, forKey: .tags)
       try container.encode(watchLists, forKey: .watchLists)
       try container.encode(_userProfile, forKey: .userProfile)
