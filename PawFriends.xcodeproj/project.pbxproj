@@ -34,6 +34,9 @@
 		3E38AD152C21ABA90078899C /* UserProfileTag+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E38ACFB2C21ABA90078899C /* UserProfileTag+Schema.swift */; };
 		3E38AD162C21ABA90078899C /* WatchList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E38ACFC2C21ABA90078899C /* WatchList.swift */; };
 		3E38AD172C21ABA90078899C /* WatchList+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E38ACFD2C21ABA90078899C /* WatchList+Schema.swift */; };
+		3E3BC9A42C2DEB0B008ECF01 /* PetsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3BC9A32C2DEB0B008ECF01 /* PetsList.swift */; };
+		3E3BC9A62C2DEB4A008ECF01 /* PetsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3BC9A52C2DEB4A008ECF01 /* PetsRow.swift */; };
+		3E3BC9A82C2E0B99008ECF01 /* PetsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3BC9A72C2E0B99008ECF01 /* PetsSheet.swift */; };
 		3E402F7E2C0A2B0400D46819 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E402F7D2C0A2B0400D46819 /* ContentView.swift */; };
 		3E402F802C0A2D6C00D46819 /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E402F7F2C0A2D6C00D46819 /* FavoriteView.swift */; };
 		3E402F822C0A2E4D00D46819 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E402F812C0A2E4D00D46819 /* MessageView.swift */; };
@@ -120,6 +123,9 @@
 		3E38ACFB2C21ABA90078899C /* UserProfileTag+Schema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserProfileTag+Schema.swift"; sourceTree = "<group>"; };
 		3E38ACFC2C21ABA90078899C /* WatchList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchList.swift; sourceTree = "<group>"; };
 		3E38ACFD2C21ABA90078899C /* WatchList+Schema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WatchList+Schema.swift"; sourceTree = "<group>"; };
+		3E3BC9A32C2DEB0B008ECF01 /* PetsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetsList.swift; sourceTree = "<group>"; };
+		3E3BC9A52C2DEB4A008ECF01 /* PetsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetsRow.swift; sourceTree = "<group>"; };
+		3E3BC9A72C2E0B99008ECF01 /* PetsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetsSheet.swift; sourceTree = "<group>"; };
 		3E402F7D2C0A2B0400D46819 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		3E402F7F2C0A2D6C00D46819 /* FavoriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteView.swift; sourceTree = "<group>"; };
 		3E402F812C0A2E4D00D46819 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
@@ -214,6 +220,9 @@
 				B548DA182C264E60005C8BF7 /* SwipeView.swift */,
 				B5BBB6152C1DD75A000F490F /* FittedImagesView.swift */,
 				B548DA1A2C27458A005C8BF7 /* LikeAndShare.swift */,
+				3E3BC9A32C2DEB0B008ECF01 /* PetsList.swift */,
+				3E3BC9A52C2DEB4A008ECF01 /* PetsRow.swift */,
+				3E3BC9A72C2E0B99008ECF01 /* PetsSheet.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -528,6 +537,7 @@
 				3E38AD0A2C21ABA90078899C /* PetType.swift in Sources */,
 				3E82B8062C15CBFC0059A1BC /* AdvertisementList.swift in Sources */,
 				B548DA1D2C277FA4005C8BF7 /* TagCloudView.swift in Sources */,
+				3E3BC9A42C2DEB0B008ECF01 /* PetsList.swift in Sources */,
 				3E38AD132C21ABA90078899C /* UserProfilePet+Schema.swift in Sources */,
 				B548DA1B2C27458A005C8BF7 /* LikeAndShare.swift in Sources */,
 				3E38AD0B2C21ABA90078899C /* PetType+Schema.swift in Sources */,
@@ -535,10 +545,12 @@
 				3E9C94ED2C07A2FF00F91BFB /* SearchView.swift in Sources */,
 				3E38AD122C21ABA90078899C /* UserProfilePet.swift in Sources */,
 				3E6782DD2C2A0DF4009B53DD /* UserProfileFollower+Schema.swift in Sources */,
+				3E3BC9A82C2E0B99008ECF01 /* PetsSheet.swift in Sources */,
 				3E38AD112C21ABA90078899C /* UserProfileAdvertisement+Schema.swift in Sources */,
 				3ED6E98C2C29BBA100ABC6A2 /* MessageDetail.swift in Sources */,
 				3E402F7E2C0A2B0400D46819 /* ContentView.swift in Sources */,
 				3E8012FC2C15DF6E0058144D /* MessageList.swift in Sources */,
+				3E3BC9A62C2DEB4A008ECF01 /* PetsRow.swift in Sources */,
 				3E1FBE022C29B90700E24D4F /* extensions.swift in Sources */,
 				3E38AD0D2C21ABA90078899C /* Tag+Schema.swift in Sources */,
 				3E82B80E2C15D6450059A1BC /* FavoriteList.swift in Sources */,

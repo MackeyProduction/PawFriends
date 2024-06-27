@@ -7,13 +7,28 @@
 
 import Foundation
 import Amplify
+import class Amplify.List
 
 @MainActor
 class UserProfileViewModel: ObservableObject {
     @Published var userProfile: UserProfile? = nil
     
     init(userProfile: UserProfile? = nil) {
-        //self.userProfile = UserProfileViewModel.sampleData[0]
+        self.userProfile = userProfile
+    }
+    
+    func getCurrentProfile() async {
+        let userAttributes = await fetchAttributes()
+        let userId = userAttributes.first(where: { $0.key.rawValue == "sub" })?.value
+        
+        if let uId = userId, let uuid = UUID(uuidString: uId) {
+            await getProfile(id: uuid)
+        }
+    }
+    
+    func getAuthorName() async -> String? {
+        let userAttributes = await fetchAttributes()
+        return userAttributes.first(where: { $0.key == .preferredUsername })?.value
     }
     
     func getProfile(id: UUID) async {
@@ -183,6 +198,28 @@ class UserProfileViewModel: ObservableObject {
                 print("Unexpected error: \(error)")
             }
         }
+    }
+    
+    func fetchPetTypes() async -> [PetType] {
+        var petTypes: [PetType] = []
+        let request = GraphQLRequest<PetType>.list(PetType.self, authMode: .amazonCognitoUserPools)
+        Task {
+            do {
+                let result = try await Amplify.API.query(request: request)
+                switch result {
+                case .success(let petTypesResult):
+                    print("Successfully retrieved pet types: \(petTypesResult)")
+                    petTypes.append(contentsOf: petTypesResult)
+                case .failure(let error):
+                    print("Got failed result with \(error.errorDescription)")
+                }
+            } catch let error as APIError {
+                print("Failed to query pet type: ", error)
+            } catch {
+                print("Unexpected error: \(error)")
+            }
+        }
+        return petTypes
     }
     
     static let sampleData: [UserProfile] = [

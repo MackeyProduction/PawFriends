@@ -9,59 +9,17 @@ import SwiftUI
 import Amplify
 
 struct ProfileView: View {
-    @StateObject private var userProfileViewModel: UserProfileViewModel = UserProfileViewModel()
-    @State private var advertisementArray: [Advertisement]
-
-    init(advertisementArray: [Advertisement]) {
-        
-        self.advertisementArray = advertisementArray
-    }
-//    func getPetName() async {
-//        do {
-//            let pet = Pet()
-//            
-//            let userProfile = UserProfile()
-//            
-//            if let ads = userProfile.advertisements {
-//                for ad in ads.elements {
-//                    let a = try await ad.advertisement
-//                }
-//            }
-//            
-//            
-//            let petBreed = try await pet.petBreed?.description
-//            
-//            if let breeds = try await pet._petBreed.get() {
-//                
-//            }
-//            
-//        } catch {
-//            
-//        }
-//    }
+    @StateObject private var userProfileViewModel: UserProfileViewModel
+    @State private var authorName: String? = nil
+    @State private var petType: PetType? = nil
+    @State private var isShowingDescriptionSheet = false
+    @State private var isShowingPetsSheet = false
+    @State private var isShowingAdvertisementSheet = false
+    @State private var newPet: Pet? = nil
     
-    func getAdvertisements() async -> [Advertisement] {
-        var advertisementsArray: [Advertisement] = []
-        if let ads = userProfileViewModel.userProfile?.advertisements {
-            for ad in ads.elements {
-                advertisementsArray.append(ad)
-            }
-        }
-        return advertisementsArray
+    init(userProfileViewModel: UserProfileViewModel) {
+        self._userProfileViewModel = StateObject(wrappedValue: userProfileViewModel)
     }
-    
-    private lazy var breeds: [PetBreed] = {
-        let pet = Pet()
-        
-        Task {
-            if let breeds = try await pet._petBreed.get() {
-                
-            }
-        }
-        
-        
-        return []
-    }()
     
     func dateToString(releaseDate: Temporal.Date) -> String {
         let relativeDateFormatter = DateFormatter()
@@ -119,7 +77,7 @@ struct ProfileView: View {
                                 .foregroundColor(Color(firstColor!))
                             
                             VStack(alignment: .leading) {
-                                Text("\(userProfile.author ?? "")")
+                                Text("\(authorName ?? "")")
                                 //Text("Anna")
                                     .font(.largeTitle)
                                 HStack {
@@ -157,8 +115,33 @@ struct ProfileView: View {
                                 .font(.title2)
                                 .fontWeight(.semibold)
                             Spacer()
-                            Image(systemName: "square.and.pencil")
-                                .font(.title2)
+                            
+                            Button(action: { isShowingDescriptionSheet.toggle() }) {
+                                Image(systemName: "square.and.pencil")
+                                    .font(.title2)
+                            }
+                            .sheet(isPresented: $isShowingDescriptionSheet) {
+                                NavigationStack {
+                                    Form {
+                                        TextField("Beschreibung", text: Binding(
+                                            get: { userProfile.description ?? "" },
+                                            set: { userProfileViewModel.userProfile?.description = $0 }
+                                        ), axis: .vertical)
+                                        .autocorrectionDisabled()
+                                    }
+                                    .navigationTitle("Beschreibung hinzufügen")
+                                    .toolbar {
+                                        ToolbarItem(placement: .confirmationAction) {
+                                            Button("Done", action: { isShowingDescriptionSheet.toggle() })
+                                        }
+                                        
+                                        ToolbarItem(placement: .cancellationAction) {
+                                            Button("Cancel", action: { isShowingDescriptionSheet.toggle() })
+                                        }
+                                    }
+                                }
+                            }
+                            
                         }
                         
                         HStack {
@@ -171,52 +154,9 @@ struct ProfileView: View {
                     Divider()
                         .overlay(Color(textColor!))
                     
-                    VStack(spacing: 5) {
-                        HStack {
-                            Text("Tiere")
-                                .font(.title2)
-                                .fontWeight(.semibold)
-                            Spacer()
-                            Image(systemName: "plus.square")
-                                .font(.title2)
-                        }.padding(.bottom, 5)
-                        
-                        if let pets = userProfile.pets {
-                            
-                            //Text("\(pets.elements[0])")
-                            let pets: [String] = ["Momo","Momo Klon"]
-                            ForEach(pets, id: \.self) { pet in
-                                //ForEach(pets.elements, id: \.id) { pet in
-                                
-                                
-                                ZStack {
-                                    HStack {
-                                        Image(systemName: "pawprint.circle.fill")
-                                            .font(.title)
-                                            .foregroundStyle(Color(greenColorReverse!))
-                                        Text(pet)
-                                        //Text(pet._pet.get()?.name ?? "")
-                                            .fontWeight(.medium)
-                                        Spacer()
-                                    }
-                                    HStack {
-                                        Divider()
-                                            .overlay(Color(textColor!))
-                                    }
-                                    HStack {
-                                        Text("Katze")
-                                            .padding(.leading, 60)
-                                    }
-                                    HStack {
-                                        Spacer()
-                                        Image(systemName: "square.and.pencil")
-                                            .font(.title3)
-                                            .foregroundStyle(Color(greenColorReverse!))
-                                    }
-                                }.padding(.top, 2)
-                            }
-                        }
-                    }.padding(.top, 5).padding(.bottom, 5)
+                    if let pets = userProfile.pets, userProfile.pets!.isLoaded {
+                        PetsList(vm: userProfileViewModel, pets: pets.elements)
+                    }
                     
                     Divider()
                         .overlay(Color(textColor!))
@@ -227,22 +167,14 @@ struct ProfileView: View {
                                 .font(.title2)
                                 .fontWeight(.semibold)
                             Spacer()
-                            Image(systemName: "plus.square")
-                                .font(.title2)
+                            Button(action: { isShowingAdvertisementSheet.toggle() }) {
+                                Image(systemName: "plus.square")
+                                    .font(.title2)
+                            }
                         }.padding(.bottom, 5)
                         
-                        
-                        
-                        if let advertisements = userProfile.advertisements {
-                            //                            ForEach(advertisements.elements, id: \.id) { item in
-                            //                                Text("\(item._advertisement)")
-                            //                            }
-                            let anzeigen: [String] = ["Katzen-Sitter für Kater gesucht","Noch ein Anzeigen Titel"]
-                            
-                            
-                            //ForEach(anzeigen, id: \.self) { advertisement in
-                            //ForEach(advertisements.elements, id: \.id) { advertisement in
-                            ForEach(advertisementArray, id: \.id) { advertisement in
+                        if let advertisements = userProfile.advertisements, userProfile.advertisements!.isLoaded {
+                            ForEach(advertisements.elements, id: \.id) { advertisement in
                                 
                                 VStack {
                                     HStack {
@@ -269,41 +201,79 @@ struct ProfileView: View {
                                             }.foregroundStyle(Color(textColor!))
                                         }
                                         Spacer()
-                                        Image(systemName: "square.and.pencil")
-                                            .font(.title3)
-                                            .foregroundStyle(Color(greenColorReverse!))
+                                        Button(action: { isShowingAdvertisementSheet.toggle() }) {
+                                            Image(systemName: "square.and.pencil")
+                                                .font(.title3)
+                                                .foregroundStyle(Color(greenColorReverse!))
+                                        }
                                     }.padding(.top, 8)
                                     Divider()
                                 }
                             }
                         }
                     }.padding(.top, 5).padding(.bottom, 5)
+                        .sheet(isPresented: $isShowingAdvertisementSheet) {
+                            NavigationStack {
+                                Form {
+                                    TextField("Tiername", text: Binding(
+                                        get: { userProfile.description ?? "" },
+                                        set: { userProfileViewModel.userProfile?.description = $0 }
+                                    ), axis: .vertical)
+                                    .autocorrectionDisabled()
+                                }
+                                .navigationTitle("Anzeige hinzufügen")
+                                .toolbar {
+                                    ToolbarItem(placement: .confirmationAction) {
+                                        Button("Done", action: { isShowingAdvertisementSheet.toggle() })
+                                    }
+                                    
+                                    ToolbarItem(placement: .cancellationAction) {
+                                        Button("Cancel", action: { isShowingAdvertisementSheet.toggle() })
+                                    }
+                                }
+                            }
+                        }
                     
                     Spacer()
+                } else {
+                    ContentUnavailableView {
+                        Label("Profil nicht gefunden", systemImage: "person")
+                    }
                 }
             }
-                    .padding(.leading)
-                    .padding(.trailing)
-                    .background(Color(mainColor!))
-            } detail: {
-                Text("Select an item")
-                    .navigationTitle("Profil")
-            }
-            .onAppear {
-                Task {
-                    advertisementArray = await getAdvertisements()
-                }
-                
-            }
+            .padding(.leading)
+            .padding(.trailing)
+            .background(Color(mainColor!))
+        } detail: {
+            Text("Select an item")
+                .navigationTitle("Profil")
         }
+        .onAppear {
+            Task {
+                do {
+                    try await userProfileViewModel.userProfile?.pets?.fetch()
+                    try await userProfileViewModel.userProfile?.advertisements?.fetch()
+                    self.authorName = await userProfileViewModel.getAuthorName()
+                }
+            }
+            
+        }
+    }
     
     
     private func shareItem(){
         
     }
     
+    private func getPetType(pet: Pet) -> String? {
+        Task {
+            return try await pet.petType?.description
+        }
+        return ""
+    }
+    
 }
 
 #Preview {
-    ProfileView(advertisementArray: [])
+    ProfileView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
 }

@@ -15,7 +15,7 @@ import SwiftUI
 struct PawFriendsApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(userProfileViewModel: UserProfileViewModel())
         }
     }
     

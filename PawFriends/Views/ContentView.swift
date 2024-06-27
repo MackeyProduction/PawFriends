@@ -19,7 +19,7 @@ let greenColor = UIColor(named: "GreenColor")
 let greenColorReverse = UIColor(named: "GreenColorReverse")
 
 struct ContentView: View {
-    @StateObject private var userProfileViewModel: UserProfileViewModel = UserProfileViewModel()
+    @StateObject var userProfileViewModel: UserProfileViewModel
     @State private var userAttributes: [AuthUserAttribute] = []
     @State private var userId: String? = nil
     
@@ -30,7 +30,7 @@ struct ContentView: View {
             }
         ) { state in
             VStack {
-                AppView()
+                AppView(userProfileViewModel: userProfileViewModel)
                 
                 Button("Sign out") {
                     Task {
@@ -39,11 +39,15 @@ struct ContentView: View {
                 }
             }.onAppear {
                 Task {
-                    self.userAttributes = await userProfileViewModel.fetchAttributes()
-                    self.userId = self.userAttributes.first(where: { $0.key.rawValue == "sub" })?.value
-                    
-                    if let uId = userId, let uuid = UUID(uuidString: uId) {
-                        await userProfileViewModel.createProfile(userProfile: UserProfile(id: uuid.uuidString, userProfileId: uuid.uuidString))
+                    if !ProcessInfo.processInfo.isSwiftUIPreview {
+                        await userProfileViewModel.getCurrentProfile()
+                        
+                        self.userAttributes = await userProfileViewModel.fetchAttributes()
+                        self.userId = self.userAttributes.first(where: { $0.key.rawValue == "sub" })?.value
+                        
+                        if let uId = userId, let uuid = UUID(uuidString: uId) {
+                            await userProfileViewModel.createProfile(userProfile: UserProfile(id: uuid.uuidString, userProfileId: uuid.uuidString))
+                        }
                     }
                 }
             }
@@ -61,6 +65,8 @@ struct ContentView: View {
 }
 
 struct AppView: View {
+    @StateObject var userProfileViewModel: UserProfileViewModel
+    
     var body: some View {
         TabView {
             SearchView()
@@ -78,7 +84,7 @@ struct AppView: View {
                     Label("Nachrichten", systemImage: "message")
                 }
             
-            ProfileView(advertisementArray: [])
+            ProfileView(userProfileViewModel: userProfileViewModel)
                 .tabItem {
                     Label("Profil", systemImage: "person")
                 }
@@ -87,9 +93,9 @@ struct AppView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
 }
 
 #Preview("ContentView:App") {
-    AppView()
+    AppView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
 }
