@@ -1,5 +1,5 @@
 //
-//  PetsRow.swift
+//  ProfilePetsRow.swift
 //  PawFriends
 //
 //  Created by Til Anheier on 27.06.24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PetsRow: View {
+struct ProfilePetsRow: View {
     @ObservedObject var vm: UserProfileViewModel
     @State var pet: Pet
     @State private var petType: PetType? = nil
@@ -43,7 +43,7 @@ struct PetsRow: View {
         .padding(.top, 2)
         .sheet(isPresented: $isShowingPetsSheet) {
             NavigationStack {
-                PetsSheet(vm: vm, pet: $pet)
+                ProfilePetsSheet(vm: vm, pet: $pet)
             }
         }
         .onAppear {
@@ -55,5 +55,5 @@ struct PetsRow: View {
 }
 
 #Preview {
-    PetsRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pet: UserProfileViewModel.sampleData[0].pets?.first ?? Pet())
+    ProfilePetsRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pet: UserProfileViewModel.sampleData[0].pets?.first ?? Pet())
 }

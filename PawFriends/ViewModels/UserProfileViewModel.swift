@@ -144,39 +144,40 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
-    func createAdvertisement(advertisement: Advertisement) {
-        Task {
-            do {
-                let result = try await Amplify.API.mutate(request: .create(advertisement))
-                switch result {
-                case .success(let advertisement):
-                    print("Successfully created advertisement: \(advertisement)")
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
-                }
-            } catch let error as APIError {
-                print("Failed to create advertisement: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+    func createAdvertisement(userProfile: UserProfile, advertisement: Advertisement) async {
+        do {
+            var newAdvertisement = advertisement
+            newAdvertisement.releaseDate = Temporal.DateTime.now()
+            newAdvertisement.setUserProfile(userProfile)
+            let result = try await Amplify.API.mutate(request: .create(newAdvertisement, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let advertisement):
+                print("Successfully created advertisement: \(advertisement)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to create advertisement: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
     }
     
-    func updateAdvertisement(advertisement: Advertisement) {
-        Task {
-            do {
-                let result = try await Amplify.API.mutate(request: .update(advertisement))
-                switch result {
-                case .success(let advertisement):
-                    print("Successfully updated advertisement: \(advertisement)")
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
-                }
-            } catch let error as APIError {
-                print("Failed to updated advertisement: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+    func updateAdvertisement(userProfile: UserProfile, advertisement: Advertisement) async {
+        do {
+            var existingAdvertisement = advertisement
+            existingAdvertisement.setUserProfile(userProfile)
+            let result = try await Amplify.API.mutate(request: .update(existingAdvertisement, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let advertisement):
+                print("Successfully updated advertisement: \(advertisement)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to updated advertisement: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
     }
     

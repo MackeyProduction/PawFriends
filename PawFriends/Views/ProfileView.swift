@@ -13,17 +13,13 @@ struct ProfileView: View {
     @State private var authorName: String? = nil
     @State private var petType: PetType? = nil
     @State private var isShowingDescriptionSheet = false
-    @State private var isShowingPetsSheet = false
-    @State private var isShowingAdvertisementSheet = false
     @State private var newPet: Pet? = nil
     
-    init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingDescriptionSheet: Bool = false, isShowingPetsSheet: Bool = false, isShowingAdvertisementSheet: Bool = false, newPet: Pet? = nil) {
+    init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingDescriptionSheet: Bool = false, newPet: Pet? = nil) {
         self.userProfileViewModel = userProfileViewModel
         self.authorName = authorName
         self.petType = petType
         self.isShowingDescriptionSheet = isShowingDescriptionSheet
-        self.isShowingPetsSheet = isShowingPetsSheet
-        self.isShowingAdvertisementSheet = isShowingAdvertisementSheet
         self.newPet = newPet
     }
     
@@ -138,7 +134,7 @@ struct ProfileView: View {
                                     .navigationTitle("Beschreibung hinzufügen")
                                     .toolbar {
                                         ToolbarItem(placement: .confirmationAction) {
-                                            Button("Done", action: { isShowingDescriptionSheet.toggle() })
+                                            Button("Done", action: updateProfile)
                                         }
                                         
                                         ToolbarItem(placement: .cancellationAction) {
@@ -161,85 +157,18 @@ struct ProfileView: View {
                         .overlay(Color(textColor!))
                     
                     if let pets = userProfile.pets, userProfile.pets!.isLoaded {
-                        PetsList(vm: userProfileViewModel, pets: pets.elements)
+                        ProfilePetsList(vm: userProfileViewModel, pets: pets.elements)
                     }
                     
                     Divider()
                         .overlay(Color(textColor!))
                     
-                    VStack(spacing: 5) {
-                        HStack {
-                            Text("Anzeigen")
-                                .font(.title2)
-                                .fontWeight(.semibold)
-                            Spacer()
-                            Button(action: { isShowingAdvertisementSheet.toggle() }) {
-                                Image(systemName: "plus.square")
-                                    .font(.title2)
-                            }
-                        }.padding(.bottom, 5)
-                        
-                        if let advertisements = userProfile.advertisements, userProfile.advertisements!.isLoaded {
-                            ForEach(advertisements.elements, id: \.id) { advertisement in
-                                
-                                VStack {
-                                    HStack {
-                                        Image(systemName: "photo.fill")
-                                            .font(.system(size: 70))
-                                            .foregroundStyle(Color(greenColorReverse!))
-                                            .padding(-8)
-                                        VStack {
-                                            HStack {
-                                                //Text(advertisement.modelName)
-                                                Text(advertisement.title ?? "")
-                                                    .fontWeight(.medium)
-                                                Spacer()
-                                                
-                                            }
-                                            HStack {
-                                                Image(systemName: "calendar")
-                                                    .font(.callout)
-                                                    .frame(width: 10)
-                                                    .padding(.leading, 5)
-                                                Text("18.04.24")
-                                                    .padding(.trailing, 50)
-                                                Spacer()
-                                            }.foregroundStyle(Color(textColor!))
-                                        }
-                                        Spacer()
-                                        Button(action: { isShowingAdvertisementSheet.toggle() }) {
-                                            Image(systemName: "square.and.pencil")
-                                                .font(.title3)
-                                                .foregroundStyle(Color(greenColorReverse!))
-                                        }
-                                    }.padding(.top, 8)
-                                    Divider()
-                                }
-                            }
-                        }
-                    }.padding(.top, 5).padding(.bottom, 5)
-                        .sheet(isPresented: $isShowingAdvertisementSheet) {
-                            NavigationStack {
-                                Form {
-                                    TextField("Tiername", text: Binding(
-                                        get: { userProfile.description ?? "" },
-                                        set: { userProfileViewModel.userProfile?.description = $0 }
-                                    ), axis: .vertical)
-                                    .autocorrectionDisabled()
-                                }
-                                .navigationTitle("Anzeige hinzufügen")
-                                .toolbar {
-                                    ToolbarItem(placement: .confirmationAction) {
-                                        Button("Done", action: { isShowingAdvertisementSheet.toggle() })
-                                    }
-                                    
-                                    ToolbarItem(placement: .cancellationAction) {
-                                        Button("Cancel", action: { isShowingAdvertisementSheet.toggle() })
-                                    }
-                                }
-                            }
-                        }
+                    if let advertisements = userProfile.advertisements, userProfile.advertisements!.isLoaded {
+                        ProfileAdvertisementList(vm: userProfileViewModel, advertisements: advertisements.elements)
+                    }
                     
+                    Divider()
+                                        
                     Spacer()
                 } else {
                     ContentUnavailableView {
@@ -271,11 +200,12 @@ struct ProfileView: View {
         
     }
     
-    private func getPetType(pet: Pet) -> String? {
+    private func updateProfile() {
         Task {
-            return try await pet.petType?.description
+            await userProfileViewModel.updateProfile(userProfile: userProfileViewModel.userProfile!)
+            
+            isShowingDescriptionSheet.toggle()
         }
-        return ""
     }
     
 }

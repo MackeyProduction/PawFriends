@@ -1,5 +1,5 @@
 //
-//  PetsList.swift
+//  ProfilePetsList.swift
 //  PawFriends
 //
 //  Created by Til Anheier on 27.06.24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PetsList: View {
+struct ProfilePetsList: View {
     @ObservedObject var vm: UserProfileViewModel
     @State var pets: [Pet]
     @State private var newPet: Pet = Pet()
@@ -36,19 +36,19 @@ struct PetsList: View {
             
             if !pets.isEmpty {
                 ForEach(pets, id: \.id) { pet in
-                    PetsRow(vm: vm, pet: pet)
+                    ProfilePetsRow(vm: vm, pet: pet)
                 }
             }
         }
         .padding(.top, 5).padding(.bottom, 5)
         .sheet(isPresented: $isShowingPetsSheet) {
             NavigationStack {
-                PetsSheet(vm: vm, pet: $newPet, isNew: true)
+                ProfilePetsSheet(vm: vm, pet: $newPet, isNew: true)
             }
         }
     }
 }
 
 #Preview {
-    PetsList(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
+    ProfilePetsList(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
 }

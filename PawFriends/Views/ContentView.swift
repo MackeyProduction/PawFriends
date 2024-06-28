@@ -46,7 +46,7 @@ struct ContentView: View {
                         self.userId = self.userAttributes.first(where: { $0.key.rawValue == "sub" })?.value
                         
                         if let uId = userId, let uuid = UUID(uuidString: uId) {
-                            await userProfileViewModel.createProfile(userProfile: UserProfile(id: uuid.uuidString, userProfileId: uuid.uuidString))
+                            await userProfileViewModel.createProfile(userProfile: UserProfile(id: uuid.uuidString, userProfileId: uuid.uuidString, description: "", activeSince: Temporal.Date.now(), location: ""))
                         }
                     }
                 }

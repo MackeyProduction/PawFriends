@@ -1,5 +1,5 @@
 //
-//  PetsSheet.swift
+//  ProfilePetsSheet.swift
 //  PawFriends
 //
 //  Created by Til Anheier on 27.06.24.
@@ -9,7 +9,7 @@ import SwiftUI
 import Amplify
 import class Amplify.List
 
-struct PetsSheet: View {
+struct ProfilePetsSheet: View {
     @ObservedObject var vm: UserProfileViewModel
     @Binding var pet: Pet
     @State var isNew: Bool
@@ -113,6 +113,6 @@ struct PetsSheet: View {
 #Preview {
     NavigationStack {
         @State var pet = UserProfileViewModel.sampleData[0].pets?.first ?? Pet()
-        PetsSheet(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pet: $pet)
+        ProfilePetsSheet(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pet: $pet)
     }
 }
