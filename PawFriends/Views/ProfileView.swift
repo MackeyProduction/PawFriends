@@ -9,7 +9,7 @@ import SwiftUI
 import Amplify
 
 struct ProfileView: View {
-    @StateObject private var userProfileViewModel: UserProfileViewModel
+    @ObservedObject private var userProfileViewModel: UserProfileViewModel
     @State private var authorName: String? = nil
     @State private var petType: PetType? = nil
     @State private var isShowingDescriptionSheet = false
@@ -17,8 +17,14 @@ struct ProfileView: View {
     @State private var isShowingAdvertisementSheet = false
     @State private var newPet: Pet? = nil
     
-    init(userProfileViewModel: UserProfileViewModel) {
-        self._userProfileViewModel = StateObject(wrappedValue: userProfileViewModel)
+    init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingDescriptionSheet: Bool = false, isShowingPetsSheet: Bool = false, isShowingAdvertisementSheet: Bool = false, newPet: Pet? = nil) {
+        self.userProfileViewModel = userProfileViewModel
+        self.authorName = authorName
+        self.petType = petType
+        self.isShowingDescriptionSheet = isShowingDescriptionSheet
+        self.isShowingPetsSheet = isShowingPetsSheet
+        self.isShowingAdvertisementSheet = isShowingAdvertisementSheet
+        self.newPet = newPet
     }
     
     func dateToString(releaseDate: Temporal.Date) -> String {

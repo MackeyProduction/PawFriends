@@ -10,6 +10,7 @@ import SwiftUI
 struct PetsList: View {
     @ObservedObject var vm: UserProfileViewModel
     @State var pets: [Pet]
+    @State private var newPet: Pet = Pet()
     @State private var petType: PetType? = nil
     @State private var isShowingPetsSheet = false
     
@@ -42,8 +43,7 @@ struct PetsList: View {
         .padding(.top, 5).padding(.bottom, 5)
         .sheet(isPresented: $isShowingPetsSheet) {
             NavigationStack {
-                @State var pet = Pet()
-                PetsSheet(vm: vm, pet: $pet, isNew: true)
+                PetsSheet(vm: vm, pet: $newPet, isNew: true)
             }
         }
     }

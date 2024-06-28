@@ -92,6 +92,22 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
+    func updateProfile(userProfile: UserProfile) async {
+        do {
+            let result = try await Amplify.API.mutate(request: .update(userProfile, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let userProfile):
+                print("Successfully updated user profile: \(userProfile)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to update user profile: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
     func createChat(chat: Chat) {
         Task {
             do {
@@ -164,61 +180,61 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
-    func createPet(pet: Pet) {
-        Task {
-            do {
-                let result = try await Amplify.API.mutate(request: .create(pet))
-                switch result {
-                case .success(let pet):
-                    print("Successfully created pet: \(pet)")
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
-                }
-            } catch let error as APIError {
-                print("Failed to create pet: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+    func createPet(userProfile: UserProfile, pet: Pet) async {
+        do {
+            var newPet = pet
+            newPet.setUserProfile(userProfile)
+            let result = try await Amplify.API.mutate(request: .create(newPet, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let pet):
+                print("Successfully created pet: \(pet)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to create pet: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
     }
     
-    func updatePet(pet: Pet) {
-        Task {
-            do {
-                let result = try await Amplify.API.mutate(request: .update(pet))
-                switch result {
-                case .success(let pet):
-                    print("Successfully updated pet: \(pet)")
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
-                }
-            } catch let error as APIError {
-                print("Failed to updated pet: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+    func updatePet(userProfile: UserProfile, pet: Pet) async {
+        do {
+            var existingPet = pet
+            existingPet.setUserProfile(userProfile)
+            let result = try await Amplify.API.mutate(request: .update(existingPet, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let pet):
+                print("Successfully updated pet: \(pet)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to updated pet: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
     }
     
     func fetchPetTypes() async -> [PetType] {
         var petTypes: [PetType] = []
-        let request = GraphQLRequest<PetType>.list(PetType.self, authMode: .amazonCognitoUserPools)
-        Task {
-            do {
-                let result = try await Amplify.API.query(request: request)
-                switch result {
-                case .success(let petTypesResult):
-                    print("Successfully retrieved pet types: \(petTypesResult)")
-                    petTypes.append(contentsOf: petTypesResult)
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
-                }
-            } catch let error as APIError {
-                print("Failed to query pet type: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+        let request = GraphQLRequest<PetType>.list(PetType.self, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let petTypesResult):
+                print("Successfully retrieved pet types: \(petTypesResult)")
+                petTypes.append(contentsOf: petTypesResult)
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to query pet type: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
+        
         return petTypes
     }
     
