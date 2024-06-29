@@ -17,6 +17,9 @@ struct AdvertisementList: View {
     @State private var likedItem: Bool = false
     @State private var heart: String = "heart"
     
+    @State private var searchText = ""
+
+    
     init(titleFilter: String = "") {
         /*
          let predicate = #Predicate<AdvertisementViewModel> { ad in
@@ -26,6 +29,7 @@ struct AdvertisementList: View {
          _advertisementViewModel.$advertisements = Query(filter: predicate, sort: \AdvertisementViewModel.title)
          */
     }
+    
     
     var body: some View {
         ZStack {
@@ -61,20 +65,45 @@ struct AdvertisementList: View {
                                         }
                                     }
                             } label: {
-                                Text(item.title ?? "")
+                                HStack {
+//                                    Image(Image(item.advertisementImages![0]!)
+//                                        .resizable()
+//                                        .frame(width: 80, height: 80)
+//                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    Image("TestImage2")
+                                        .resizable()
+                                        .frame(width: 100, height: 100)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                        
+                                    VStack {
+                                        Text(item.title ?? "")
+                                            .font(.title3)
+                                            .fontWeight(.semibold)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text(item.description ?? "")
+                                            Spacer()
+                                        }.frame(maxWidth: .infinity, maxHeight: 50, alignment: .top)
+                                        Spacer()
+                                        //alignment: .topleading
+                                    }.frame(width: .infinity, height: 100)
+                                }
                             }
-                            .listRowBackground(Color(secondColor!))
+                            .listRowBackground(Color(mainColor!))
                             //}
                         }.onDelete(perform: deleteItems)
                         
                     }.scrollContentBackground(.hidden)
+                    .frame( maxWidth: .infinity)
+                    .listStyle(GroupedListStyle())
+
                 } else {
                     ContentUnavailableView {
                         Label("Keine Anzeigen gefunden", systemImage: "pawprint")
                     }
                 }
             }
-            .navigationTitle("Suche")
+            .navigationTitle("Anzeigen")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
@@ -89,7 +118,7 @@ struct AdvertisementList: View {
                 //await advertisementViewModel.listAdvertisements()
             }
             .buttonStyle(.plain)
-        }
+        }.searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Suche")
     }
     
     private func likeItem() {

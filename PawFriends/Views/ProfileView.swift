@@ -11,36 +11,19 @@ import Amplify
 struct ProfileView: View {
     @StateObject private var userProfileViewModel: UserProfileViewModel = UserProfileViewModel()
     @State private var advertisementArray: [Advertisement]
+    @State private var petArray: [Pet]
+    @State private var tagArray: [String]
+    @State private var petType: String
 
-    init(advertisementArray: [Advertisement]) {
-        
+    init(advertisementArray: [Advertisement], petArray: [Pet], tagArray: [String], petType: String) {
         self.advertisementArray = advertisementArray
+        self.petArray = petArray
+        self.tagArray = tagArray
+        self.petType = petType
     }
-//    func getPetName() async {
-//        do {
-//            let pet = Pet()
-//            
-//            let userProfile = UserProfile()
-//            
-//            if let ads = userProfile.advertisements {
-//                for ad in ads.elements {
-//                    let a = try await ad.advertisement
-//                }
-//            }
-//            
-//            
-//            let petBreed = try await pet.petBreed?.description
-//            
-//            if let breeds = try await pet._petBreed.get() {
-//                
-//            }
-//            
-//        } catch {
-//            
-//        }
-//    }
+ 
     
-    func getAdvertisements() async -> [Advertisement] {
+    func getAdvertisements() -> [Advertisement] {
         var advertisementsArray: [Advertisement] = []
         if let ads = userProfileViewModel.userProfile?.advertisements {
             for ad in ads.elements {
@@ -50,18 +33,46 @@ struct ProfileView: View {
         return advertisementsArray
     }
     
+    func getPets() -> [Pet] {
+        var petsArray: [Pet] = []
+        if let pets = userProfileViewModel.userProfile?.pets {
+            for pet in pets.elements {
+                petsArray.append(pet)
+            }
+        }
+        return petsArray
+    }
+    
+    func getTagStrings() -> [String] {
+        var tagsArray: [String] = []
+        if let tags = userProfileViewModel.userProfile?.tags {
+            for tag in tags.elements {
+                //tagsArray.append(tag)
+            }
+        }
+        return tagsArray
+    }
+    
+    func getPetType(pet: Pet) async -> String {
+        var petType: String = ""
+        do {
+            petType = try await pet.petType?.description! ?? ""
+        }
+        catch {}
+        return petType
+
+    }
+    
+    
     private lazy var breeds: [PetBreed] = {
         let pet = Pet()
         
         Task {
-            if let breeds = try await pet._petBreed.get() {
-                
-            }
+            if let breeds = try await pet._petBreed.get() {}
         }
-        
-        
         return []
     }()
+    
     
     func dateToString(releaseDate: Temporal.Date) -> String {
         let relativeDateFormatter = DateFormatter()
@@ -125,7 +136,6 @@ struct ProfileView: View {
                                 HStack {
                                     Image(systemName: "bookmark")
                                     Text("Aktiv seit: \(dateToString(releaseDate: userProfile.activeSince ?? Temporal.Date.now()))")
-                                    //Text("Aktiv seit: 12.03.23")
                                         .foregroundStyle(Color(textColor!))
                                         .padding(.leading, -5)
                                 }
@@ -143,6 +153,7 @@ struct ProfileView: View {
                         HStack {
                             Image(systemName: "number.square")
                                 .font(.headline)
+                            //Text("")
                             TagCloudView(tags: ["Nicht-Raucher","sportlich","Katzen-Kenner"])
                         }
                         .padding([.top, .bottom], 5)
@@ -181,21 +192,14 @@ struct ProfileView: View {
                                 .font(.title2)
                         }.padding(.bottom, 5)
                         
-                        if let pets = userProfile.pets {
-                            
-                            //Text("\(pets.elements[0])")
-                            let pets: [String] = ["Momo","Momo Klon"]
-                            ForEach(pets, id: \.self) { pet in
-                                //ForEach(pets.elements, id: \.id) { pet in
-                                
-                                
+                        if !petArray.isEmpty {
+                            ForEach(petArray, id: \.id) { pet in
                                 ZStack {
                                     HStack {
                                         Image(systemName: "pawprint.circle.fill")
                                             .font(.title)
                                             .foregroundStyle(Color(greenColorReverse!))
-                                        Text(pet)
-                                        //Text(pet._pet.get()?.name ?? "")
+                                        Text(pet.name ?? "")
                                             .fontWeight(.medium)
                                         Spacer()
                                     }
@@ -203,9 +207,14 @@ struct ProfileView: View {
                                         Divider()
                                             .overlay(Color(textColor!))
                                     }
+                                    //petType nicht dynamisch
                                     HStack {
-                                        Text("Katze")
+                                        Text(petType)
                                             .padding(.leading, 60)
+                                    }.onAppear(){
+                                        Task{
+                                            petType = await getPetType(pet: pet)
+                                        }
                                     }
                                     HStack {
                                         Spacer()
@@ -233,15 +242,7 @@ struct ProfileView: View {
                         
                         
                         
-                        if let advertisements = userProfile.advertisements {
-                            //                            ForEach(advertisements.elements, id: \.id) { item in
-                            //                                Text("\(item._advertisement)")
-                            //                            }
-                            let anzeigen: [String] = ["Katzen-Sitter für Kater gesucht","Noch ein Anzeigen Titel"]
-                            
-                            
-                            //ForEach(anzeigen, id: \.self) { advertisement in
-                            //ForEach(advertisements.elements, id: \.id) { advertisement in
+                        if !advertisementArray.isEmpty {
                             ForEach(advertisementArray, id: \.id) { advertisement in
                                 
                                 VStack {
@@ -252,7 +253,6 @@ struct ProfileView: View {
                                             .padding(-8)
                                         VStack {
                                             HStack {
-                                                //Text(advertisement.modelName)
                                                 Text(advertisement.title ?? "")
                                                     .fontWeight(.medium)
                                                 Spacer()
@@ -291,7 +291,10 @@ struct ProfileView: View {
             }
             .onAppear {
                 Task {
-                    advertisementArray = await getAdvertisements()
+                    //advertisementArray = await getAdvertisements()
+                    advertisementArray = getAdvertisements()
+                    petArray = getPets()
+                    tagArray = getTagStrings()
                 }
                 
             }
@@ -305,5 +308,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView(advertisementArray: [])
+    ProfileView(advertisementArray: [], petArray: [], tagArray: [], petType: "")
 }
