@@ -90,6 +90,7 @@ struct AdvertisementList: View {
                                 }
                             }
                             .listRowBackground(Color(mainColor!))
+                            //.listRowSeparatorTint(Color(mainTextColor!))
                             //}
                         }.onDelete(perform: deleteItems)
                         
