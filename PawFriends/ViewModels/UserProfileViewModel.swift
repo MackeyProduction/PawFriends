@@ -7,13 +7,28 @@
 
 import Foundation
 import Amplify
+import class Amplify.List
 
 @MainActor
 class UserProfileViewModel: ObservableObject {
     @Published var userProfile: UserProfile? = nil
     
     init(userProfile: UserProfile? = nil) {
-        //self.userProfile = UserProfileViewModel.sampleData[0]
+        self.userProfile = userProfile
+    }
+    
+    func getCurrentProfile() async {
+        let userAttributes = await fetchAttributes()
+        let userId = userAttributes.first(where: { $0.key.rawValue == "sub" })?.value
+        
+        if let uId = userId, let uuid = UUID(uuidString: uId) {
+            await getProfile(id: uuid)
+        }
+    }
+    
+    func getAuthorName() async -> String? {
+        let userAttributes = await fetchAttributes()
+        return userAttributes.first(where: { $0.key == .preferredUsername })?.value
     }
     
     func getProfile(id: UUID) async {
@@ -77,6 +92,22 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
+    func updateProfile(userProfile: UserProfile) async {
+        do {
+            let result = try await Amplify.API.mutate(request: .update(userProfile, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let userProfile):
+                print("Successfully updated user profile: \(userProfile)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to update user profile: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
     func createChat(chat: Chat) {
         Task {
             do {
@@ -113,76 +144,156 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
-    func createAdvertisement(advertisement: Advertisement) {
-        Task {
-            do {
-                let result = try await Amplify.API.mutate(request: .create(advertisement))
-                switch result {
-                case .success(let advertisement):
-                    print("Successfully created advertisement: \(advertisement)")
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
-                }
-            } catch let error as APIError {
-                print("Failed to create advertisement: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+    func createAdvertisement(userProfile: UserProfile, advertisement: Advertisement) async {
+        do {
+            var newAdvertisement = advertisement
+            newAdvertisement.releaseDate = Temporal.DateTime.now()
+            newAdvertisement.setUserProfile(userProfile)
+            let result = try await Amplify.API.mutate(request: .create(newAdvertisement, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let advertisement):
+                print("Successfully created advertisement: \(advertisement)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to create advertisement: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
     }
     
-    func updateAdvertisement(advertisement: Advertisement) {
-        Task {
-            do {
-                let result = try await Amplify.API.mutate(request: .update(advertisement))
-                switch result {
-                case .success(let advertisement):
-                    print("Successfully updated advertisement: \(advertisement)")
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
-                }
-            } catch let error as APIError {
-                print("Failed to updated advertisement: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+    func updateAdvertisement(userProfile: UserProfile, advertisement: Advertisement) async {
+        do {
+            var existingAdvertisement = advertisement
+            existingAdvertisement.setUserProfile(userProfile)
+            let result = try await Amplify.API.mutate(request: .update(existingAdvertisement, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let advertisement):
+                print("Successfully updated advertisement: \(advertisement)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to updated advertisement: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
     }
     
-    func createPet(pet: Pet) {
-        Task {
-            do {
-                let result = try await Amplify.API.mutate(request: .create(pet))
-                switch result {
-                case .success(let pet):
-                    print("Successfully created pet: \(pet)")
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
-                }
-            } catch let error as APIError {
-                print("Failed to create pet: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+    func createPet(userProfile: UserProfile, pet: Pet) async {
+        do {
+            var newPet = pet
+            newPet.setUserProfile(userProfile)
+            let result = try await Amplify.API.mutate(request: .create(newPet, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let pet):
+                print("Successfully created pet: \(pet)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to create pet: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
     }
     
-    func updatePet(pet: Pet) {
-        Task {
-            do {
-                let result = try await Amplify.API.mutate(request: .update(pet))
-                switch result {
-                case .success(let pet):
-                    print("Successfully updated pet: \(pet)")
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
-                }
-            } catch let error as APIError {
-                print("Failed to updated pet: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+    func updatePet(userProfile: UserProfile, pet: Pet) async {
+        do {
+            var existingPet = pet
+            existingPet.setUserProfile(userProfile)
+            let result = try await Amplify.API.mutate(request: .update(existingPet, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let pet):
+                print("Successfully updated pet: \(pet)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to updated pet: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
+    }
+    
+    func createTag(userProfile: UserProfile, tag: Tag) async {
+        do {
+            let newTag = UserProfileTag(userProfile: userProfile, tag: tag)
+            let result = try await Amplify.API.mutate(request: .create(newTag, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let tag):
+                print("Successfully created tag: \(tag)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to create tag: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func updateTag(userProfileTag: UserProfileTag, tag: Tag) async {
+        do {
+            var existingUserProfileTag = userProfileTag
+            existingUserProfileTag.setTag(tag)
+            let result = try await Amplify.API.mutate(request: .update(existingUserProfileTag, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let tag):
+                print("Successfully updated tag: \(tag)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to updated tag: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func fetchPetTypes() async -> [PetType] {
+        var petTypes: [PetType] = []
+        let request = GraphQLRequest<PetType>.list(PetType.self, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let petTypesResult):
+                print("Successfully retrieved pet types: \(petTypesResult)")
+                petTypes.append(contentsOf: petTypesResult)
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query pet type: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+        
+        return petTypes
+    }
+    
+    func fetchTags() async -> [Tag] {
+        var tags: [Tag] = []
+        let request = GraphQLRequest<PetType>.list(Tag.self, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let tagsResult):
+                print("Successfully retrieved tags: \(tagsResult)")
+                tags.append(contentsOf: tagsResult)
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query tags: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+        
+        return tags
     }
     
     static let sampleData: [UserProfile] = [
