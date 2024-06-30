@@ -14,11 +14,10 @@ struct AdvertisementList: View {
     //@Query private var ads: [AdvertisementViewModel]
     @State private var newAdvertisement: AdvertisementViewModel?
     
-    @State private var likedItem: Bool = false
-    @State private var heart: String = "heart"
-    
     @State private var searchText = ""
 
+    @State private var likedItem: Bool = false
+    @State private var heart: String = "heart"
     
     init(titleFilter: String = "") {
         /*
@@ -40,64 +39,56 @@ struct AdvertisementList: View {
                     List {
                         ForEach($advertisementViewModel.advertisements, id: \.id) { $item in
                             //GeometryReader { geoRoot in
-                            NavigationLink {
-                                //                                AdvertisementDetail(advertisement: $item, geoRoot: geoRoot)
-                                AdvertisementDetail(advertisement: $item)
-                                    .toolbar {
-                                        ToolbarItem(placement: .topBarTrailing) {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .frame(width: 75, height: 35)
-                                                .foregroundStyle(.black)
-                                                .opacity(0.4)
-                                                .overlay(alignment: .center) {
-                                                    HStack {
-                                                        Button(action: likeItem) {
-                                                            Label("Like Item", systemImage: heart)
-                                                                .foregroundStyle(.white)
-                                                        }
-                                                        Button(action: shareItem) {
-                                                            Label("Share Item", systemImage: "square.and.arrow.up")
-                                                                .foregroundStyle(.white)
-                                                        }
-                                                        .padding(.bottom, 5)
-                                                    }
-                                                }
-                                        }
-                                    }
-                            } label: {
-                                HStack {
-//                                    Image(Image(item.advertisementImages![0]!)
-//                                        .resizable()
-//                                        .frame(width: 80, height: 80)
-//                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    Image("TestImage2")
-                                        .resizable()
-                                        .frame(width: 100, height: 100)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                            ZStack {
+                                NavigationLink(destination: AdvertisementDetail(advertisement: $item)) {
+                                    HStack {
+                                        //                                    Image(item.advertisementImages![0] ?? "TestImage1")
+                                        //                                        .resizable()
+                                        //                                        .frame(width: 80, height: 80)
+                                        //                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                        Image("TestImage2")
+                                            .resizable()
+                                            .frame(width: 100, height: 100)
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
                                         
-                                    VStack {
-                                        Text(item.title ?? "")
-                                            .font(.title3)
-                                            .fontWeight(.semibold)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                        HStack{
-                                            Text(item.description ?? "")
+                                        VStack {
+                                            HStack {
+                                                Text(item.title ?? "")
+                                                    .font(.title3)
+                                                    .fontWeight(.semibold)
+                                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                            }
+                                            HStack{
+                                                Text(item.description ?? "")
+                                                Spacer()
+                                            }.frame(maxWidth: .infinity, maxHeight: 50, alignment: .top)
                                             Spacer()
-                                        }.frame(maxWidth: .infinity, maxHeight: 50, alignment: .top)
-                                        Spacer()
-                                        //alignment: .topleading
-                                    }.frame(width: .infinity, height: 100)
+                                            //alignment: .topleading
+                                        }.frame(width: .infinity, height: 100)
+                                    }
                                 }
+//                                HStack{
+//                                    Spacer()
+//                                    Button(action: likeItem) {
+//                                        //Group{
+//                                            Label("", systemImage: heart)
+//                                                .foregroundStyle(Color(mainTextColor!))
+//                                                .frame(width: 50, alignment: .center)
+//                                                .border(.green)
+////                                        }.frame(width: 50, height: 50)
+////                                            .border(.blue)
+//                                    }
+//                                }
+//                                .border(.brown)
+//                                Spacer()
                             }
-                            .listRowBackground(Color(mainColor!))
-                            //.listRowSeparatorTint(Color(mainTextColor!))
-                            //}
                         }.onDelete(perform: deleteItems)
                         
                     }.scrollContentBackground(.hidden)
                     .frame( maxWidth: .infinity)
                     .listStyle(GroupedListStyle())
-
+                    
+                    
                 } else {
                     ContentUnavailableView {
                         Label("Keine Anzeigen gefunden", systemImage: "pawprint")
@@ -121,6 +112,7 @@ struct AdvertisementList: View {
             .buttonStyle(.plain)
         }.searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Suche")
     }
+   
     
     private func likeItem() {
         if likedItem {
@@ -130,10 +122,6 @@ struct AdvertisementList: View {
             heart = "heart.fill"
             likedItem = true
         }
-    }
-    
-    private func shareItem(){
-        
     }
 
     private func addItem() {

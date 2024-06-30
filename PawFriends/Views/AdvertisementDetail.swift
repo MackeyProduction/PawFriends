@@ -15,6 +15,9 @@ struct AdvertisementDetail: View {
     @Binding var advertisement: Advertisement
     let isNew: Bool
     
+    @State private var likedItem: Bool = false
+    @State private var heart: String = "heart"
+    
     @StateObject private var viewModel = PhotoPickerViewModel()
     @State var imageSelections: [PhotosPickerItem] = []
     //var geoRoot: GeometryProxy
@@ -245,6 +248,28 @@ struct AdvertisementDetail: View {
             }
             .background(Color(mainColor!))
             .edgesIgnoringSafeArea(.top)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(width: 75, height: 35)
+                        .foregroundStyle(.black)
+                        .opacity(0.4)
+                        .overlay(alignment: .center) {
+                            HStack {
+                                Button(action: likeItem) {
+                                    Label("Like Item", systemImage: heart)
+                                        .foregroundStyle(.white)
+                                }
+                                Button(action: shareItem) {
+                                    Label("Share Item", systemImage: "square.and.arrow.up")
+                                        .foregroundStyle(.white)
+                                }
+                                .padding(.bottom, 5)
+                                .padding(.trailing, 10)
+                            }
+                        }
+                }
+            }
         } else {
             VStack(spacing: 10) {
                 if viewModel.selectedImages.isEmpty {
@@ -349,6 +374,20 @@ struct AdvertisementDetail: View {
             .edgesIgnoringSafeArea(.top)
             //}
         }
+    }
+    
+    private func likeItem() {
+        if likedItem {
+            heart = "heart"
+            likedItem = false
+        } else {
+            heart = "heart.fill"
+            likedItem = true
+        }
+    }
+    
+    private func shareItem(){
+        
     }
     
     private func follow() {
