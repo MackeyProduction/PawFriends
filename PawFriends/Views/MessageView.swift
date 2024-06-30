@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct MessageView: View {
+    @ObservedObject var userProfileViewModel: UserProfileViewModel
+    
     var body: some View {
         NavigationSplitView {
-            MessageList()
+            MessageList(userProfileViewModel: userProfileViewModel)
         } detail: {
             Text("Select an item")
                 .navigationTitle("Nachrichten")
@@ -19,5 +21,5 @@ struct MessageView: View {
 }
 
 #Preview {
-    MessageView()
+    MessageView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
 }

@@ -9,7 +9,7 @@ import SwiftUI
 import SlidingTabView
 
 struct FavoriteList: View {
-    
+    @ObservedObject var userProfileViewModel: UserProfileViewModel
     @State private var selectedTabIndex = 0
     
     var body: some View {
@@ -17,9 +17,9 @@ struct FavoriteList: View {
             SlidingTabView(selection: self.$selectedTabIndex, tabs: ["Merkliste", "Folge ich"])
             
             if selectedTabIndex == 0 {
-                WatchlistView()
+                WatchlistView(userProfileViewModel: userProfileViewModel)
             } else {
-                FollowingListView()
+                FollowingListView(userProfileViewModel: userProfileViewModel)
             }
             
             Spacer()
@@ -29,5 +29,5 @@ struct FavoriteList: View {
 }
 
 #Preview {
-    FavoriteList()
+    FavoriteList(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
 }
