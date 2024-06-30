@@ -2,19 +2,19 @@
 import Amplify
 import Foundation
 
-public struct UserProfileTag: Model {
+public struct UserProfileFollower: Model {
   public let id: String
   public var author: String?
-  internal var _userProfile: LazyReference<UserProfile>
-  public var userProfile: UserProfile?   {
+  internal var _follower: LazyReference<UserProfile>
+  public var follower: UserProfile?   {
       get async throws { 
-        try await _userProfile.get()
+        try await _follower.get()
       } 
     }
-  internal var _tag: LazyReference<Tag>
-  public var tag: Tag?   {
+  internal var _followed: LazyReference<UserProfile>
+  public var followed: UserProfile?   {
       get async throws { 
-        try await _tag.get()
+        try await _followed.get()
       } 
     }
   public var createdAt: Temporal.DateTime?
@@ -22,40 +22,40 @@ public struct UserProfileTag: Model {
   
   public init(id: String = UUID().uuidString,
       author: String? = nil,
-      userProfile: UserProfile? = nil,
-      tag: Tag? = nil) {
+      follower: UserProfile? = nil,
+      followed: UserProfile? = nil) {
     self.init(id: id,
       author: author,
-      userProfile: userProfile,
-      tag: tag,
+      follower: follower,
+      followed: followed,
       createdAt: nil,
       updatedAt: nil)
   }
   internal init(id: String = UUID().uuidString,
       author: String? = nil,
-      userProfile: UserProfile? = nil,
-      tag: Tag? = nil,
+      follower: UserProfile? = nil,
+      followed: UserProfile? = nil,
       createdAt: Temporal.DateTime? = nil,
       updatedAt: Temporal.DateTime? = nil) {
       self.id = id
       self.author = author
-      self._userProfile = LazyReference(userProfile)
-      self._tag = LazyReference(tag)
+      self._follower = LazyReference(follower)
+      self._followed = LazyReference(followed)
       self.createdAt = createdAt
       self.updatedAt = updatedAt
   }
-  public mutating func setUserProfile(_ userProfile: UserProfile? = nil) {
-    self._userProfile = LazyReference(userProfile)
+  public mutating func setFollower(_ follower: UserProfile? = nil) {
+    self._follower = LazyReference(follower)
   }
-  public mutating func setTag(_ tag: Tag? = nil) {
-    self._tag = LazyReference(tag)
+  public mutating func setFollowed(_ followed: UserProfile? = nil) {
+    self._followed = LazyReference(followed)
   }
   public init(from decoder: Decoder) throws {
       let values = try decoder.container(keyedBy: CodingKeys.self)
       id = try values.decode(String.self, forKey: .id)
       author = try? values.decode(String?.self, forKey: .author)
-      _userProfile = try values.decodeIfPresent(LazyReference<UserProfile>.self, forKey: .userProfile) ?? LazyReference(identifiers: nil)
-      _tag = try values.decodeIfPresent(LazyReference<Tag>.self, forKey: .tag) ?? LazyReference(identifiers: nil)
+      _follower = try values.decodeIfPresent(LazyReference<UserProfile>.self, forKey: .follower) ?? LazyReference(identifiers: nil)
+      _followed = try values.decodeIfPresent(LazyReference<UserProfile>.self, forKey: .followed) ?? LazyReference(identifiers: nil)
       createdAt = try? values.decode(Temporal.DateTime?.self, forKey: .createdAt)
       updatedAt = try? values.decode(Temporal.DateTime?.self, forKey: .updatedAt)
   }
@@ -63,8 +63,8 @@ public struct UserProfileTag: Model {
       var container = encoder.container(keyedBy: CodingKeys.self)
       try container.encode(id, forKey: .id)
       try container.encode(author, forKey: .author)
-      try container.encode(_userProfile, forKey: .userProfile)
-      try container.encode(_tag, forKey: .tag)
+      try container.encode(_follower, forKey: .follower)
+      try container.encode(_followed, forKey: .followed)
       try container.encode(createdAt, forKey: .createdAt)
       try container.encode(updatedAt, forKey: .updatedAt)
   }

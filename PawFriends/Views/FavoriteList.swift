@@ -6,35 +6,28 @@
 //
 
 import SwiftUI
-import SwiftData
+import SlidingTabView
 
 struct FavoriteList: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var favorites: [Favorite]
+    @ObservedObject var userProfileViewModel: UserProfileViewModel
+    @State private var selectedTabIndex = 0
     
     var body: some View {
-        Group {
-            if !favorites.isEmpty {
-                List {
-                    ForEach(favorites) { favorite in
-                        NavigationLink {
-                            Text("Item at \(favorite.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                        } label: {
-                            Text(favorite.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                        }
-                    }
-                }
+        VStack {
+            SlidingTabView(selection: self.$selectedTabIndex, tabs: ["Merkliste", "Folge ich"])
+            
+            if selectedTabIndex == 0 {
+                WatchlistView(userProfileViewModel: userProfileViewModel)
             } else {
-                ContentUnavailableView {
-                    Label("Keine Favoriten gefunden", systemImage: "heart")
-                }
+                FollowingListView(userProfileViewModel: userProfileViewModel)
             }
+            
+            Spacer()
         }
         .navigationTitle("Favoriten")
     }
 }
 
 #Preview {
-    FavoriteList()
-        .modelContainer(for: Favorite.self, inMemory: true)
+    FavoriteList(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
 }

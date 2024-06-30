@@ -12,6 +12,7 @@ extension Advertisement {
     case visitor
     case description
     case advertisementImages
+    case author
     case tags
     case watchLists
     case userProfile
@@ -27,7 +28,8 @@ extension Advertisement {
     let advertisement = Advertisement.keys
     
     model.authRules = [
-      rule(allow: .public, provider: .iam, operations: [.create, .update, .delete, .read])
+      rule(allow: .owner, ownerField: "author", identityClaim: "cognito:username", provider: .userPools, operations: [.create, .update, .delete, .read]),
+      rule(allow: .private, operations: [.read])
     ]
     
     model.listPluralName = "Advertisements"
@@ -45,6 +47,7 @@ extension Advertisement {
       .field(advertisement.visitor, is: .optional, ofType: .int),
       .field(advertisement.description, is: .optional, ofType: .string),
       .field(advertisement.advertisementImages, is: .optional, ofType: .embeddedCollection(of: String.self)),
+      .field(advertisement.author, is: .optional, ofType: .string),
       .hasMany(advertisement.tags, is: .optional, ofType: AdvertisementTag.self, associatedFields: [AdvertisementTag.keys.advertisement]),
       .hasMany(advertisement.watchLists, is: .optional, ofType: WatchList.self, associatedFields: [WatchList.keys.advertisement]),
       .belongsTo(advertisement.userProfile, is: .optional, ofType: UserProfile.self, targetNames: ["userProfileId"]),
@@ -83,6 +86,9 @@ extension ModelPath where ModelType == Advertisement {
     }
   public var advertisementImages: FieldPath<String>   {
       string("advertisementImages") 
+    }
+  public var author: FieldPath<String>   {
+      string("author") 
     }
   public var tags: ModelPath<AdvertisementTag>   {
       AdvertisementTag.Path(name: "tags", isCollection: true, parent: self) 

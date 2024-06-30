@@ -6,14 +6,14 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct SearchView: View {
+    @ObservedObject var advertisementViewModel: AdvertisementViewModel
     @State private var searchText = ""
 
     var body: some View {
         NavigationSplitView {
-            AdvertisementList(titleFilter: searchText)
+            AdvertisementList(advertisementViewModel: advertisementViewModel, titleFilter: searchText)
                 .searchable(text: $searchText)
         } detail: {
             Text("Select an item")
@@ -23,5 +23,5 @@ struct SearchView: View {
 }
 
 #Preview {
-    SearchView()
+    SearchView(advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData))
 }

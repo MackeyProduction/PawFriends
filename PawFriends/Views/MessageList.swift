@@ -9,12 +9,12 @@ import SwiftUI
 import Amplify
 
 struct MessageList: View {
-    @StateObject private var userProfileViewModel: UserProfileViewModel = UserProfileViewModel()
+    @ObservedObject var userProfileViewModel: UserProfileViewModel
     @State private var chats: [Chat] = []
     
     var body: some View {
         Group {
-            if let chats = userProfileViewModel.userProfile?.chats {
+            if let chats = userProfileViewModel.userProfile?.chats, chats.isLoaded {
                 List {
                     // TODO: Chats müssen nach den Anzeigen gefiltert werden
                     ForEach($chats, id: \.id) { chat in
@@ -24,7 +24,12 @@ struct MessageList: View {
                     }
                 }
                 .onAppear {
-                    self.chats = chats.elements // Synchronisieren der lokalen Chat-Liste
+                    Task {
+                        do {
+                            try await userProfileViewModel.userProfile?.chats?.fetch()
+                            self.chats = chats.elements // Synchronisieren der lokalen Chat-Liste
+                        }
+                    }
                 }
             } else {
                 ContentUnavailableView {
@@ -64,5 +69,5 @@ struct MessageList: View {
 }
 
 #Preview {
-    MessageList()
+    MessageList(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
 }

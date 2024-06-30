@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct FavoriteView: View {
+    @ObservedObject var userProfileViewModel: UserProfileViewModel
+    
     var body: some View {
         NavigationSplitView {
-            FavoriteList()
+            FavoriteList(userProfileViewModel: userProfileViewModel)
         } detail: {
             Text("Select an item")
                 .navigationTitle("Favoriten")
@@ -19,6 +21,5 @@ struct FavoriteView: View {
 }
 
 #Preview {
-    FavoriteView()
-        .modelContainer(for: Favorite.self, inMemory: true)
+    FavoriteView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
 }

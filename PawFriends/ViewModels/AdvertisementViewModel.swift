@@ -11,11 +11,10 @@ import Amplify
 @MainActor
 class AdvertisementViewModel: ObservableObject {
     @Published var advertisements: [Advertisement] = []
-    @Published var advertisement: Advertisement
+    @Published var advertisement: Advertisement? = nil
     
-    init() {
-        advertisements = AdvertisementViewModel.sampleData()
-        advertisement = AdvertisementViewModel.sampleData()[0]
+    init(advertisements: [Advertisement] = []) {
+        self.advertisements = advertisements
     }
     
     func listAdvertisements() {
@@ -62,10 +61,8 @@ class AdvertisementViewModel: ObservableObject {
         }
     }
     
-    static func sampleData() -> [Advertisement] {
-        return [
-            Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Katzen-Sitter für Kater gesucht", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Die Beschreibung ist eine Aufsatzart. Sie informiert sachlich über ein Objekt, dass betrachtet wird und beschrieben werden soll. Die verwendete Sprache sollte an die Zielgruppe angepasst sein.\n\nZiel einer Beschreibung ist es einen gegebenen Gegenstand oder Situation dem Leser blalba genauestens zu vermitteln.\nSprachliche Stilmittel und die chronologisch sowie sinnvolle Beschreibung ist hier besonders wichtig.", advertisementImages: ["TestImage2","TestImage1"], tags: nil, watchLists: nil, userProfile: nil, chats: nil),
-            Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige", advertisementImages: [], tags: nil, watchLists: nil, userProfile: nil, chats: nil)
-        ]
-    }
+    static let sampleData: [Advertisement] = [
+        Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Katzen-Sitter für Kater gesucht", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Die Beschreibung ist eine Aufsatzart. Sie informiert sachlich über ein Objekt, dass betrachtet wird und beschrieben werden soll. Die verwendete Sprache sollte an die Zielgruppe angepasst sein.\n\nZiel einer Beschreibung ist es einen gegebenen Gegenstand oder Situation dem Leser blalba genauestens zu vermitteln.\nSprachliche Stilmittel und die chronologisch sowie sinnvolle Beschreibung ist hier besonders wichtig.", advertisementImages: ["TestImage2","TestImage1"], tags: nil, watchLists: nil, userProfile: nil, chats: nil),
+        Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige", advertisementImages: [], tags: nil, watchLists: nil, userProfile: nil, chats: nil)
+    ]
 }

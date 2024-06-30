@@ -8,6 +8,7 @@ public struct Pet: Model {
   public var name: String?
   public var age: Int?
   public var petImage: Bool?
+  public var author: String?
   internal var _petType: LazyReference<PetType>
   public var petType: PetType?   {
       get async throws { 
@@ -34,6 +35,7 @@ public struct Pet: Model {
       name: String? = nil,
       age: Int? = nil,
       petImage: Bool? = nil,
+      author: String? = nil,
       petType: PetType? = nil,
       petBreed: PetBreed? = nil,
       userProfile: UserProfile? = nil) {
@@ -42,6 +44,7 @@ public struct Pet: Model {
       name: name,
       age: age,
       petImage: petImage,
+      author: author,
       petType: petType,
       petBreed: petBreed,
       userProfile: userProfile,
@@ -53,6 +56,7 @@ public struct Pet: Model {
       name: String? = nil,
       age: Int? = nil,
       petImage: Bool? = nil,
+      author: String? = nil,
       petType: PetType? = nil,
       petBreed: PetBreed? = nil,
       userProfile: UserProfile? = nil,
@@ -63,6 +67,7 @@ public struct Pet: Model {
       self.name = name
       self.age = age
       self.petImage = petImage
+      self.author = author
       self._petType = LazyReference(petType)
       self._petBreed = LazyReference(petBreed)
       self._userProfile = LazyReference(userProfile)
@@ -85,6 +90,7 @@ public struct Pet: Model {
       name = try? values.decode(String?.self, forKey: .name)
       age = try? values.decode(Int?.self, forKey: .age)
       petImage = try? values.decode(Bool?.self, forKey: .petImage)
+      author = try? values.decode(String?.self, forKey: .author)
       _petType = try values.decodeIfPresent(LazyReference<PetType>.self, forKey: .petType) ?? LazyReference(identifiers: nil)
       _petBreed = try values.decodeIfPresent(LazyReference<PetBreed>.self, forKey: .petBreed) ?? LazyReference(identifiers: nil)
       _userProfile = try values.decodeIfPresent(LazyReference<UserProfile>.self, forKey: .userProfile) ?? LazyReference(identifiers: nil)
@@ -98,6 +104,7 @@ public struct Pet: Model {
       try container.encode(name, forKey: .name)
       try container.encode(age, forKey: .age)
       try container.encode(petImage, forKey: .petImage)
+      try container.encode(author, forKey: .author)
       try container.encode(_petType, forKey: .petType)
       try container.encode(_petBreed, forKey: .petBreed)
       try container.encode(_userProfile, forKey: .userProfile)

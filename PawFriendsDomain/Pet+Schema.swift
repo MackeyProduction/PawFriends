@@ -10,6 +10,7 @@ extension Pet {
     case name
     case age
     case petImage
+    case author
     case petType
     case petBreed
     case userProfile
@@ -24,7 +25,8 @@ extension Pet {
     let pet = Pet.keys
     
     model.authRules = [
-      rule(allow: .public, provider: .iam, operations: [.create, .update, .delete, .read])
+      rule(allow: .owner, ownerField: "author", identityClaim: "cognito:username", provider: .userPools, operations: [.create, .update, .delete, .read]),
+      rule(allow: .private, operations: [.read])
     ]
     
     model.listPluralName = "Pets"
@@ -40,6 +42,7 @@ extension Pet {
       .field(pet.name, is: .optional, ofType: .string),
       .field(pet.age, is: .optional, ofType: .int),
       .field(pet.petImage, is: .optional, ofType: .bool),
+      .field(pet.author, is: .optional, ofType: .string),
       .belongsTo(pet.petType, is: .optional, ofType: PetType.self, targetNames: ["petId"]),
       .belongsTo(pet.petBreed, is: .optional, ofType: PetBreed.self, targetNames: ["petId"]),
       .belongsTo(pet.userProfile, is: .optional, ofType: UserProfile.self, targetNames: ["userProfileId"]),
@@ -71,6 +74,9 @@ extension ModelPath where ModelType == Pet {
     }
   public var petImage: FieldPath<Bool>   {
       bool("petImage") 
+    }
+  public var author: FieldPath<String>   {
+      string("author") 
     }
   public var petType: ModelPath<PetType>   {
       PetType.Path(name: "petType", parent: self) 

@@ -19,9 +19,11 @@ const schema = a.schema({
       pets: a.hasMany('Pet', 'userProfileId'),
       watchLists: a.hasMany('WatchList', 'userProfileId'),
       advertisements: a.hasMany('Advertisement', 'userProfileId'),
-      chats: a.hasMany('Chat', 'userProfileId')
+      chats: a.hasMany('Chat', 'userProfileId'),
+      follows: a.hasMany('UserProfileFollower', 'followerId'),
+      followers: a.hasMany('UserProfileFollower', 'followedId')
     })
-    .authorization((allow) => [allow.ownerDefinedIn('author')]),
+    .authorization((allow) => [allow.ownerDefinedIn('author').to(['create', 'read', 'update']), allow.authenticated().to(['create', 'read'])]),
   Pet: a
     .model({
       petId: a.id(),
@@ -30,25 +32,26 @@ const schema = a.schema({
       name: a.string(),
       age: a.integer(),
       petImage: a.boolean(),
+      author: a.string(),
       petType: a.belongsTo('PetType', 'petId'),
       petBreed: a.belongsTo('PetBreed', 'petId'),
       userProfile: a.belongsTo('UserProfile', 'userProfileId')
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [allow.ownerDefinedIn('author'), allow.authenticated().to(['read'])]),
   PetType: a
     .model({
       petId: a.id(),
       description: a.string(),
       pets: a.hasMany('Pet', 'petId')
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [allow.owner().to(['read']), allow.authenticated().to(['read'])]),
   PetBreed: a
     .model({
       petId: a.id(),
       description: a.string(),
       pets: a.hasMany('Pet', 'petId')
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [allow.owner().to(['read']), allow.authenticated().to(['read'])]),
   Chat: a
     .model({
       message: a.string(),
@@ -69,12 +72,13 @@ const schema = a.schema({
       visitor: a.integer(),
       description: a.string(),
       advertisementImages: a.string().array(),
+      author: a.string(),
       tags: a.hasMany('AdvertisementTag', 'advertisementId'),
       watchLists: a.hasMany('WatchList', 'advertisementId'),
       userProfile: a.belongsTo('UserProfile', 'userProfileId'),
       chats: a.hasMany('Chat', 'advertisementId'),
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [allow.ownerDefinedIn('author'), allow.authenticated().to(['read'])]),
   Tag: a
     .model({
       tagId: a.id(),
@@ -82,31 +86,43 @@ const schema = a.schema({
       userProfiles: a.hasMany('UserProfileTag', 'tagId'),
       advertisements: a.hasMany('AdvertisementTag', 'tagId')
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [allow.owner().to(['read']), allow.authenticated().to(['read'])]),
   UserProfileTag: a
     .model({
       userProfileId: a.id().required(),
       tagId: a.id().required(),
+      author: a.string(),
       userProfile: a.belongsTo('UserProfile', 'userProfileId'),
       tag: a.belongsTo('Tag', 'tagId')
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [allow.ownerDefinedIn('author'), allow.authenticated().to(['read'])]),
   AdvertisementTag: a
     .model({
       advertisementId: a.id().required(),
       tagId: a.id().required(),
+      author: a.string(),
       advertisement: a.belongsTo('Advertisement', 'advertisementId'),
       tag: a.belongsTo('Tag', 'tagId')
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [allow.ownerDefinedIn('author'), allow.authenticated().to(['read'])]),
   WatchList: a
     .model({
       userProfileId: a.id().required(),
       advertisementId: a.id().required(),
+      author: a.string(),
       userProfile: a.belongsTo('UserProfile', 'userProfileId'),
       advertisement: a.belongsTo('Advertisement', 'advertisementId')
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [allow.ownerDefinedIn('author'), allow.authenticated().to(['read'])]),
+  UserProfileFollower: a
+    .model({
+      followerId: a.id().required(),
+      followedId: a.id().required(),
+      author: a.string(),
+      follower: a.belongsTo('UserProfile', 'followerId'),
+      followed: a.belongsTo('UserProfile', 'followedId')
+    })
+    .authorization((allow) => [allow.ownerDefinedIn('author'), allow.authenticated().to(['read'])]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -114,7 +130,7 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: 'iam',
+    defaultAuthorizationMode: 'userPool',
   },
 });
 

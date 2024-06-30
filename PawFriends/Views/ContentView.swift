@@ -19,41 +19,74 @@ let greenColor = UIColor(named: "GreenColor")
 let greenColorReverse = UIColor(named: "GreenColorReverse")
 
 struct ContentView: View {
+    @StateObject var userProfileViewModel: UserProfileViewModel
+    @StateObject var advertisementViewModel: AdvertisementViewModel
+    @State private var userAttributes: [AuthUserAttribute] = []
+    @State private var userId: String? = nil
+    
     var body: some View {
-        Authenticator { state in
-            AppView()
-            
+        Authenticator(
+            headerContent: {
+                Image("PawFriendsLogo")
+            }
+        ) { state in
             VStack {
+                AppView(userProfileViewModel: userProfileViewModel, advertisementViewModel: advertisementViewModel)
+                
                 Button("Sign out") {
                     Task {
                         await state.signOut()
                     }
                 }
+            }.onAppear {
+                Task {
+                    if !ProcessInfo.processInfo.isSwiftUIPreview {
+                        await userProfileViewModel.getCurrentProfile()
+                        
+                        self.userAttributes = await userProfileViewModel.fetchAttributes()
+                        self.userId = self.userAttributes.first(where: { $0.key.rawValue == "sub" })?.value
+                        
+                        if let uId = userId, let uuid = UUID(uuidString: uId) {
+                            await userProfileViewModel.createProfile(userProfile: UserProfile(id: uuid.uuidString, userProfileId: uuid.uuidString, description: "", activeSince: Temporal.Date.now(), location: ""))
+                        }
+                    }
+                }
             }
-        }
+        }.signUpFields([
+            .email(),
+            .text(
+                key: .preferredUsername,
+                label: "Username",
+                placeholder: "Enter your username",
+                isRequired: true
+            ),
+            .password()
+        ])
     }
 }
 
 struct AppView: View {
+    @StateObject var userProfileViewModel: UserProfileViewModel
+    @StateObject var advertisementViewModel: AdvertisementViewModel
+    
     var body: some View {
         TabView {
-            SearchView()
+            SearchView(advertisementViewModel: advertisementViewModel)
                 .tabItem {
                     Label("Suche", systemImage: "magnifyingglass")
                 }
             
-            FavoriteView()
+            FavoriteView(userProfileViewModel: userProfileViewModel)
                 .tabItem {
                     Label("Favoriten", systemImage: "heart")
                 }
-                .modelContainer(for: Favorite.self, inMemory: true)
             
-            MessageView()
+            MessageView(userProfileViewModel: userProfileViewModel)
                 .tabItem {
                     Label("Nachrichten", systemImage: "message")
                 }
             
-            ProfileView(advertisementArray: [], petArray: [],tagArray: [], petType: "")
+            ProfileView(userProfileViewModel: userProfileViewModel)
                 .tabItem {
                     Label("Profil", systemImage: "person")
                 }
@@ -62,9 +95,9 @@ struct AppView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData))
 }
 
 #Preview("ContentView:App") {
-    AppView()
+    AppView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData))
 }

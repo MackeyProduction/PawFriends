@@ -404,7 +404,7 @@ struct AdvertisementDetail: View {
 
 #Preview {
     NavigationStack {
-        @State var sampleAdvertisement = AdvertisementViewModel.sampleData()[0]
+        @State var sampleAdvertisement = AdvertisementViewModel.sampleData[0]
         GeometryReader { previewGeo in
             AdvertisementDetail(advertisement: $sampleAdvertisement)
 //            AdvertisementDetail(advertisement: $sampleAdvertisement, geoRoot: previewGeo)
@@ -414,7 +414,7 @@ struct AdvertisementDetail: View {
 
 #Preview("New Advertisement") {
     NavigationStack {
-        @State var sampleAdvertisement = AdvertisementViewModel.sampleData()[0]
+        @State var sampleAdvertisement = AdvertisementViewModel.sampleData[0]
         GeometryReader { previewGeo in
             AdvertisementDetail(advertisement: $sampleAdvertisement, isNew: true)
                 .navigationBarTitleDisplayMode(.inline)

@@ -10,7 +10,7 @@ import SwiftData
 
 struct AdvertisementList: View {
     @Environment(\.modelContext) private var modelContext
-    @StateObject var advertisementViewModel = AdvertisementViewModel()
+    @ObservedObject var advertisementViewModel: AdvertisementViewModel
     //@Query private var ads: [AdvertisementViewModel]
     @State private var newAdvertisement: AdvertisementViewModel?
     
@@ -19,7 +19,8 @@ struct AdvertisementList: View {
     @State private var likedItem: Bool = false
     @State private var heart: String = "heart"
     
-    init(titleFilter: String = "") {
+    init(advertisementViewModel: AdvertisementViewModel, titleFilter: String = "") {
+        self.advertisementViewModel = advertisementViewModel
         /*
          let predicate = #Predicate<AdvertisementViewModel> { ad in
          titleFilter.isEmpty || ad.title.localizedStandardContains(titleFilter)
@@ -143,10 +144,10 @@ struct AdvertisementList: View {
 
 #Preview {
     NavigationStack {
-        AdvertisementList()
+        AdvertisementList(advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData))
     }
 }
 
 #Preview("Empty List") {
-    AdvertisementList()
+    AdvertisementList(advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData))
 }
