@@ -20,6 +20,7 @@ let greenColorReverse = UIColor(named: "GreenColorReverse")
 
 struct ContentView: View {
     @StateObject var userProfileViewModel: UserProfileViewModel
+    @StateObject var advertisementViewModel: AdvertisementViewModel
     @State private var userAttributes: [AuthUserAttribute] = []
     @State private var userId: String? = nil
     
@@ -30,7 +31,7 @@ struct ContentView: View {
             }
         ) { state in
             VStack {
-                AppView(userProfileViewModel: userProfileViewModel)
+                AppView(userProfileViewModel: userProfileViewModel, advertisementViewModel: advertisementViewModel)
                 
                 Button("Sign out") {
                     Task {
@@ -66,20 +67,21 @@ struct ContentView: View {
 
 struct AppView: View {
     @StateObject var userProfileViewModel: UserProfileViewModel
+    @StateObject var advertisementViewModel: AdvertisementViewModel
     
     var body: some View {
         TabView {
-            SearchView()
+            SearchView(advertisementViewModel: advertisementViewModel)
                 .tabItem {
                     Label("Suche", systemImage: "magnifyingglass")
                 }
             
-            FavoriteView()
+            FavoriteView(userProfileViewModel: userProfileViewModel)
                 .tabItem {
                     Label("Favoriten", systemImage: "heart")
                 }
             
-            MessageView()
+            MessageView(userProfileViewModel: userProfileViewModel)
                 .tabItem {
                     Label("Nachrichten", systemImage: "message")
                 }
@@ -93,9 +95,9 @@ struct AppView: View {
 }
 
 #Preview {
-    ContentView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
+    ContentView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData))
 }
 
 #Preview("ContentView:App") {
-    AppView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
+    AppView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData))
 }

@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct FollowingListView: View {
-    @StateObject private var userProfileViewModel: UserProfileViewModel = UserProfileViewModel()
+    @StateObject var userProfileViewModel: UserProfileViewModel
     @State private var followList: [UserProfile] = []
     
     var body: some View {
-        if let follows = userProfileViewModel.userProfile?.follows, !follows.isEmpty {
+        if let follows = userProfileViewModel.userProfile?.follows, follows.isLoaded, !follows.isEmpty {
             List {
                 ForEach($followList, id: \.id) { user in
                     NavigationLink(destination: ProfileView(userProfileViewModel: userProfileViewModel)) {
@@ -41,7 +41,10 @@ struct FollowingListView: View {
             }
             .onAppear {
                 Task {
-                    self.followList = await getFollows(followList: follows.elements)
+                    do {
+                        try await userProfileViewModel.userProfile?.follows?.fetch()
+                        self.followList = await getFollows(followList: userProfileViewModel.userProfile?.follows?.elements ?? [])
+                    }
                 }
             }
         } else {
@@ -68,5 +71,5 @@ struct FollowingListView: View {
 }
 
 #Preview {
-    FollowingListView()
+    FollowingListView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
 }

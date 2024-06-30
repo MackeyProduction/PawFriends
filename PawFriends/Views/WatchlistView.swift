@@ -9,12 +9,12 @@ import SwiftUI
 import Amplify
 
 struct WatchlistView: View {
-    @StateObject private var userProfileViewModel: UserProfileViewModel = UserProfileViewModel()
+    @StateObject var userProfileViewModel: UserProfileViewModel
     @State private var watchList: [WatchList] = []
     @State private var advertisements: [Advertisement] = []
     
     var body: some View {
-        if let watchList = userProfileViewModel.userProfile?.watchLists, !watchList.isEmpty {
+        if let watchList = userProfileViewModel.userProfile?.watchLists, watchList.isLoaded, !watchList.isEmpty {
             List {
                 ForEach($advertisements, id: \.id) { advertisement in
                     NavigationLink(destination: AdvertisementDetail(advertisement: advertisement)) {
@@ -47,7 +47,10 @@ struct WatchlistView: View {
             }
             .onAppear {
                 Task {
-                    self.advertisements = await getAdvertisements(watchList: watchList.elements)
+                    do {
+                        try await userProfileViewModel.userProfile?.watchLists?.fetch()
+                        self.advertisements = await getAdvertisements(watchList: userProfileViewModel.userProfile?.watchLists?.elements ?? [])
+                    }
                 }
             }
         } else {
@@ -96,5 +99,5 @@ struct WatchlistView: View {
 }
 
 #Preview {
-    WatchlistView()
+    WatchlistView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
 }
