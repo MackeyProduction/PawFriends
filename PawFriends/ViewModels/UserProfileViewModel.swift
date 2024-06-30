@@ -217,6 +217,41 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
+    func createTag(userProfile: UserProfile, tag: Tag) async {
+        do {
+            let newTag = UserProfileTag(userProfile: userProfile, tag: tag)
+            let result = try await Amplify.API.mutate(request: .create(newTag, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let tag):
+                print("Successfully created tag: \(tag)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to create tag: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func updateTag(userProfileTag: UserProfileTag, tag: Tag) async {
+        do {
+            var existingUserProfileTag = userProfileTag
+            existingUserProfileTag.setTag(tag)
+            let result = try await Amplify.API.mutate(request: .update(existingUserProfileTag, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let tag):
+                print("Successfully updated tag: \(tag)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to updated tag: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
     func fetchPetTypes() async -> [PetType] {
         var petTypes: [PetType] = []
         let request = GraphQLRequest<PetType>.list(PetType.self, limit: 1000, authMode: .amazonCognitoUserPools)
@@ -237,6 +272,28 @@ class UserProfileViewModel: ObservableObject {
         }
         
         return petTypes
+    }
+    
+    func fetchTags() async -> [Tag] {
+        var tags: [Tag] = []
+        let request = GraphQLRequest<PetType>.list(Tag.self, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let tagsResult):
+                print("Successfully retrieved tags: \(tagsResult)")
+                tags.append(contentsOf: tagsResult)
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query tags: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+        
+        return tags
     }
     
     static let sampleData: [UserProfile] = [

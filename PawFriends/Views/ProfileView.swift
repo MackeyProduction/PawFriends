@@ -7,18 +7,24 @@
 
 import SwiftUI
 import Amplify
+import class Amplify.List
 
 struct ProfileView: View {
     @ObservedObject private var userProfileViewModel: UserProfileViewModel
     @State private var authorName: String? = nil
     @State private var petType: PetType? = nil
+    @State private var isShowingTagsSheet = false
     @State private var isShowingDescriptionSheet = false
     @State private var newPet: Pet? = nil
+    @State private var tag: String? = "tag"
+    @State private var tags: [Tag] = []
+    @State private var tagCloud: [String] = []
     
-    init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingDescriptionSheet: Bool = false, newPet: Pet? = nil) {
+    init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingTagsSheet: Bool = false, isShowingDescriptionSheet: Bool = false, newPet: Pet? = nil) {
         self.userProfileViewModel = userProfileViewModel
         self.authorName = authorName
         self.petType = petType
+        self.isShowingTagsSheet = isShowingTagsSheet
         self.isShowingDescriptionSheet = isShowingDescriptionSheet
         self.newPet = newPet
     }
@@ -103,7 +109,40 @@ struct ProfileView: View {
                         HStack {
                             Image(systemName: "number.square")
                                 .font(.headline)
-                            TagCloudView(tags: ["Nicht-Raucher","sportlich","Katzen-Kenner"])
+                            
+                            TagCloudView(tags: tagCloud)
+                            
+                            Button(action: { isShowingTagsSheet.toggle() }) {
+                                Image(systemName: "square.and.pencil")
+                                    .font(.title2)
+                            }
+                            .sheet(isPresented: $isShowingTagsSheet) {
+                                NavigationStack {
+                                    Form {
+                                        Picker("Tags", selection: $tag) {
+                                            ForEach(tags, id: \.id) { tag in
+                                                Text(tag.description ?? "")
+                                                    .tag(tag.description as String?)
+                                            }
+                                        }
+                                    }
+                                    .navigationTitle("Tags bearbeiten")
+                                    .toolbar {
+                                        ToolbarItem(placement: .confirmationAction) {
+                                            Button("Done", action: createOrUpdateProfileTags)
+                                        }
+                                        
+                                        ToolbarItem(placement: .cancellationAction) {
+                                            Button("Cancel", action: { isShowingTagsSheet.toggle() })
+                                        }
+                                    }
+                                    .onAppear {
+                                        Task {
+                                            self.tags = await userProfileViewModel.fetchTags()
+                                        }
+                                    }
+                                }
+                            }
                         }
                         .padding([.top, .bottom], 5)
                     }
@@ -188,6 +227,8 @@ struct ProfileView: View {
                 do {
                     try await userProfileViewModel.userProfile?.pets?.fetch()
                     try await userProfileViewModel.userProfile?.advertisements?.fetch()
+                    try await userProfileViewModel.userProfile?.tags?.fetch()
+                    try await loadTagCloud()
                     self.authorName = await userProfileViewModel.getAuthorName()
                 }
             }
@@ -195,6 +236,17 @@ struct ProfileView: View {
         }
     }
     
+    private func loadTagCloud() async throws {
+        do {
+            let tagItems = userProfileViewModel.userProfile?.tags?.elements
+            for item in tagItems! {
+                let tag = try await item.tag
+                self.tagCloud.append(tag?.description ?? "")
+            }
+        } catch {
+            print("Could not fetch tags for tag cloud.")
+        }
+    }
     
     private func shareItem(){
         
@@ -205,6 +257,30 @@ struct ProfileView: View {
             await userProfileViewModel.updateProfile(userProfile: userProfileViewModel.userProfile!)
             
             isShowingDescriptionSheet.toggle()
+        }
+    }
+    
+    private func createOrUpdateProfileTags() {
+        do {
+            Task {
+                // load profile tags
+                let profileTags = userProfileViewModel.userProfile?.tags?.elements
+                
+                if let selectedProfileTag = tag {
+                    // format to tag
+                    let formattedTag = tags.first(where: { $0.description == selectedProfileTag })
+                    
+                    // check if profile tags exists
+                    if let pTags = profileTags, pTags.isEmpty {
+                        await userProfileViewModel.createTag(userProfile: userProfileViewModel.userProfile!, tag: formattedTag!)
+                    } else {
+                        let firstUserProfileTag = userProfileViewModel.userProfile?.tags?.first(where: { $0.author == userProfileViewModel.userProfile?.author })
+                        await userProfileViewModel.updateTag(userProfileTag: firstUserProfileTag!, tag: formattedTag!)
+                    }
+                }
+                
+                isShowingTagsSheet.toggle()
+            }
         }
     }
     
