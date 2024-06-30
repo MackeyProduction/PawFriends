@@ -19,6 +19,7 @@ struct ProfileView: View {
     @State private var tag: String? = "tag"
     @State private var tags: [Tag] = []
     @State private var tagCloud: [String] = []
+    @State private var followers: [UserProfileFollower] = []
     
     init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingTagsSheet: Bool = false, isShowingDescriptionSheet: Bool = false, newPet: Pet? = nil) {
         self.userProfileViewModel = userProfileViewModel
@@ -101,7 +102,7 @@ struct ProfileView: View {
                         
                         HStack {
                             Image(systemName: "person.3.fill")
-                            Text("2 Follower")
+                            Text("\(followers.count) Follower")
                             Spacer()
                         }
                         .padding([.top, .bottom], 5)
@@ -228,8 +229,10 @@ struct ProfileView: View {
                     try await userProfileViewModel.userProfile?.pets?.fetch()
                     try await userProfileViewModel.userProfile?.advertisements?.fetch()
                     try await userProfileViewModel.userProfile?.tags?.fetch()
+                    try await userProfileViewModel.userProfile?.followers?.fetch()
                     try await loadTagCloud()
                     self.authorName = await userProfileViewModel.getAuthorName()
+                    self.followers = userProfileViewModel.userProfile?.followers?.elements ?? []
                 }
             }
             
