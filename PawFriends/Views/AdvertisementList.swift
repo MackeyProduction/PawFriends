@@ -88,7 +88,7 @@ struct AdvertisementList: View {
             }
             .sheet(isPresented: $isShowingAdvertisementSheet) {
                 NavigationStack {
-                    AdvertisementSheet(advertisementViewModel: advertisementViewModel, advertisement: $newAdvertisement)
+                    AdvertisementSheet(advertisementViewModel: advertisementViewModel, userProfile: userProfileViewModel.userProfile, advertisement: $newAdvertisement, isNew: true)
                 }
             }
             .task {

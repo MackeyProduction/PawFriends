@@ -59,6 +59,25 @@ class AdvertisementViewModel: ObservableObject {
         }
     }
     
+    func createAdvertisement(userProfile: UserProfile, advertisement: Advertisement) async {
+        do {
+            var newAdvertisement = advertisement
+            newAdvertisement.releaseDate = Temporal.DateTime.now()
+            newAdvertisement.setUserProfile(userProfile)
+            let result = try await Amplify.API.mutate(request: .create(newAdvertisement, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let advertisement):
+                print("Successfully created advertisement: \(advertisement)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to create advertisement: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
     static let sampleData: [Advertisement] = [
         Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Katzen-Sitter für Kater gesucht", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Die Beschreibung ist eine Aufsatzart. Sie informiert sachlich über ein Objekt, dass betrachtet wird und beschrieben werden soll. Die verwendete Sprache sollte an die Zielgruppe angepasst sein.\n\nZiel einer Beschreibung ist es einen gegebenen Gegenstand oder Situation dem Leser blalba genauestens zu vermitteln.\nSprachliche Stilmittel und die chronologisch sowie sinnvolle Beschreibung ist hier besonders wichtig.", advertisementImages: ["TestImage2","TestImage1"], tags: nil, watchLists: nil, userProfile: nil, chats: nil),
         Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige", advertisementImages: [], tags: nil, watchLists: nil, userProfile: nil, chats: nil)

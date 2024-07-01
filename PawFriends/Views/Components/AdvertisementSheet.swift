@@ -10,6 +10,7 @@ import PhotosUI
 
 struct AdvertisementSheet: View {
     @ObservedObject var advertisementViewModel: AdvertisementViewModel
+    @State var userProfile: UserProfile? = nil
     @StateObject private var photoPickerViewModel: PhotoPickerViewModel = PhotoPickerViewModel()
     @Binding var advertisement: Advertisement
     @State var isNew: Bool = false
@@ -120,13 +121,25 @@ struct AdvertisementSheet: View {
     }
     
     private func createOrUpdate() {
-        
+        Task {
+            do {
+                // check if we have a new or an existing advertisement
+                if isNew {
+                    await advertisementViewModel.createAdvertisement(userProfile: userProfile!, advertisement: advertisement)
+                }
+                
+                // reload advertisements
+                await advertisementViewModel.listAdvertisements()
+                
+                dismiss()
+            }
+        }
     }
 }
 
 #Preview {
     NavigationStack {
         @State var advertisement = Advertisement()
-        AdvertisementSheet(advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData), advertisement: $advertisement)
+        AdvertisementSheet(advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData), userProfile: UserProfileViewModel.sampleData[0], advertisement: $advertisement)
     }
 }
