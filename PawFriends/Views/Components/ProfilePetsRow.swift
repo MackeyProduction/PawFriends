@@ -12,15 +12,22 @@ struct ProfilePetsRow: View {
     @State var pet: Pet
     @State private var petType: PetType? = nil
     @State private var isShowingPetsSheet = false
+    @State private var navigateToPetDetail = false
     
     var body: some View {
         ZStack {
             HStack {
-                Image(systemName: "pawprint.circle.fill")
-                    .font(.title)
-                    .foregroundStyle(Color(greenColorReverse!))
-                Text(pet.name ?? "Tier nicht gefunden")
-                    .fontWeight(.medium)
+                Button(action: {
+                    navigateToPetDetail = true
+                }) {
+                    Image(systemName: "pawprint.circle.fill")
+                        .font(.title)
+                        .foregroundStyle(Color(greenColorReverse!))
+                    Text(pet.name ?? "Tier nicht gefunden")
+                        .fontWeight(.medium)
+                }
+                .navigationDestination(isPresented: $navigateToPetDetail) {
+                    PetDetail(vm: vm, pet: $pet)}
                 Spacer()
             }
             HStack {

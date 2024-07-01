@@ -12,6 +12,8 @@ struct ProfileAdvertisementList: View {
     @State var advertisements: [Advertisement]
     @State private var newAdvertisement: Advertisement = Advertisement()
     @State private var isShowingAdvertisementSheet = false
+    @State private var navigateToAdvertisementDetail = false
+
     
     init(vm: UserProfileViewModel, advertisements: [Advertisement] = []) {
         self.vm = vm
@@ -25,10 +27,19 @@ struct ProfileAdvertisementList: View {
                     .font(.title2)
                     .fontWeight(.semibold)
                 Spacer()
-                Button(action: { isShowingAdvertisementSheet.toggle() }) {
-                    Image(systemName: "plus.square")
-                        .font(.title2)
+//                Button(action: { isShowingAdvertisementSheet.toggle() }) {
+//                    Image(systemName: "plus.square")
+//                        .font(.title2)
+//                }
+                Button(action: {
+                    navigateToAdvertisementDetail = true
+                }) {
+                    Label("", systemImage: "plus.square")
                 }
+                .font(.title2)
+                .navigationDestination(isPresented: $navigateToAdvertisementDetail) {
+                    AdvertisementDetail(vm: vm, advertisement: $newAdvertisement, isNew: true).navigationBarBackButtonHidden(true)
+                               }
             }.padding(.bottom, 5)
             
             if !advertisements.isEmpty {
@@ -38,11 +49,11 @@ struct ProfileAdvertisementList: View {
             }
         }
         .padding(.top, 5).padding(.bottom, 5)
-        .sheet(isPresented: $isShowingAdvertisementSheet) {
-            NavigationStack {
-                ProfileAdvertisementSheet(vm: vm, advertisement: $newAdvertisement, isNew: true)
-            }
-        }
+//        .sheet(isPresented: $isShowingAdvertisementSheet) {
+//            NavigationStack {
+//                ProfileAdvertisementSheet(vm: vm, advertisement: $newAdvertisement, isNew: true)
+//            }
+//        }
     }
 }
 

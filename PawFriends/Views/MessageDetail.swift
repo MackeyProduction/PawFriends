@@ -27,9 +27,9 @@ struct MessageDetail: View {
                                 HStack {
                                     Text(chat.message ?? "")
                                         .padding()
-                                        .background(Color.blue)
+                                        .background(Color(greenColorReverse!))
                                         .cornerRadius(10)
-                                        .foregroundColor(.white)
+                                        .foregroundColor(Color(mainColor!))
                                         .frame(maxWidth: .infinity, alignment: .trailing)
                                     
                                     Image("TestImage2")
@@ -51,9 +51,9 @@ struct MessageDetail: View {
                                     
                                     Text(chat.message ?? "")
                                         .padding()
-                                        .background(Color.gray.opacity(0.2))
+                                        .background(Color(greenColor!))
                                         .cornerRadius(10)
-                                        .foregroundColor(.black)
+                                        .foregroundColor(Color(mainTextColor!))
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
                                 
@@ -85,7 +85,7 @@ struct MessageDetail: View {
                     Text("Send")
                         .padding(.horizontal)
                         .padding(.vertical, 10)
-                        .background(Color.blue)
+                        .background(Color(greenColorReverse!))
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
@@ -105,6 +105,7 @@ struct MessageDetail: View {
                 }
             }
         }
+        .background(Color(mainColor!))
     }
     
     private func sendMessage() {

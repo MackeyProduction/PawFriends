@@ -24,6 +24,7 @@ struct FavoriteList: View {
             
             Spacer()
         }
+        .background(Color(mainColor!))
         .navigationTitle("Favoriten")
     }
 }

@@ -39,6 +39,8 @@ struct FollowingListView: View {
                     }
                 }
             }
+            .background(Color(mainColor!))
+            .scrollContentBackground(.hidden)
             .onAppear {
                 Task {
                     do {

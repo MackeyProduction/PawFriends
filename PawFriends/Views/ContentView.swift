@@ -18,6 +18,7 @@ let mainTextColor = UIColor(named: "MainTextColor")
 let greenColor = UIColor(named: "GreenColor")
 let greenColorReverse = UIColor(named: "GreenColorReverse")
 
+
 struct ContentView: View {
     @StateObject var userProfileViewModel: UserProfileViewModel
     @StateObject var advertisementViewModel: AdvertisementViewModel
@@ -32,12 +33,6 @@ struct ContentView: View {
         ) { state in
             VStack {
                 AppView(userProfileViewModel: userProfileViewModel, advertisementViewModel: advertisementViewModel)
-                
-                Button("Sign out") {
-                    Task {
-                        await state.signOut()
-                    }
-                }
             }.onAppear {
                 Task {
                     if !ProcessInfo.processInfo.isSwiftUIPreview {
@@ -71,7 +66,7 @@ struct AppView: View {
     
     var body: some View {
         TabView {
-            SearchView(advertisementViewModel: advertisementViewModel)
+            SearchView(vm: userProfileViewModel, advertisementViewModel: advertisementViewModel)
                 .tabItem {
                     Label("Suche", systemImage: "magnifyingglass")
                 }
@@ -90,7 +85,7 @@ struct AppView: View {
                 .tabItem {
                     Label("Profil", systemImage: "person")
                 }
-        }
+        }.background(Color(mainColor!))
     }
 }
 

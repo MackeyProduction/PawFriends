@@ -312,9 +312,9 @@ class UserProfileViewModel: ObservableObject {
                 ],
             pets:
                 [
+                    Pet(id: UUID().uuidString, description: "Momo ist ein super lieber Tuxedo-Kater, der Gesellschaft liebt und super herumgetragen werden kann", name: "Momo", age: 4, petImage: false, petType: PetType(id: UUID().uuidString, description: "Katze"), petBreed: PetBreed(id: UUID().uuidString, description: "Europäisch Kurzhaar Mix")),
                     Pet(id: UUID().uuidString, description: "Nemo ist ein kleiner, süßer Choco-Chihuahua, der es liebt zu kuscheln.", name: "Nemo", age: 5, petImage: false, petType: PetType(id: UUID().uuidString, description: "Hund"), petBreed: PetBreed(id: UUID().uuidString, description: "Chihuahua")),
                     Pet(id: UUID().uuidString, description: "Eddy ist mein Lieblingspony.", name: "Eddy", age: 10, petImage: false, petType: PetType(id: UUID().uuidString, description: "Pferd"), petBreed: PetBreed(id: UUID().uuidString, description: "Mini-Shetty")),
-                    Pet(id: UUID().uuidString, description: "Momo ist ein super lieber Tuxedo-Kater, der Gesellschaft liebt und super herumgetragen werden kann", name: "Momo", age: 4, petImage: false, petType: PetType(id: UUID().uuidString, description: "Katze"), petBreed: PetBreed(id: UUID().uuidString, description: "Europäisch Kurzhaar Mix")),
                 ],
             watchLists:
                 [
@@ -322,6 +322,7 @@ class UserProfileViewModel: ObservableObject {
                 ],
             advertisements:
                 [
+                    Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", advertisementId: nil, title: "Katzen-Sitter für Kater gesucht", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Die Beschreibung ist eine Aufsatzart. Sie informiert sachlich über ein Objekt, dass betrachtet wird und beschrieben werden soll. Die verwendete Sprache sollte an die Zielgruppe angepasst sein.\n\nZiel einer Beschreibung ist es einen gegebenen Gegenstand oder Situation dem Leser blalba genauestens zu vermitteln.\nSprachliche Stilmittel und die chronologisch sowie sinnvolle Beschreibung ist hier besonders wichtig.", advertisementImages: ["TestImage2","TestImage1"], tags: nil, watchLists: nil, userProfile: nil, chats: nil),
                     Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 1", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige"),
                     Advertisement(id: "9FCF5DD5-1D65-4A82-BE76-42CB438607A0", title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine andere Anzeige")
                 ],

@@ -12,6 +12,7 @@ struct ProfileAdvertisementRow: View {
     @ObservedObject var vm: UserProfileViewModel
     @State var advertisement: Advertisement
     @State private var isShowingAdvertisementSheet = false
+    @State private var navigateToAdvertisementDetail = false
     
     func releaseDateToString(releaseDate: Temporal.DateTime) -> String {
         let relativeDateFormatter = DateFormatter()
@@ -29,27 +30,33 @@ struct ProfileAdvertisementRow: View {
     var body: some View {
         VStack {
             HStack {
-                Image(systemName: "photo.fill")
-                    .font(.system(size: 70))
-                    .foregroundStyle(Color(greenColorReverse!))
-                    .padding(-8)
-                VStack {
-                    HStack {
-                        Text(advertisement.title ?? "")
-                            .fontWeight(.medium)
-                        Spacer()
-                        
+                Button(action: {
+                    navigateToAdvertisementDetail = true
+                }) {
+                    Image(systemName: "photo.fill")
+                        .font(.system(size: 70))
+                        .foregroundStyle(Color(greenColorReverse!))
+                        .padding(-8)
+                    VStack {
+                        HStack {
+                            Text(advertisement.title ?? "")
+                                .fontWeight(.medium)
+                            Spacer()
+                            
+                        }
+                        HStack {
+                            Image(systemName: "calendar")
+                                .font(.callout)
+                                .frame(width: 10)
+                                .padding(.leading, 5)
+                            Text(releaseDateToString(releaseDate:advertisement.releaseDate ?? Temporal.DateTime(.distantPast)))
+                                .padding(.trailing, 50)
+                            Spacer()
+                        }.foregroundStyle(Color(textColor!))
                     }
-                    HStack {
-                        Image(systemName: "calendar")
-                            .font(.callout)
-                            .frame(width: 10)
-                            .padding(.leading, 5)
-                        Text(releaseDateToString(releaseDate:advertisement.releaseDate ?? Temporal.DateTime(.distantPast)))
-                            .padding(.trailing, 50)
-                        Spacer()
-                    }.foregroundStyle(Color(textColor!))
                 }
+                .navigationDestination(isPresented: $navigateToAdvertisementDetail) {
+                    AdvertisementDetail(vm: vm, advertisement: $advertisement)}
                 Spacer()
                 Button(action: { isShowingAdvertisementSheet.toggle() }) {
                     Image(systemName: "square.and.pencil")

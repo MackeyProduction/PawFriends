@@ -12,12 +12,13 @@ struct FavoriteView: View {
     
     var body: some View {
         NavigationSplitView {
-            FavoriteList(userProfileViewModel: userProfileViewModel)
+            FavoriteList(userProfileViewModel: userProfileViewModel)            .background(Color(mainColor!))
         } detail: {
             Text("Select an item")
                 .navigationTitle("Favoriten")
         }
     }
+
 }
 
 #Preview {

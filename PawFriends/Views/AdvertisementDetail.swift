@@ -12,8 +12,10 @@ import PhotosUI
 
 struct AdvertisementDetail: View {
     //@Query(sort: \Advertisement.title) private var ads: [Advertisement]
+    //@ObservedObject var vm: UserProfileViewModel
+    @ObservedObject var vm: UserProfileViewModel
     @Binding var advertisement: Advertisement
-    let isNew: Bool
+    @State var isNew: Bool
     
     @State private var likedItem: Bool = false
     @State private var heart: String = "heart"
@@ -31,7 +33,9 @@ struct AdvertisementDetail: View {
     
     @Environment(\.dismiss) private var dismiss
     
-    init(advertisement: Binding<Advertisement>, isNew: Bool = false) {
+    
+    init(vm: UserProfileViewModel, advertisement: Binding<Advertisement>, isNew: Bool = false) {
+        self.vm = vm
         self._advertisement = advertisement
         self.isNew = isNew
         self.title = ""
@@ -188,55 +192,7 @@ struct AdvertisementDetail: View {
                     Divider()
                         .background(Color(textColor!))
                     
-                    VStack {
-                        Text("Anbieter")  // alles am anbieter fixen (userprofile)
-                            .font(.title3)
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, 8)
-                        
-                        HStack {
-                            Image(systemName: "person.crop.square.fill")
-                                .font(.system(size: 50))
-                                .padding(.trailing, 2)
-                                .foregroundColor(Color(firstColor!))
-                            Text("Anna")
-                                .font(.headline)
-                            
-                            Spacer()
-                            
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 10)
-                                Button(action: follow) {
-                                    Label("Folgen", systemImage: "person.badge.plus")
-                                }
-                                .foregroundStyle(Color(mainTextColor!))
-                            }
-                            .frame(width: 100, height: 40)
-                            .foregroundStyle(Color(secondColor!))
-                        }
-                        
-                        HStack {
-                            Image(systemName: "bookmark")
-                                .font(.callout)
-                                .frame(width: 10)
-                            Text("Aktiv seit 19.09.19")
-                                .font(.callout)
-                            Spacer()
-                        }
-                        .foregroundStyle(Color(textColor!))
-                        .padding(.top, 2)
-                        .padding(.bottom, 5)
-                        //                                .background(RoundedRectangle(cornerRadius: 10)
-                        //                                    .foregroundStyle(Color(secondColor!)))
-                        HStack {
-                            Image(systemName: "number.square")
-                                .font(.callout)
-                                .frame(maxWidth: 10, maxHeight: .infinity, alignment: .top)
-                                .padding(.top, 9)
-                            TagCloudView(tags: ["Nicht-Raucher","sportlich","Katzen-Kenner"])
-                        }
-                    }
+                    DetailProfileInfos(vm: vm, title: "Anbieter")
                     .padding(.top, 10)
                     .padding(.bottom, 20)
                     .padding(.leading)
@@ -318,23 +274,29 @@ struct AdvertisementDetail: View {
                 Form {
                     Section {
                         //Text("Titel")
-                        TextField("Titel", text: $title)
+                        TextField("Titel", text: Binding(
+                            get: { advertisement.title ?? "" },
+                            set: { advertisement.title = $0 }
+                        ), axis: .vertical)
                             .autocorrectionDisabled()
                     }
                     .listRowBackground(Color(thirdColor!))
                     
-                    Section { //Multi select, Kategorien sortiert
-                        Picker("Tags", selection: $tags) {
-                            ForEach(tagOptions, id: \.self) {
-                                Text($0)
-                            }
-                        }//.pickerStyle()
-                    }
-                    .listRowBackground(Color(thirdColor!))
+        //            Section { //Multi select, Kategorien sortiert
+        //                Picker("Tags", selection: $tags) {
+        //                    ForEach(tagOptions, id: \.self) {
+        //                        Text($0)
+        //                    }
+        //                }//.pickerStyle()
+        //            }
+        //            .listRowBackground(Color(thirdColor!))
                     
                     Section {
                         Text("Beschreibung")
-                        TextField("", text: $description, axis: .vertical)
+                        TextField("", text: Binding(
+                            get: { advertisement.description ?? "" },
+                            set: { advertisement.description = $0 }
+                        ), axis: .vertical)
                             .autocorrectionDisabled()
                             .lineLimit(9...9)
                     }
@@ -343,7 +305,7 @@ struct AdvertisementDetail: View {
                     Section(footer:
                                 HStack {
                         Spacer()
-                        Button(action: {}) {
+                        Button(action: createOrUpdate) {
                             Text("Veröffentlichen")
                                 .font(.title2)
                                 .foregroundStyle(Color(mainTextColor!))
@@ -355,18 +317,70 @@ struct AdvertisementDetail: View {
                     ) {
                         EmptyView()
                     }
-                }
-                //.frame(width: g.size.width, height: g.size.height-150, alignment: .center)
-                .frame(height: 560) //dynamische höhe machen
-                .scrollContentBackground(.hidden)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Abbrechen") {
-                            //     modelContext.delete(advertisement)
-                            dismiss()
-                        }.foregroundStyle(Color(mainTextColor!))
+                }.scrollContentBackground(.hidden)
+                    //.navigationTitle(isNew ? "Anzeige hinzufügen" : "Anzeige bearbeiten")
+                    .toolbar {
+//                        ToolbarItem(placement: .confirmationAction) {
+//                            Button("Done", action: createOrUpdate)
+//                        }
+                        
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Abbrechen", action: { dismiss() })
+                        }
                     }
-                }
+                
+//                Form {
+//                    Section {
+//                        //Text("Titel")
+//                        TextField("Titel", text: $title)
+//                            .autocorrectionDisabled()
+//                    }
+//                    .listRowBackground(Color(thirdColor!))
+//                    
+//                    Section { //Multi select, Kategorien sortiert
+//                        Picker("Tags", selection: $tags) {
+//                            ForEach(tagOptions, id: \.self) {
+//                                Text($0)
+//                            }
+//                        }//.pickerStyle()
+//                    }
+//                    .listRowBackground(Color(thirdColor!))
+//                    
+//                    Section {
+//                        Text("Beschreibung")
+//                        TextField("", text: $description, axis: .vertical)
+//                            .autocorrectionDisabled()
+//                            .lineLimit(9...9)
+//                    }
+//                    .listRowBackground(Color(thirdColor!))
+//                                        
+//                    Section(footer:
+//                                HStack {
+//                        Spacer()
+//                        Button(action: {}) {
+//                            Text("Veröffentlichen")
+//                                .font(.title2)
+//                                .foregroundStyle(Color(mainTextColor!))
+//                        }
+//                        .padding(10)
+//                        .background(RoundedRectangle(cornerRadius: 10).foregroundStyle(Color(greenColor!)))
+//                        Spacer()
+//                    }
+//                    ) {
+//                        EmptyView()
+//                    }
+//                }
+//                //.frame(width: g.size.width, height: g.size.height-150, alignment: .center)
+//                .frame(height: 560) //dynamische höhe machen
+//                .scrollContentBackground(.hidden)
+//                .toolbar {
+//                    ToolbarItem(placement: .cancellationAction) {
+//                        Button("Abbrechen") {
+//                            //     modelContext.delete(advertisement)
+//                            dismiss()
+//                        }.foregroundStyle(Color(mainTextColor!))
+//                    }
+//                }
                 //.navigationTitle(isNew ? "Neue Anzeige" : "Anzeige")
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
@@ -399,27 +413,52 @@ struct AdvertisementDetail: View {
         advertisement.releaseDate = Temporal.DateTime(releaseDate)
     }
     
+    private func createOrUpdate() {
+        Task {
+            do {
+                // check if we have a new or an existing advertisement
+                if isNew {
+                    await vm.createAdvertisement(userProfile: vm.userProfile!, advertisement: advertisement)
+                } else {
+                    await vm.updateAdvertisement(userProfile: vm.userProfile!, advertisement: advertisement)
+                }
+                
+                // reload advertisements
+                try await vm.userProfile?.advertisements?.fetch()
+                
+                dismiss()
+            }
+        }
+    }
 }
 
 
 #Preview {
     NavigationStack {
-        @State var sampleAdvertisement = AdvertisementViewModel.sampleData[0]
-        GeometryReader { previewGeo in
-            AdvertisementDetail(advertisement: $sampleAdvertisement)
-//            AdvertisementDetail(advertisement: $sampleAdvertisement, geoRoot: previewGeo)
-        }
+        @State var advertisement = UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement()
+        AdvertisementDetail(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisement: $advertisement)
     }
+//    NavigationStack {
+//        @State var sampleAdvertisement = AdvertisementViewModel.sampleData[0]
+//        GeometryReader { previewGeo in
+//            AdvertisementDetail(advertisement: $sampleAdvertisement)
+////            AdvertisementDetail(advertisement: $sampleAdvertisement, geoRoot: previewGeo)
+//        }
+//    }
 }
 
 #Preview("New Advertisement") {
     NavigationStack {
-        @State var sampleAdvertisement = AdvertisementViewModel.sampleData[0]
-        GeometryReader { previewGeo in
-            AdvertisementDetail(advertisement: $sampleAdvertisement, isNew: true)
-                .navigationBarTitleDisplayMode(.inline)
-        }
+        @State var advertisement = UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement()
+        AdvertisementDetail(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisement: $advertisement, isNew: true)
     }
+//    NavigationStack {
+//        @State var sampleAdvertisement = AdvertisementViewModel.sampleData[0]
+//        GeometryReader { previewGeo in
+//            AdvertisementDetail(advertisement: $sampleAdvertisement, isNew: true)
+//                .navigationBarTitleDisplayMode(.inline)
+//        }
+//    }
 }
 
 

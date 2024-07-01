@@ -10,6 +10,7 @@ import SwiftData
 
 struct AdvertisementList: View {
     @Environment(\.modelContext) private var modelContext
+    @ObservedObject var userProfileViewModel: UserProfileViewModel
     @ObservedObject var advertisementViewModel: AdvertisementViewModel
     //@Query private var ads: [AdvertisementViewModel]
     @State private var newAdvertisement: AdvertisementViewModel?
@@ -19,7 +20,8 @@ struct AdvertisementList: View {
     @State private var likedItem: Bool = false
     @State private var heart: String = "heart"
     
-    init(advertisementViewModel: AdvertisementViewModel, titleFilter: String = "") {
+    init(vm: UserProfileViewModel, advertisementViewModel: AdvertisementViewModel, titleFilter: String = "") {
+        self.userProfileViewModel = vm
         self.advertisementViewModel = advertisementViewModel
         /*
          let predicate = #Predicate<AdvertisementViewModel> { ad in
@@ -41,7 +43,7 @@ struct AdvertisementList: View {
                         ForEach($advertisementViewModel.advertisements, id: \.id) { $item in
                             //GeometryReader { geoRoot in
                             ZStack {
-                                NavigationLink(destination: AdvertisementDetail(advertisement: $item)) {
+                                NavigationLink(destination: AdvertisementDetail(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisement: $item)) {
                                     HStack {
                                         //                                    Image(item.advertisementImages![0] ?? "TestImage1")
                                         //                                        .resizable()
@@ -144,10 +146,10 @@ struct AdvertisementList: View {
 
 #Preview {
     NavigationStack {
-        AdvertisementList(advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData))
+        AdvertisementList(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData))
     }
 }
 
 #Preview("Empty List") {
-    AdvertisementList(advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData))
+    AdvertisementList(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData))
 }

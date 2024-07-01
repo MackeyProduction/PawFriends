@@ -17,7 +17,7 @@ struct WatchlistView: View {
         if let watchList = userProfileViewModel.userProfile?.watchLists, watchList.isLoaded, !watchList.isEmpty {
             List {
                 ForEach($advertisements, id: \.id) { advertisement in
-                    NavigationLink(destination: AdvertisementDetail(advertisement: advertisement)) {
+                    NavigationLink(destination: AdvertisementDetail(vm: userProfileViewModel, advertisement: advertisement)) {
                         HStack {
                             Image("\(String(describing: advertisement.wrappedValue.advertisementImages?.first))")
                                 .resizable()
@@ -45,6 +45,8 @@ struct WatchlistView: View {
                     }
                 }
             }
+            .background(Color(mainColor!))
+            .scrollContentBackground(.hidden)
             .onAppear {
                 Task {
                     do {

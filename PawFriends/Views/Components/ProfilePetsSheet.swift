@@ -38,12 +38,14 @@ struct ProfilePetsSheet: View {
                 set: { pet.name = $0 }
             ), axis: .vertical)
             .autocorrectionDisabled()
+            .listRowBackground(Color(thirdColor!))
             
             TextField("Beschreibung", text: Binding(
                 get: { pet.description ?? "" },
                 set: { pet.description = $0 }
             ), axis: .vertical)
             .autocorrectionDisabled()
+            .listRowBackground(Color(thirdColor!))
             
             TextField("Alter", value: Binding(
                 get: {
@@ -57,6 +59,7 @@ struct ProfilePetsSheet: View {
                 }
             ), formatter: numberFormatter)
                 .keyboardType(.numberPad)
+                .listRowBackground(Color(thirdColor!))
             
             Picker("Tiertypen", selection: $petType) {
                 Text("None")
@@ -66,7 +69,7 @@ struct ProfilePetsSheet: View {
                     Text(petType.description ?? "")
                         .tag(petType.description as String?)
                 }
-            }
+            }.listRowBackground(Color(thirdColor!))
         }
         .navigationTitle(isNew ? "Haustier hinzufügen" : "Haustier bearbeiten")
         .toolbar {

@@ -23,6 +23,7 @@ struct MessageList: View {
                         }
                     }
                 }
+                .scrollContentBackground(.hidden)
                 .onAppear {
                     Task {
                         do {
@@ -37,6 +38,7 @@ struct MessageList: View {
                 }
             }
         }
+        .background(Color(mainColor!))
         .navigationTitle("Nachrichten")
         
     }

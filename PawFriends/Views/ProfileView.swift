@@ -30,6 +30,7 @@ struct ProfileView: View {
         self.newPet = newPet
     }
     
+    @State private var navigateToSettings = false
     
     func dateToString(releaseDate: Temporal.Date) -> String {
         let relativeDateFormatter = DateFormatter()
@@ -69,10 +70,15 @@ struct ProfileView: View {
                                 }
                                 .padding(.bottom, 5)
                                 .font(.title2)
-                                Button(action: {}) {
+                                Button(action: {
+                                    navigateToSettings = true
+                                }) {
                                     Label("", systemImage: "gearshape.fill")
                                 }
                                 .font(.title2)
+                                .navigationDestination(isPresented: $navigateToSettings) {
+                                                   SettingsView()
+                                               }
                             }
                         }.foregroundStyle(Color(textColor!))
                         

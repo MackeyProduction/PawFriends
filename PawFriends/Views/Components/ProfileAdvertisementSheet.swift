@@ -16,28 +16,86 @@ struct ProfileAdvertisementSheet: View {
     
     var body: some View {
         Form {
-            TextField("Anzeigentitel", text: Binding(
-                get: { advertisement.title ?? "" },
-                set: { advertisement.title = $0 }
-            ), axis: .vertical)
-            .autocorrectionDisabled()
-            
-            TextField("Beschreibung", text: Binding(
-                get: { advertisement.description ?? "" },
-                set: { advertisement.description = $0 }
-            ), axis: .vertical)
-            .autocorrectionDisabled()
-        }
-        .navigationTitle(isNew ? "Anzeige hinzufügen" : "Anzeige bearbeiten")
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Done", action: createOrUpdate)
+            Section {
+                //Text("Titel")
+                TextField("Titel", text: Binding(
+                    get: { advertisement.title ?? "" },
+                    set: { advertisement.title = $0 }
+                ), axis: .vertical)
+                    .autocorrectionDisabled()
             }
+            .listRowBackground(Color(thirdColor!))
             
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel", action: { dismiss() })
+//            Section { //Multi select, Kategorien sortiert
+//                Picker("Tags", selection: $tags) {
+//                    ForEach(tagOptions, id: \.self) {
+//                        Text($0)
+//                    }
+//                }//.pickerStyle()
+//            }
+//            .listRowBackground(Color(thirdColor!))
+            
+            Section {
+                Text("Beschreibung")
+                TextField("", text: Binding(
+                    get: { advertisement.description ?? "" },
+                    set: { advertisement.description = $0 }
+                ), axis: .vertical)
+                    .autocorrectionDisabled()
+                    .lineLimit(9...9)
             }
-        }
+            .listRowBackground(Color(thirdColor!))
+                                
+//            Section(footer:
+//                        HStack {
+//                Spacer()
+//                Button(action: createOrUpdate) {
+//                    Text("Veröffentlichen")
+//                        .font(.title2)
+//                        .foregroundStyle(Color(mainTextColor!))
+//                }
+//                .padding(10)
+//                .background(RoundedRectangle(cornerRadius: 10).foregroundStyle(Color(greenColor!)))
+//                Spacer()
+//            }
+//            ) {
+//                EmptyView()
+//            }
+        }.scrollContentBackground(.hidden)
+            .navigationTitle(isNew ? "Anzeige hinzufügen" : "Anzeige bearbeiten")
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Fertig", action: createOrUpdate)
+                }
+                
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Abbrechen", action: { dismiss() })
+                }
+            }
+        
+//        Form {
+//            TextField("Anzeigentitel", text: Binding(
+//                get: { advertisement.title ?? "" },
+//                set: { advertisement.title = $0 }
+//            ), axis: .vertical)
+//            .autocorrectionDisabled()
+//            
+//            TextField("Beschreibung", text: Binding(
+//                get: { advertisement.description ?? "" },
+//                set: { advertisement.description = $0 }
+//            ), axis: .vertical)
+//            .autocorrectionDisabled()
+//        }
+//        .navigationTitle(isNew ? "Anzeige hinzufügen" : "Anzeige bearbeiten")
+//        .toolbar {
+//            ToolbarItem(placement: .confirmationAction) {
+//                Button("Done", action: createOrUpdate)
+//            }
+//            
+//            ToolbarItem(placement: .cancellationAction) {
+//                Button("Cancel", action: { dismiss() })
+//            }
+//        }
     }
     
     private func createOrUpdate() {
