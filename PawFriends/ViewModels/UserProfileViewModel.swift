@@ -252,6 +252,39 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
+    func createWatchListItem(userProfile: UserProfile, advertisement: Advertisement) async {
+        do {
+            let newWatchListItem = WatchList(userProfile: userProfile, advertisement: advertisement)
+            let result = try await Amplify.API.mutate(request: .create(newWatchListItem, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let watchListItem):
+                print("Successfully created watch list item: \(watchListItem)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to create watch list item: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func deleteWatchListItem(watchList: WatchList) async {
+        do {
+            let result = try await Amplify.API.mutate(request: .delete(watchList, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let watchListItem):
+                print("Successfully deleted watch list item: \(watchListItem)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to delete watch list item: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
     func fetchPetTypes() async -> [PetType] {
         var petTypes: [PetType] = []
         let request = GraphQLRequest<PetType>.list(PetType.self, limit: 1000, authMode: .amazonCognitoUserPools)
@@ -294,6 +327,30 @@ class UserProfileViewModel: ObservableObject {
         }
         
         return tags
+    }
+    
+    func fetchWatchListItem(userProfile: UserProfile, advertisement: Advertisement) async -> WatchList? {
+        var watchList: [WatchList] = []
+        let watchListKeys = WatchList.keys
+        let predicate = watchListKeys.userProfile.eq(userProfile.id) && watchListKeys.advertisement.eq(advertisement.id)
+        let request = GraphQLRequest<WatchList>.list(WatchList.self, where: predicate, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let watchListResult):
+                print("Successfully retrieved watch list items: \(watchListResult)")
+                watchList.append(contentsOf: watchListResult)
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query tags: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+        
+        return watchList.first
     }
     
     static let sampleData: [UserProfile] = [
