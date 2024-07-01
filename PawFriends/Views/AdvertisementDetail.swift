@@ -26,6 +26,7 @@ struct AdvertisementDetail: View {
     @State private var tags: String = "tag"
     @State private var tagCloud: [String] = []
     @State private var description: String = ""
+    @State private var advertisementUserProfile: UserProfile? = nil
     
     @Environment(\.dismiss) private var dismiss
     
@@ -169,11 +170,13 @@ struct AdvertisementDetail: View {
                 Divider()
                     .background(Color(textColor!))
                 
-                DetailProfileInfos(vm: vm, title: "Anbieter")
-                    .padding(.top, 10)
-                    .padding(.bottom, 20)
-                    .padding(.leading)
-                    .padding(.trailing)
+                if let up = advertisementUserProfile {
+                    DetailProfileInfos(vm: vm, title: "Anbieter", authorId: up.author ?? "")
+                        .padding(.top, 10)
+                        .padding(.bottom, 20)
+                        .padding(.leading)
+                        .padding(.trailing)
+                }
                 
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
@@ -210,6 +213,7 @@ struct AdvertisementDetail: View {
                     try await vm.userProfile?.watchLists?.fetch()
                     try await loadTagCloud()
                     await fetchLikeItem()
+                    self.advertisementUserProfile = try await advertisement.userProfile
                 }
             }
         }
