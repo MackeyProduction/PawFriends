@@ -110,7 +110,7 @@ struct AdvertisementList: View {
                 }
             }
             .task {
-                //await advertisementViewModel.listAdvertisements()
+                await advertisementViewModel.listAdvertisements()
             }
             .buttonStyle(.plain)
         }.searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Suche")

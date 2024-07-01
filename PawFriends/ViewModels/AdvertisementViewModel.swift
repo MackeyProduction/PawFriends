@@ -17,23 +17,21 @@ class AdvertisementViewModel: ObservableObject {
         self.advertisements = advertisements
     }
     
-    func listAdvertisements() {
+    func listAdvertisements() async {
         let request = GraphQLRequest<Advertisement>.list(Advertisement.self)
-        Task {
-            do {
-                let result = try await Amplify.API.query(request: request)
-                switch result {
-                case .success(let advertisements):
-                    print("Successfully retrieved list of advertisements: \(advertisements)")
-                    self.advertisements = advertisements.elements
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
-                }
-            } catch let error as APIError {
-                print("Failed to query list of advertisements: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let advertisements):
+                print("Successfully retrieved list of advertisements: \(advertisements)")
+                self.advertisements = advertisements.elements
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to query list of advertisements: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
     }
     
