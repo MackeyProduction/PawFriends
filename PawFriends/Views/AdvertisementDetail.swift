@@ -213,6 +213,7 @@ struct AdvertisementDetail: View {
                     try await vm.userProfile?.watchLists?.fetch()
                     try await loadTagCloud()
                     await fetchLikeItem()
+                    await updateVisitor()
                     self.advertisementUserProfile = try await advertisement.userProfile
                 }
             }
@@ -245,11 +246,12 @@ struct AdvertisementDetail: View {
         }
     }
     
-    private func shareItem(){
-        
+    private func updateVisitor() async {
+        advertisement.visitor = 1 // TODO: muss noch gefixt werden
+        await vm.updateAdvertisement(userProfile: vm.userProfile!, advertisement: advertisement)
     }
     
-    private func follow() {
+    private func shareItem(){
         
     }
     
