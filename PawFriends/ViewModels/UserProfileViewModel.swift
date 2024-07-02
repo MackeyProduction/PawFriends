@@ -110,21 +110,19 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
-    func createChat(chat: Chat) {
-        Task {
-            do {
-                let result = try await Amplify.API.mutate(request: .create(chat))
-                switch result {
-                case .success(let chat):
-                    print("Successfully created chat: \(chat)")
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
-                }
-            } catch let error as APIError {
-                print("Failed to create chat: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+    func createChat(chat: Chat) async {
+        do {
+            let result = try await Amplify.API.mutate(request: .create(chat, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let chat):
+                print("Successfully created chat: \(chat)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to create chat: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
     }
     

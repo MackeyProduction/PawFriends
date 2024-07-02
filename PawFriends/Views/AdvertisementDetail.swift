@@ -27,6 +27,8 @@ struct AdvertisementDetail: View {
     @State private var tagCloud: [String] = []
     @State private var description: String = ""
     @State private var advertisementUserProfile: UserProfile? = nil
+    @State private var isShowingMessageSheet = false
+    @State private var chatMessage: String? = ""
     
     @Environment(\.dismiss) private var dismiss
     
@@ -176,8 +178,22 @@ struct AdvertisementDetail: View {
                         .padding(.bottom, 20)
                         .padding(.leading)
                         .padding(.trailing)
+                } else {
+                    ContentUnavailableView {
+                        Label("Anbieter nicht gefunden", systemImage: "person")
+                    }
                 }
                 
+                Divider()
+                    .background(Color(textColor!))
+                
+                Button(action: { isShowingMessageSheet.toggle() }) {
+                    Label("Nachricht", systemImage: "message")
+                        .font(.title2)
+                        .foregroundStyle(Color(mainTextColor!))
+                }
+                .padding(10)
+                .background(RoundedRectangle(cornerRadius: 10).foregroundStyle(Color(greenColor!)))
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
             //.edgesIgnoringSafeArea(.top)
@@ -206,15 +222,63 @@ struct AdvertisementDetail: View {
                     }
             }
         }
+        .sheet(isPresented: $isShowingMessageSheet) {
+            Form {
+                Section {
+                    HStack {
+                        Image(systemName: "person.crop.square.fill")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(Color(firstColor!))
+                        
+                        Text("\(advertisement.author ?? "Anbieter nicht gefunden")")
+                            .font(.largeTitle)
+                    }.padding(.top)
+                }
+                
+                Section {
+                    Text("Nachricht")
+                    TextField("", text: Binding(
+                        get: { chatMessage ?? "" },
+                        set: { chatMessage = $0 }
+                    ), axis: .vertical)
+                        .autocorrectionDisabled()
+                        .lineLimit(9...9)
+                }
+                .listRowBackground(Color(thirdColor!))
+                
+                Section(footer:
+                            HStack {
+                    Spacer()
+                    Button(action: createChat) {
+                        Label("Senden", systemImage: "message")
+                            .font(.title2)
+                            .foregroundStyle(Color(mainTextColor!))
+                    }
+                    .padding(10)
+                    .background(RoundedRectangle(cornerRadius: 10).foregroundStyle(Color(greenColor!)))
+                    Spacer()
+                }
+                ) {
+                    EmptyView()
+                }
+            }
+            .scrollContentBackground(.hidden)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Abbrechen", action: { dismiss() })
+                }
+            }
+        }
         .onAppear {
             Task {
                 do {
+                    self.advertisementUserProfile = try await advertisement.userProfile
                     try await advertisement.tags?.fetch()
                     try await vm.userProfile?.watchLists?.fetch()
-                    try await loadTagCloud()
+//                    try await loadTagCloud()
                     await fetchLikeItem()
                     await updateVisitor()
-                    self.advertisementUserProfile = try await advertisement.userProfile
                 }
             }
         }
@@ -287,6 +351,15 @@ struct AdvertisementDetail: View {
             }
         } catch {
             print("Could not fetch tags for tag cloud.")
+        }
+    }
+    
+    private func createChat() {
+        Task {
+            do {
+                // TODO: Fix create chat
+                await vm.createChat(chat: Chat(message: chatMessage, recipient: advertisement.author, userProfile: vm.userProfile, advertisement: advertisement))
+            }
         }
     }
 }
