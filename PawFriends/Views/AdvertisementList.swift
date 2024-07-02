@@ -38,7 +38,7 @@ struct AdvertisementList: View {
                         ForEach($advertisementViewModel.advertisements, id: \.id) { $item in
                             //GeometryReader { geoRoot in
                             ZStack {
-                                NavigationLink(destination: AdvertisementDetail(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisement: $item)) {
+                                NavigationLink(destination: AdvertisementDetail(vm: userProfileViewModel, advertisement: $item)) {
                                     HStack {
                                         //                                    Image(item.advertisementImages![0] ?? "TestImage1")
                                         //                                        .resizable()

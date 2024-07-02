@@ -9,55 +9,59 @@ import SwiftUI
 import Amplify
 
 struct WatchlistView: View {
-    @StateObject var userProfileViewModel: UserProfileViewModel
+    @ObservedObject var userProfileViewModel: UserProfileViewModel
     @State private var watchList: [WatchList] = []
     @State private var advertisements: [Advertisement] = []
     
     var body: some View {
-        if let watchList = userProfileViewModel.userProfile?.watchLists, watchList.isLoaded, !watchList.isEmpty {
-            List {
-                ForEach($advertisements, id: \.id) { advertisement in
-                    NavigationLink(destination: AdvertisementDetail(vm: userProfileViewModel, advertisement: advertisement)) {
-                        HStack {
-                            Image("\(String(describing: advertisement.wrappedValue.advertisementImages?.first))")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                            VStack(alignment: .leading) {
-                                Text("\(advertisement.wrappedValue.title ?? "Anzeige nicht gefunden")")
-                                    .font(.headline)
-                                if let userProfile = userProfileViewModel.userProfile {
-                                    Text("\(userProfile.location ?? "")")
+        Group {
+            if let watchList = userProfileViewModel.userProfile?.watchLists, watchList.isLoaded, !watchList.isEmpty {
+                List {
+                    ForEach($advertisements, id: \.id) { advertisement in
+                        NavigationLink(destination: AdvertisementDetail(vm: userProfileViewModel, advertisement: advertisement)) {
+                            HStack {
+                                Image("\(String(describing: advertisement.wrappedValue.advertisementImages?.first))")
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                VStack(alignment: .leading) {
+                                    Text("\(advertisement.wrappedValue.title ?? "Anzeige nicht gefunden")")
+                                        .font(.headline)
+                                    if let userProfile = userProfileViewModel.userProfile {
+                                        Text("\(userProfile.location ?? "")")
+                                            .font(.subheadline)
+                                    }
+                                    Text(releaseDateToString(releaseDate: advertisement.wrappedValue.releaseDate ?? Temporal.DateTime(.distantPast)))
                                         .font(.subheadline)
                                 }
-                                Text(releaseDateToString(releaseDate: advertisement.wrappedValue.releaseDate ?? Temporal.DateTime(.distantPast)))
-                                    .font(.subheadline)
-                            }
-                            Spacer()
-                            Button(action: {
-                                //                                if let index = ads.firstIndex(where: { $0.id == ad.id }) {
-                                //                                    ads.remove(at: index)
-                                //                                }
-                            }) {
-                                Image(systemName: "trash")
-                                    .foregroundColor(.red)
+                                Spacer()
+                                Button(action: {
+                                    //                                if let index = ads.firstIndex(where: { $0.id == ad.id }) {
+                                    //                                    ads.remove(at: index)
+                                    //                                }
+                                }) {
+                                    Image(systemName: "trash")
+                                        .foregroundColor(.red)
+                                }
                             }
                         }
                     }
                 }
+                
+            } else {
+                ContentUnavailableView {
+                    Label("Keine Favoriten gefunden", systemImage: "heart")
+                }
             }
-            .background(Color(mainColor!))
-            .scrollContentBackground(.hidden)
-            .onAppear {
-                Task {
-                    do {
-                        try await userProfileViewModel.userProfile?.watchLists?.fetch()
+        }
+        .background(Color(mainColor!))
+        .scrollContentBackground(.hidden)
+        .onAppear {
+            Task {
+                do {
+                    if let watchList = userProfileViewModel.userProfile?.watchLists, watchList.isLoaded {
                         self.advertisements = await getAdvertisements(watchList: userProfileViewModel.userProfile?.watchLists?.elements ?? [])
                     }
                 }
-            }
-        } else {
-            ContentUnavailableView {
-                Label("Keine Favoriten gefunden", systemImage: "heart")
             }
         }
     }

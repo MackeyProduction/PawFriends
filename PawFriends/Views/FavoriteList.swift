@@ -26,6 +26,12 @@ struct FavoriteList: View {
         }
         .background(Color(mainColor!))
         .navigationTitle("Favoriten")
+        .onAppear {
+            Task {
+                try await userProfileViewModel.userProfile?.watchLists?.fetch()
+                try await userProfileViewModel.userProfile?.follows?.fetch()
+            }
+        }
     }
 }
 
