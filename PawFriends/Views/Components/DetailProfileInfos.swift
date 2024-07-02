@@ -15,12 +15,17 @@ struct DetailProfileInfos: View {
     @State private var tag: String? = "tag"
     @State private var tags: [Tag] = []
     @State private var tagCloud: [String] = []
+    @State private var followIcon: String = "person.badge.plus"
+    @State private var followed: Bool = false
+    @State private var followLabel: String = "Folgen"
     
     @State var title: String
+    @State var authorId: String
     
-    init(vm: UserProfileViewModel, title: String = "Anbieter") {
+    init(vm: UserProfileViewModel, title: String = "Anbieter", authorId: String = "") {
         self.vm = vm
         self.title = title
+        self.authorId = authorId
     }
     
     var body: some View {
@@ -45,11 +50,11 @@ struct DetailProfileInfos: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: 10)
                     Button(action: follow) {
-                        Label("Folgen", systemImage: "person.badge.plus")
+                        Label(followLabel, systemImage: followIcon)
                     }
                     .foregroundStyle(Color(mainTextColor!))
                 }
-                .frame(width: 100, height: 40)
+                .frame(width: 120, height: 40)
                 .foregroundStyle(Color(secondColor!))
             }
             
@@ -79,7 +84,13 @@ struct DetailProfileInfos: View {
                 do {
                     try await vm.userProfile?.tags?.fetch()
                     try await loadTagCloud()
-                    self.authorName = await vm.getAuthorName()
+                    await fetchFollow()
+                    
+                    if vm.userProfile?.author == self.authorId {
+                        self.authorName = await vm.getAuthorName()
+                    } else {
+                        self.authorName = self.authorId
+                    }
                 }
             }
             
@@ -116,8 +127,37 @@ struct DetailProfileInfos: View {
         return RelativeDateTimeString
     }
     
+    private func toggleFollow() {
+        followed = !followed
+        followIcon = followed ? "person.fill.checkmark" : "person.badge.plus"
+        followLabel = followed ? "Entfolgen" : "Folgen"
+    }
+    
     private func follow() {
+        toggleFollow()
         
+        Task {
+            let userProfile = await vm.getProfile(id: UUID(uuidString: authorId)!)
+            guard userProfile != nil else {
+                print("User could not be found.")
+                return
+            }
+            
+            if followed {
+                await vm.createFollows(follower: vm.userProfile!, followed: userProfile!)
+            } else {
+                if let userProfileFollower = await vm.fetchFollow(follower: vm.userProfile!, followed: userProfile!) {
+                    await vm.deleteFollows(userProfileFollower: userProfileFollower)
+                }
+            }
+        }
+    }
+    
+    private func fetchFollow() async {
+        let userProfile = await vm.getProfile(id: UUID(uuidString: authorId)!)
+        if let userProfileFollower = await vm.fetchFollow(follower: vm.userProfile!, followed: userProfile!) {
+            toggleFollow()
+        }
     }
 }
 

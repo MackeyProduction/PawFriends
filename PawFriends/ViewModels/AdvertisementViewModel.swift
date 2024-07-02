@@ -17,23 +17,21 @@ class AdvertisementViewModel: ObservableObject {
         self.advertisements = advertisements
     }
     
-    func listAdvertisements() {
+    func listAdvertisements() async {
         let request = GraphQLRequest<Advertisement>.list(Advertisement.self)
-        Task {
-            do {
-                let result = try await Amplify.API.query(request: request)
-                switch result {
-                case .success(let advertisements):
-                    print("Successfully retrieved list of advertisements: \(advertisements)")
-                    self.advertisements = advertisements.elements
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
-                }
-            } catch let error as APIError {
-                print("Failed to query list of advertisements: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let advertisements):
+                print("Successfully retrieved list of advertisements: \(advertisements)")
+                self.advertisements = advertisements.elements
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to query list of advertisements: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
     }
     
@@ -58,6 +56,25 @@ class AdvertisementViewModel: ObservableObject {
             } catch {
                 print("Unexpected error: \(error)")
             }
+        }
+    }
+    
+    func createAdvertisement(userProfile: UserProfile, advertisement: Advertisement) async {
+        do {
+            var newAdvertisement = advertisement
+            newAdvertisement.releaseDate = Temporal.DateTime.now()
+            newAdvertisement.setUserProfile(userProfile)
+            let result = try await Amplify.API.mutate(request: .create(newAdvertisement, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let advertisement):
+                print("Successfully created advertisement: \(advertisement)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to create advertisement: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
     }
     

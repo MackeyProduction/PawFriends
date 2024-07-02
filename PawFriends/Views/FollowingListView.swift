@@ -12,46 +12,48 @@ struct FollowingListView: View {
     @State private var followList: [UserProfile] = []
     
     var body: some View {
-        if let follows = userProfileViewModel.userProfile?.follows, follows.isLoaded, !follows.isEmpty {
-            List {
-                ForEach($followList, id: \.id) { user in
-                    NavigationLink(destination: ProfileView(userProfileViewModel: userProfileViewModel)) {
-                        HStack {
-                            Image("TestImage1")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                            VStack(alignment: .leading) {
-                                Text(user.wrappedValue.author ?? "Benutzer nicht gefunden")
-                                    .font(.headline)
-                                Text(user.wrappedValue.location ?? "Ort nicht gefunden")
-                                    .font(.subheadline)
-                            }
-                            Spacer()
-                            Button(action: {
-                                //                            if let index = people.firstIndex(where: { $0.id == person.id }) {
-                                //                                people.remove(at: index)
-                                //                            }
-                            }) {
-                                Text("Entfolgen")
-                                    .foregroundColor(.red)
+        Group {
+            if let follows = userProfileViewModel.userProfile?.follows, follows.isLoaded, !follows.isEmpty {
+                List {
+                    ForEach($followList, id: \.id) { user in
+                        NavigationLink(destination: FollowProfileView(userProfileViewModel: userProfileViewModel, authorId: user.wrappedValue.author ?? "")) {
+                            HStack {
+                                Image("TestImage1")
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                VStack(alignment: .leading) {
+                                    Text(user.wrappedValue.author ?? "Benutzer nicht gefunden")
+                                        .font(.headline)
+                                    Text(user.wrappedValue.location ?? "Ort nicht gefunden")
+                                        .font(.subheadline)
+                                }
+                                Spacer()
+                                Button(action: {}) {
+                                    Text("Entfolgen")
+                                        .foregroundColor(.red)
+                                }
                             }
                         }
+                        
+                        
                     }
                 }
+            } else {
+                ContentUnavailableView {
+                    Label("Keine Follower gefunden", systemImage: "person")
+                }
             }
-            .background(Color(mainColor!))
-            .scrollContentBackground(.hidden)
-            .onAppear {
-                Task {
-                    do {
-                        try await userProfileViewModel.userProfile?.follows?.fetch()
+        }
+        .background(Color(mainColor!))
+        .scrollContentBackground(.hidden)
+        .onAppear {
+            Task {
+                do {
+                    if let follows = userProfileViewModel.userProfile?.follows, follows.isLoaded {
                         self.followList = await getFollows(followList: userProfileViewModel.userProfile?.follows?.elements ?? [])
                     }
+                    
                 }
-            }
-        } else {
-            ContentUnavailableView {
-                Label("Keine Follower gefunden", systemImage: "person")
             }
         }
     }

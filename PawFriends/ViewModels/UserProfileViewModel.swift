@@ -22,7 +22,7 @@ class UserProfileViewModel: ObservableObject {
         let userId = userAttributes.first(where: { $0.key.rawValue == "sub" })?.value
         
         if let uId = userId, let uuid = UUID(uuidString: uId) {
-            await getProfile(id: uuid)
+            self.userProfile = await getProfile(id: uuid)
         }
     }
     
@@ -31,28 +31,30 @@ class UserProfileViewModel: ObservableObject {
         return userAttributes.first(where: { $0.key == .preferredUsername })?.value
     }
     
-    func getProfile(id: UUID) async {
+    func getProfile(id: UUID) async -> UserProfile? {
+        var userProfileResult: UserProfile? = nil
         let request = GraphQLRequest<UserProfile>.get(UserProfile.self, byId: id.uuidString)
-        Task {
-            do {
-                let result = try await Amplify.API.query(request: request)
-                switch result {
-                case .success(let userProfile):
-                    guard let userProfile = userProfile else {
-                        print("Could not find user profile")
-                        return
-                    }
-                    print("Successfully retrieved user profile: \(userProfile)")
-                    self.userProfile = userProfile
-                case .failure(let error):
-                    print("Got failed result with \(error.errorDescription)")
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let userProfile):
+                guard let userProfile = userProfile else {
+                    print("Could not find user profile")
+                    return nil
                 }
-            } catch let error as APIError {
-                print("Failed to query user profile: ", error)
-            } catch {
-                print("Unexpected error: \(error)")
+                print("Successfully retrieved user profile: \(userProfile)")
+                userProfileResult = userProfile
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
             }
+        } catch let error as APIError {
+            print("Failed to query user profile: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
         }
+        
+        return userProfileResult
     }
     
     func fetchAttributes() async -> [AuthUserAttribute] {
@@ -70,7 +72,7 @@ class UserProfileViewModel: ObservableObject {
         Task {
             do {
                 if let uuid = UUID(uuidString: userProfile.id) {
-                    await getProfile(id: uuid)
+                    self.userProfile = await getProfile(id: uuid)
                     guard self.userProfile == nil else {
                         print("User already exists")
                         return
@@ -252,6 +254,72 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
+    func createWatchListItem(userProfile: UserProfile, advertisement: Advertisement) async {
+        do {
+            let newWatchListItem = WatchList(userProfile: userProfile, advertisement: advertisement)
+            let result = try await Amplify.API.mutate(request: .create(newWatchListItem, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let watchListItem):
+                print("Successfully created watch list item: \(watchListItem)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to create watch list item: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func deleteWatchListItem(watchList: WatchList) async {
+        do {
+            let result = try await Amplify.API.mutate(request: .delete(watchList, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let watchListItem):
+                print("Successfully deleted watch list item: \(watchListItem)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to delete watch list item: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func createFollows(follower: UserProfile, followed: UserProfile) async {
+        do {
+            let newUserProfileFollower = UserProfileFollower(follower: follower, followed: followed)
+            let result = try await Amplify.API.mutate(request: .create(newUserProfileFollower, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let userProfileFollower):
+                print("Successfully created user profile follower: \(userProfileFollower)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to create user profile follower: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func deleteFollows(userProfileFollower: UserProfileFollower) async {
+        do {
+            let result = try await Amplify.API.mutate(request: .delete(userProfileFollower, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let userProfileFollower):
+                print("Successfully deleted user profile follower: \(userProfileFollower)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to delete user profile follower: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
     func fetchPetTypes() async -> [PetType] {
         var petTypes: [PetType] = []
         let request = GraphQLRequest<PetType>.list(PetType.self, limit: 1000, authMode: .amazonCognitoUserPools)
@@ -294,6 +362,54 @@ class UserProfileViewModel: ObservableObject {
         }
         
         return tags
+    }
+    
+    func fetchWatchListItem(userProfile: UserProfile, advertisement: Advertisement) async -> WatchList? {
+        var watchList: [WatchList] = []
+        let watchListKeys = WatchList.keys
+        let predicate = watchListKeys.userProfile.eq(userProfile.id) && watchListKeys.advertisement.eq(advertisement.id)
+        let request = GraphQLRequest<WatchList>.list(WatchList.self, where: predicate, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let watchListResult):
+                print("Successfully retrieved watch list items: \(watchListResult)")
+                watchList.append(contentsOf: watchListResult)
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query watch list items: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+        
+        return watchList.first
+    }
+    
+    func fetchFollow(follower: UserProfile, followed: UserProfile) async -> UserProfileFollower? {
+        var userProfileFollower: [UserProfileFollower] = []
+        let userProfileFollowerKeys = UserProfileFollower.keys
+        let predicate = userProfileFollowerKeys.follower.eq(follower.id) && userProfileFollowerKeys.followed.eq(followed.id)
+        let request = GraphQLRequest<WatchList>.list(UserProfileFollower.self, where: predicate, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let userProfileFollowerResult):
+                print("Successfully retrieved user profile follower items: \(userProfileFollowerResult)")
+                userProfileFollower.append(contentsOf: userProfileFollowerResult)
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query user profile follower items: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+        
+        return userProfileFollower.first
     }
     
     static let sampleData: [UserProfile] = [
