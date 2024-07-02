@@ -62,6 +62,7 @@
 		3E9C94FE2C07A30100F91BFB /* PawFriendsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C94FD2C07A30100F91BFB /* PawFriendsTests.swift */; };
 		3E9C95082C07A30100F91BFB /* PawFriendsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C95072C07A30100F91BFB /* PawFriendsUITests.swift */; };
 		3E9C950A2C07A30100F91BFB /* PawFriendsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C95092C07A30100F91BFB /* PawFriendsUITestsLaunchTests.swift */; };
+		3EA477C22C34435B00ECD60B /* FollowProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA477C12C34435B00ECD60B /* FollowProfileView.swift */; };
 		3EAC3BA72C177781008129A4 /* AWSCognitoAuthPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 3EAC3BA62C177781008129A4 /* AWSCognitoAuthPlugin */; };
 		3EAC3BAA2C177BDE008129A4 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = 3EAC3BA92C177BDE008129A4 /* Authenticator */; };
 		3ED6E98A2C29BB9300ABC6A2 /* MessageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED6E9892C29BB9200ABC6A2 /* MessageRow.swift */; };
@@ -161,6 +162,7 @@
 		3E9C95032C07A30100F91BFB /* PawFriendsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PawFriendsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E9C95072C07A30100F91BFB /* PawFriendsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PawFriendsUITests.swift; sourceTree = "<group>"; };
 		3E9C95092C07A30100F91BFB /* PawFriendsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PawFriendsUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3EA477C12C34435B00ECD60B /* FollowProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowProfileView.swift; sourceTree = "<group>"; };
 		3ED6E9892C29BB9200ABC6A2 /* MessageRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageRow.swift; sourceTree = "<group>"; };
 		3ED6E98B2C29BBA100ABC6A2 /* MessageDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageDetail.swift; sourceTree = "<group>"; };
 		B52AE9932C24CD4100604A33 /* amplify_outputs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = amplify_outputs.json; path = PawFriendsCore/amplify_outputs.json; sourceTree = SOURCE_ROOT; };
@@ -244,6 +246,7 @@
 				3E628CE02C2F52FC008CA852 /* ProfileAdvertisementSheet.swift */,
 				B56684052C322CB500AC7022 /* DetailProfileInfos.swift */,
 				3E53F18C2C32F78E00FB136F /* AdvertisementSheet.swift */,
+				3EA477C12C34435B00ECD60B /* FollowProfileView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -572,6 +575,7 @@
 				3E38AD112C21ABA90078899C /* UserProfileAdvertisement+Schema.swift in Sources */,
 				3ED6E98C2C29BBA100ABC6A2 /* MessageDetail.swift in Sources */,
 				3E402F7E2C0A2B0400D46819 /* ContentView.swift in Sources */,
+				3EA477C22C34435B00ECD60B /* FollowProfileView.swift in Sources */,
 				3E53F18D2C32F78E00FB136F /* AdvertisementSheet.swift in Sources */,
 				3E8012FC2C15DF6E0058144D /* MessageList.swift in Sources */,
 				3E3BC9A62C2DEB4A008ECF01 /* ProfilePetsRow.swift in Sources */,

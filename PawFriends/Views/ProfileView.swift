@@ -20,13 +20,15 @@ struct ProfileView: View {
     @State private var tags: [Tag] = []
     @State private var tagCloud: [String] = []
     @State private var followers: [UserProfileFollower] = []
+    @State private var authorId: String? = nil
     
-    init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingTagsSheet: Bool = false, isShowingDescriptionSheet: Bool = false, newPet: Pet? = nil) {
+    init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingTagsSheet: Bool = false, isShowingDescriptionSheet: Bool = false, authorId: String? = nil, newPet: Pet? = nil) {
         self.userProfileViewModel = userProfileViewModel
         self.authorName = authorName
         self.petType = petType
         self.isShowingTagsSheet = isShowingTagsSheet
         self.isShowingDescriptionSheet = isShowingDescriptionSheet
+        self.authorId = authorId
         self.newPet = newPet
     }
     
@@ -237,7 +239,14 @@ struct ProfileView: View {
                     try await userProfileViewModel.userProfile?.tags?.fetch()
                     try await userProfileViewModel.userProfile?.followers?.fetch()
                     try await loadTagCloud()
-                    self.authorName = await userProfileViewModel.getAuthorName()
+                    
+                    // TODO: Fix loading followed author... followed author is always empty
+                    if let author = authorId {
+                        self.authorName = author
+                    } else {
+                        self.authorName = await userProfileViewModel.getAuthorName()
+                    }
+                    
                     self.followers = userProfileViewModel.userProfile?.followers?.elements ?? []
                 }
             }
