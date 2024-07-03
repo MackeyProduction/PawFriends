@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import MultiPicker
 
 struct AdvertisementSheet: View {
     @ObservedObject var advertisementViewModel: AdvertisementViewModel
@@ -14,6 +15,12 @@ struct AdvertisementSheet: View {
     @StateObject private var photoPickerViewModel: PhotoPickerViewModel = PhotoPickerViewModel()
     @Binding var advertisement: Advertisement
     @State var isNew: Bool = false
+    @State private var tags: [Tag] = []
+    
+    @State private var navigateToMultiPickerView = false
+    
+    @State var selection = Set<String>()
+    let items = ["Indoor", "Erdgeschoss", "Katze", "Nicht-Raucherhaushalt", "Einmalig"]
     
     @Environment(\.dismiss) private var dismiss
     
@@ -73,14 +80,30 @@ struct AdvertisementSheet: View {
                 }
                 .listRowBackground(Color(thirdColor!))
                 
-    //            Section { //Multi select, Kategorien sortiert
-    //                Picker("Tags", selection: $tags) {
-    //                    ForEach(tagOptions, id: \.self) {
-    //                        Text($0)
-    //                    }
-    //                }//.pickerStyle()
-    //            }
-    //            .listRowBackground(Color(thirdColor!))
+                Section {
+                    HStack {
+                        Text("Tags")
+                        Spacer()
+                        Button(action: {
+                            navigateToMultiPickerView = true
+                        }) {
+                            Image(systemName: "plus.square")
+                                .font(.title2)
+                        }
+                        .navigationDestination(isPresented: $navigateToMultiPickerView) {
+                            MultiPickerView(items: items, tags: tags)
+                            //.navigationBarBackButtonHidden(true)
+                        }
+                    }
+                    .onAppear {
+                        Task {
+                            self.tags = await advertisementViewModel.fetchTags()
+                        }
+                    }
+                    
+                    TagCloudView(tags: items)
+                }
+                .listRowBackground(Color(thirdColor!))
                 
                 Section {
                     Text("Beschreibung")
@@ -134,6 +157,14 @@ struct AdvertisementSheet: View {
                 dismiss()
             }
         }
+    }
+}
+
+struct ModelCell: View {
+    let model: String
+    
+    var body: some View {
+        Text(model)
     }
 }
 

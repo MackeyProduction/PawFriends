@@ -149,6 +149,7 @@ struct AdvertisementDetail: View {
                             .padding(.trailing, 5)
                             .padding(.top, 4)
                         
+                        //var tagCloud = ["Indoor", "Erdgeschoss", "Katze", "Nicht-Raucherhaushalt", "Einmalig"]
                         TagCloudView(tags: tagCloud)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     }
@@ -211,7 +212,7 @@ struct AdvertisementDetail: View {
                 do {
                     try await advertisement.tags?.fetch()
                     try await vm.userProfile?.watchLists?.fetch()
-                    try await loadTagCloud()
+                    //try await loadTagCloud()
                     await fetchLikeItem()
                     await updateVisitor()
                     self.advertisementUserProfile = try await advertisement.userProfile

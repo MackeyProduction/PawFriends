@@ -78,6 +78,28 @@ class AdvertisementViewModel: ObservableObject {
         }
     }
     
+    func fetchTags() async -> [Tag] {
+        var tags: [Tag] = []
+        let request = GraphQLRequest<PetType>.list(Tag.self, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let tagsResult):
+                print("Successfully retrieved tags: \(tagsResult)")
+                tags.append(contentsOf: tagsResult)
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query tags: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+        
+        return tags
+    }
+    
     static let sampleData: [Advertisement] = [
         Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Katzen-Sitter für Kater gesucht", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Die Beschreibung ist eine Aufsatzart. Sie informiert sachlich über ein Objekt, dass betrachtet wird und beschrieben werden soll. Die verwendete Sprache sollte an die Zielgruppe angepasst sein.\n\nZiel einer Beschreibung ist es einen gegebenen Gegenstand oder Situation dem Leser blalba genauestens zu vermitteln.\nSprachliche Stilmittel und die chronologisch sowie sinnvolle Beschreibung ist hier besonders wichtig.", advertisementImages: ["TestImage2","TestImage1"], tags: nil, watchLists: nil, userProfile: nil, chats: nil),
         Advertisement(id: UUID().uuidString, advertisementId: nil, title: "Neue Anzeige 2", releaseDate: Temporal.DateTime.now(), visitor: 15, description: "Das ist eine Anzeige", advertisementImages: [], tags: nil, watchLists: nil, userProfile: nil, chats: nil)

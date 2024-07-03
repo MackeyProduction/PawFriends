@@ -27,6 +27,14 @@ struct AdvertisementList: View {
          */
     }
     
+    @State var heart = "heart"
+    func like() {
+        if heart == "heart" {
+            heart = "heart.fill"
+        } else {
+            heart = "heart"
+        }
+    }
     
     var body: some View {
         ZStack {
@@ -38,6 +46,13 @@ struct AdvertisementList: View {
                         ForEach($advertisementViewModel.advertisements, id: \.id) { $item in
                             //GeometryReader { geoRoot in
                             ZStack {
+                                HStack {
+                                    Spacer()
+                                    Button(action: like) {
+                                        Label("", systemImage: heart)
+                                            .foregroundStyle(.black)
+                                    }
+                                }
                                 NavigationLink(destination: AdvertisementDetail(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisement: $item)) {
                                     HStack {
                                         //                                    Image(item.advertisementImages![0] ?? "TestImage1")

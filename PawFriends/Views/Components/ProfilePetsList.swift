@@ -13,7 +13,7 @@ struct ProfilePetsList: View {
     @State private var newPet: Pet = Pet()
     @State private var petType: PetType? = nil
     @State private var isShowingPetsSheet = false
-    @State private var navigateToPetDetail = false
+    //@State private var navigateToPetDetail = false
     
     init(vm: UserProfileViewModel, pets: [Pet] = [], petType: PetType? = nil, isShowingPetsSheet: Bool = false) {
         self.vm = vm
@@ -29,19 +29,20 @@ struct ProfilePetsList: View {
                     .font(.title2)
                     .fontWeight(.semibold)
                 Spacer()
-//                Button(action: { isShowingPetsSheet.toggle() }) {
-//                    Image(systemName: "plus.square")
-//                        .font(.title2)
-//                }
-                Button(action: {
-                    navigateToPetDetail = true
-                }) {
-                    Label("", systemImage: "plus.square")
+                Button(action: { isShowingPetsSheet.toggle() }) {
+                    Image(systemName: "plus.square")
+                        .font(.title2)
                 }
-                .font(.title2)
-                .navigationDestination(isPresented: $navigateToPetDetail) {
-                    PetDetail(vm: vm, pet: $newPet, isNew: true).navigationBarBackButtonHidden(true)
-                               }
+//                Button(action: {
+//                    navigateToPetDetail = true
+//                }) {
+//                    Label("", systemImage: "plus.square")
+//                }
+//                .padding(.trailing, -8)
+//                .font(.title2)
+//                .navigationDestination(isPresented: $navigateToPetDetail) {
+//                    PetDetail(vm: vm, pet: $newPet, isNew: true).navigationBarBackButtonHidden(true)
+//                               }
             }.padding(.bottom, 5)
             
             if !pets.isEmpty {
@@ -51,11 +52,11 @@ struct ProfilePetsList: View {
             }
         }
         .padding(.top, 5).padding(.bottom, 5)
-//        .sheet(isPresented: $isShowingPetsSheet) {
-//            NavigationStack {
-//                ProfilePetsSheet(vm: vm, pet: $newPet, isNew: true)
-//            }
-//        }
+        .sheet(isPresented: $isShowingPetsSheet) {
+            NavigationStack {
+                ProfilePetsSheet(vm: vm, pet: $newPet, isNew: true)
+            }
+        }
     }
 }
 
