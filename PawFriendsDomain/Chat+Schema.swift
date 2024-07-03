@@ -23,7 +23,8 @@ extension Chat {
     
     model.authRules = [
       rule(allow: .owner, ownerField: "author", identityClaim: "cognito:username", provider: .userPools, operations: [.create, .update, .delete, .read]),
-      rule(allow: .owner, ownerField: "recipient", identityClaim: "cognito:username", provider: .userPools, operations: [.create, .update, .delete, .read])
+      rule(allow: .owner, ownerField: "recipient", identityClaim: "cognito:username", provider: .userPools, operations: [.create, .update, .delete, .read]),
+      rule(allow: .private, operations: [.read])
     ]
     
     model.listPluralName = "Chats"
