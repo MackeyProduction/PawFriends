@@ -273,12 +273,12 @@ struct AdvertisementDetail: View {
         .onAppear {
             Task {
                 do {
-                    self.advertisementUserProfile = try await advertisement.userProfile
                     try await advertisement.tags?.fetch()
                     try await vm.userProfile?.watchLists?.fetch()
 //                    try await loadTagCloud()
                     await fetchLikeItem()
                     await updateVisitor()
+                    self.advertisementUserProfile = try await advertisement.userProfile
                 }
             }
         }
@@ -357,8 +357,11 @@ struct AdvertisementDetail: View {
     private func createChat() {
         Task {
             do {
-                // TODO: Fix create chat
-                await vm.createChat(chat: Chat(message: chatMessage, recipient: advertisement.author, userProfile: vm.userProfile, advertisement: advertisement))
+                if let author = advertisementUserProfile?.author, let up = vm.userProfile {
+                    await vm.createChat(message: chatMessage ?? "", recipient: author.uppercased(), userProfile: up, advertisement: advertisement)
+                }
+                
+                dismiss()
             }
         }
     }

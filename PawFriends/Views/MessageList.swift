@@ -10,28 +10,21 @@ import Amplify
 
 struct MessageList: View {
     @ObservedObject var userProfileViewModel: UserProfileViewModel
-    @State private var chats: [Chat] = []
+    @State private var chats: [String: [Chat]] = [:]
     
     var body: some View {
         Group {
-            if let chats = userProfileViewModel.userProfile?.chats, chats.isLoaded {
+            if !chats.isEmpty {
                 List {
-                    // TODO: Chats müssen nach den Anzeigen gefiltert werden
-                    ForEach($chats, id: \.id) { chat in
-                        NavigationLink(destination: MessageDetail(vm: userProfileViewModel, chats: $chats)) {
-                            MessageRow(chat: chat)
+                    ForEach(chats.keys.sorted(), id: \.self) { key in
+                        if let chatList = chats[key]?.sorted(by: { $0.updatedAt! < $1.updatedAt! }), let lastChat = chatList.last {
+                            NavigationLink(destination: MessageDetail(vm: userProfileViewModel, chats: Binding.constant(chatList))) {
+                                MessageRow(chat: Binding.constant(lastChat))
+                            }
                         }
                     }
                 }
                 .scrollContentBackground(.hidden)
-                .onAppear {
-                    Task {
-                        do {
-                            try await userProfileViewModel.userProfile?.chats?.fetch()
-                            self.chats = chats.elements // Synchronisieren der lokalen Chat-Liste
-                        }
-                    }
-                }
             } else {
                 ContentUnavailableView {
                     Label("Keine Nachrichten vorhanden", systemImage: "message")
@@ -40,27 +33,25 @@ struct MessageList: View {
         }
         .background(Color(mainColor!))
         .navigationTitle("Nachrichten")
-        
+        .onAppear {
+            Task {
+                do {
+                    try await userProfileViewModel.userProfile?.advertisements?.fetch()
+                    try await userProfileViewModel.userProfile?.chats?.fetch()
+                    self.chats = try await filteredChats
+                }
+            }
+        }
     }
     
-    var filteredChats: [Chat] {
-        // Filterfunktion funktioniert nicht... erstmal weg gelassen
+    var filteredChats: [String: [Chat]] {
         get async throws {
-            guard let chats = userProfileViewModel.userProfile?.chats else {
-                return []
-            }
+            var filteredChats: [String: [Chat]] = [:]
             
-            var filteredChats: [Chat] = []
-            
+            let chats = await userProfileViewModel.fetchChats(userProfile: userProfileViewModel.userProfile!)
             for chat in chats {
-                do {
-                    if let advertisement = try await chat._advertisement.get() {
-                        if let _ = userProfileViewModel.userProfile?.chats?.first(where: { $0.id == advertisement.id }) {
-                            filteredChats.append(chat)
-                        }
-                    }
-                } catch {
-                    print("Error fetching advertisement: \(error)")
+                if let ad = try await chat.advertisement {
+                    filteredChats[ad.id] = await userProfileViewModel.fetchChatsByAdvertisement(advertisement: ad)
                 }
             }
             

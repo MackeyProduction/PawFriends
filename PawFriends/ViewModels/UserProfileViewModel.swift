@@ -110,9 +110,10 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
-    func createChat(chat: Chat) async {
+    func createChat(message: String, recipient: String, userProfile: UserProfile, advertisement: Advertisement) async {
         do {
-            let result = try await Amplify.API.mutate(request: .create(chat, authMode: .amazonCognitoUserPools))
+            let newChat = Chat(message: message, recipient: recipient, userProfile: userProfile, advertisement: advertisement)
+            let result = try await Amplify.API.mutate(request: .create(newChat, authMode: .amazonCognitoUserPools))
             switch result {
             case .success(let chat):
                 print("Successfully created chat: \(chat)")
@@ -408,6 +409,54 @@ class UserProfileViewModel: ObservableObject {
         }
         
         return userProfileFollower.first
+    }
+    
+    func fetchChats(userProfile: UserProfile) async -> [Chat] {
+        var chats: [Chat] = []
+        let chatKeys = Chat.keys
+        let predicate = chatKeys.userProfile.eq(userProfile.id) || chatKeys.recipient.eq(userProfile.id)
+        let request = GraphQLRequest<WatchList>.list(Chat.self, where: predicate, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let chatsResult):
+                print("Successfully retrieved chats: \(chatsResult)")
+                chats.append(contentsOf: chatsResult)
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query chats: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+        
+        return chats
+    }
+    
+    func fetchChatsByAdvertisement(advertisement: Advertisement) async -> [Chat] {
+        var chats: [Chat] = []
+        let chatKeys = Chat.keys
+        let predicate = chatKeys.advertisement.eq(advertisement.id)
+        let request = GraphQLRequest<WatchList>.list(Chat.self, where: predicate, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let chatsResult):
+                print("Successfully retrieved chats: \(chatsResult)")
+                chats.append(contentsOf: chatsResult)
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query chats: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+        
+        return chats
     }
     
     static let sampleData: [UserProfile] = [
