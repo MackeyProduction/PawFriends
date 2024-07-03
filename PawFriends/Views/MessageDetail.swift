@@ -13,6 +13,8 @@ struct MessageDetail: View {
     @ObservedObject var vm: UserProfileViewModel
     @Binding var chats: [Chat]
     @State private var newMessage: String = ""
+    @State private var advertisement: Advertisement? = nil
+    @State private var recipient: String? = nil
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -21,7 +23,7 @@ struct MessageDetail: View {
                 VStack {
                     ForEach(chats, id: \.id) { chat in
                         VStack {
-                            if chat.recipient != vm.userProfile?.author {
+                            if chat.recipient != vm.userProfile?.id {
                                 Spacer()
                                 
                                 HStack {
@@ -38,7 +40,7 @@ struct MessageDetail: View {
                                         .clipShape(Circle())
                                 }
                                 
-                                Text("\(chat.updatedAt?.iso8601FormattedString(format: TemporalFormat.short, timeZone: TimeZone.current) ?? "")")
+                                Text("\(dateToString(date: chat.updatedAt ?? Temporal.DateTime.now()))")
                                     .font(.body)
                                     .padding(.leading)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -57,7 +59,7 @@ struct MessageDetail: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
                                 
-                                Text("\(chat.updatedAt?.iso8601FormattedString(format: TemporalFormat.short, timeZone: TimeZone.current) ?? "")")
+                                Text("\(dateToString(date: chat.updatedAt ?? Temporal.DateTime.now()))")
                                     .font(.body)
                                     .padding(.leading)
                                     .frame(maxWidth: .infinity, alignment: .trailing)
@@ -106,12 +108,38 @@ struct MessageDetail: View {
             }
         }
         .background(Color(mainColor!))
+        .onAppear {
+            Task {
+                self.advertisement = try await chats.first?.advertisement
+                self.recipient = advertisement?.author
+            }
+        }
     }
     
     private func sendMessage() {
-        // Hier die Logik für das Senden der Nachricht hinzufügen
-        print("New message: \(newMessage)")
-        newMessage = ""
+        Task {
+            if let author = recipient, let up = vm.userProfile, let ad = advertisement {
+                await vm.createChat(message: newMessage, recipient: author.uppercased(), userProfile: up, advertisement: ad)
+            }
+            newMessage = ""
+        }
+    }
+    
+    func dateToString(date: Temporal.DateTime) -> String {
+        let relativeDateFormatter = DateFormatter()
+        relativeDateFormatter.timeStyle = .none
+        relativeDateFormatter.dateStyle = .medium
+        relativeDateFormatter.locale = Locale(identifier: "de_DE")
+        relativeDateFormatter.doesRelativeDateFormatting = true
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
+        
+        let timeString = timeFormatter.string(from: date.foundationDate)
+        let relativeDateString = relativeDateFormatter.string(from: date.foundationDate)
+        let RelativeDateTimeString = relativeDateString+", "+timeString
+        
+        return RelativeDateTimeString
     }
 }
 

@@ -62,7 +62,7 @@ const schema = a.schema({
       userProfile: a.belongsTo('UserProfile', 'userProfileId'),
       advertisement: a.belongsTo('Advertisement', 'advertisementId')
     })
-    .authorization((allow) => [allow.ownerDefinedIn('author'), allow.ownerDefinedIn('recipient')]),
+    .authorization((allow) => [allow.ownerDefinedIn('author'), allow.ownerDefinedIn('recipient'), allow.authenticated().to(['read'])]),
   Advertisement: a
     .model({
       advertisementId: a.id(),

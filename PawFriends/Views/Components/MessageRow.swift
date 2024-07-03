@@ -23,7 +23,7 @@ struct MessageRow: View {
                     .font(.headline)
                 Text("Last sender: \(chat.author ?? "")")
                     .font(.subheadline)
-                Text("\(chat.updatedAt?.iso8601FormattedString(format: TemporalFormat.short, timeZone: TimeZone.current) ?? "")")
+                Text("\(dateToString(date: chat.updatedAt ?? Temporal.DateTime.now()))")
                     .font(.caption)
                     .foregroundColor(.gray)
             }
@@ -33,7 +33,7 @@ struct MessageRow: View {
     }
     
     var truncatedMessage: String {
-        var messageLimit = 40
+        let messageLimit = 40
         if let message = chat.message, message.count > messageLimit {
             var truncatedMessage = message
             let endIndex = message.index(message.startIndex, offsetBy: messageLimit)
@@ -41,5 +41,22 @@ struct MessageRow: View {
             return truncatedMessage
         }
         return chat.message ?? ""
+    }
+    
+    func dateToString(date: Temporal.DateTime) -> String {
+        let relativeDateFormatter = DateFormatter()
+        relativeDateFormatter.timeStyle = .none
+        relativeDateFormatter.dateStyle = .medium
+        relativeDateFormatter.locale = Locale(identifier: "de_DE")
+        relativeDateFormatter.doesRelativeDateFormatting = true
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
+        
+        let timeString = timeFormatter.string(from: date.foundationDate)
+        let relativeDateString = relativeDateFormatter.string(from: date.foundationDate)
+        let RelativeDateTimeString = relativeDateString+", "+timeString
+        
+        return RelativeDateTimeString
     }
 }
