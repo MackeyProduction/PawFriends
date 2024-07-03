@@ -6,96 +6,152 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct ProfileAdvertisementSheet: View {
     @ObservedObject var vm: UserProfileViewModel
+    @ObservedObject var advertisementViewModel: AdvertisementViewModel
     @Binding var advertisement: Advertisement
     @State var isNew: Bool = false
+    //@State var tags: [String]
+    
+    @StateObject private var photoPickerViewModel = PhotoPickerViewModel()
+    @State var imageSelections: [PhotosPickerItem] = []
+    
+    @State private var navigateToMultiPickerView = false
+    
+    @State private var tags: [Tag] = []
+    @State var selection = Set<String>()
+    let items = ["Indoor", "Erdgeschoss", "Katze", "Nicht-Raucherhaushalt", "Einmalig"]
     
     @Environment(\.dismiss) private var dismiss
     
+    func stringToUiimages(strings: [String?]?) -> [UIImage]{
+        var uiimages: [UIImage] = []
+        for string in strings! {
+            let image: Image = Image(string!)
+            uiimages.append(image.asUIImage())
+        }
+        return uiimages
+    }
+    
     var body: some View {
-        Form {
-            Section {
-                //Text("Titel")
-                TextField("Titel", text: Binding(
-                    get: { advertisement.title ?? "" },
-                    set: { advertisement.title = $0 }
-                ), axis: .vertical)
-                    .autocorrectionDisabled()
-            }
-            .listRowBackground(Color(thirdColor!))
-            
-//            Section { //Multi select, Kategorien sortiert
-//                Picker("Tags", selection: $tags) {
-//                    ForEach(tagOptions, id: \.self) {
-//                        Text($0)
-//                    }
-//                }//.pickerStyle()
-//            }
-//            .listRowBackground(Color(thirdColor!))
-            
-            Section {
-                Text("Beschreibung")
-                TextField("", text: Binding(
-                    get: { advertisement.description ?? "" },
-                    set: { advertisement.description = $0 }
-                ), axis: .vertical)
-                    .autocorrectionDisabled()
-                    .lineLimit(9...9)
-            }
-            .listRowBackground(Color(thirdColor!))
-                                
-//            Section(footer:
-//                        HStack {
-//                Spacer()
-//                Button(action: createOrUpdate) {
-//                    Text("Veröffentlichen")
-//                        .font(.title2)
-//                        .foregroundStyle(Color(mainTextColor!))
-//                }
-//                .padding(10)
-//                .background(RoundedRectangle(cornerRadius: 10).foregroundStyle(Color(greenColor!)))
-//                Spacer()
-//            }
-//            ) {
-//                EmptyView()
-//            }
-        }.scrollContentBackground(.hidden)
-            .navigationTitle(isNew ? "Anzeige hinzufügen" : "Anzeige bearbeiten")
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Fertig", action: createOrUpdate)
+        VStack(spacing: 10) {
+            if photoPickerViewModel.selectedImages.isEmpty {
+                ZStack {
+                    Rectangle()
+                        .fill(Color(secondColor!))
+                        .frame(maxWidth: .infinity, maxHeight: 270)
+                    Image(systemName: "photo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity, maxHeight: 250, alignment: .center)
+                        .clipped()
+                        .foregroundStyle(Color(textColor!))
+                        .opacity(0.2)
+                        .overlay(alignment: .bottomTrailing) {
+                            PhotosPicker(selection: $photoPickerViewModel.imageSelections,
+                                         matching: .images,
+                                         photoLibrary: .shared()) {
+                                PickPhotoButton()
+                                    .padding(.bottom, 5)
+                                    .padding(.trailing, 5)
+                            }
+                                         .buttonStyle(.borderless)
+                        }
                 }
+                .frame(height: 270)
+            } else {
+                //SwipeView(images: viewModel.selectedImages)
+                Image(uiImage: photoPickerViewModel.selectedImages[0])
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 270, alignment: .top)
+                    .clipped()
+                    .overlay(alignment: .bottomTrailing) {
+                        PhotosPicker(selection: $photoPickerViewModel.imageSelections,
+                                     matching: .images,
+                                     photoLibrary: .shared()) {
+                            PickPhotoButton()
+                                .padding(.bottom, 5)
+                                .padding(.trailing, 5)
+                        }
+                                     .buttonStyle(.borderless)
+                    }
+            }
+            
+            Form {
+                Section {
+                    //Text("Titel")
+                    TextField("Titel", text: Binding(
+                        get: { advertisement.title ?? "" },
+                        set: { advertisement.title = $0 }
+                    ), axis: .vertical)
+                        .autocorrectionDisabled()
+                }
+                .listRowBackground(Color(thirdColor!))
                 
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen", action: { dismiss() })
+                Section {
+                    HStack {
+                        Text("Tags")
+                        Spacer()
+                        Button(action: {
+                            navigateToMultiPickerView = true
+                        }) {
+                            Image(systemName: "plus.square")
+                                .font(.title2)
+                        }
+                        .navigationDestination(isPresented: $navigateToMultiPickerView) {
+                            MultiPickerView(items: items, tags: tags)
+                            //.navigationBarBackButtonHidden(true)
+                        }
+                    }
+                    .onAppear {
+                        Task {
+                            self.tags = await advertisementViewModel.fetchTags()
+                        }
+                    }
+                    
+                    TagCloudView(tags: items)
                 }
-            }
-        
-//        Form {
-//            TextField("Anzeigentitel", text: Binding(
-//                get: { advertisement.title ?? "" },
-//                set: { advertisement.title = $0 }
-//            ), axis: .vertical)
-//            .autocorrectionDisabled()
-//            
-//            TextField("Beschreibung", text: Binding(
-//                get: { advertisement.description ?? "" },
-//                set: { advertisement.description = $0 }
-//            ), axis: .vertical)
-//            .autocorrectionDisabled()
-//        }
-//        .navigationTitle(isNew ? "Anzeige hinzufügen" : "Anzeige bearbeiten")
-//        .toolbar {
-//            ToolbarItem(placement: .confirmationAction) {
-//                Button("Done", action: createOrUpdate)
-//            }
-//            
-//            ToolbarItem(placement: .cancellationAction) {
-//                Button("Cancel", action: { dismiss() })
-//            }
-//        }
+                .listRowBackground(Color(thirdColor!))
+                
+                Section {
+                    Text("Beschreibung")
+                    TextField("", text: Binding(
+                        get: { advertisement.description ?? "" },
+                        set: { advertisement.description = $0 }
+                    ), axis: .vertical)
+                        .autocorrectionDisabled()
+                        .lineLimit(9...9)
+                }
+                .listRowBackground(Color(thirdColor!))
+                                    
+                Section(footer:
+                            HStack {
+                    Spacer()
+                    Button(action: createOrUpdate) {
+                        Text("Veröffentlichen")
+                            .font(.title2)
+                            .foregroundStyle(Color(mainTextColor!))
+                    }
+                    .padding(10)
+                    .background(RoundedRectangle(cornerRadius: 10).foregroundStyle(Color(greenColor!)))
+                    Spacer()
+                }
+                ) {
+                    EmptyView()
+                }
+            }.scrollContentBackground(.hidden)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Abbrechen", action: { dismiss() })
+                    }
+                }
+        }
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
+        .background(Color(mainColor!))
+        .edgesIgnoringSafeArea(.top)
     }
     
     private func createOrUpdate() {
@@ -120,6 +176,6 @@ struct ProfileAdvertisementSheet: View {
 #Preview {
     NavigationStack {
         @State var advertisement = UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement()
-        ProfileAdvertisementSheet(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisement: $advertisement)
+        ProfileAdvertisementSheet(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData), advertisement: $advertisement)
     }
 }

@@ -15,7 +15,7 @@ struct FollowingListView: View {
         if let follows = userProfileViewModel.userProfile?.follows, follows.isLoaded, !follows.isEmpty {
             List {
                 ForEach($followList, id: \.id) { user in
-                    NavigationLink(destination: ProfileView(userProfileViewModel: userProfileViewModel)) {
+                    NavigationLink(destination: ProfileView(userProfileViewModel: userProfileViewModel, isMyProfile: false)) {
                         HStack {
                             Image("TestImage1")
                                 .resizable()

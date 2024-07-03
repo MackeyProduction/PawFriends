@@ -300,12 +300,5 @@ struct AdvertisementDetail: View {
     }
 }
 
-#Preview("New Advertisement") {
-    NavigationStack {
-        @State var advertisement = UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement()
-        AdvertisementDetail(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisement: $advertisement, isNew: true)
-    }
-}
-
 
 

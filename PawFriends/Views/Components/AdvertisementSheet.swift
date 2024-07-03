@@ -160,13 +160,6 @@ struct AdvertisementSheet: View {
     }
 }
 
-struct ModelCell: View {
-    let model: String
-    
-    var body: some View {
-        Text(model)
-    }
-}
 
 #Preview {
     NavigationStack {

@@ -13,13 +13,15 @@ struct ProfilePetsList: View {
     @State private var newPet: Pet = Pet()
     @State private var petType: PetType? = nil
     @State private var isShowingPetsSheet = false
+    @State var isMyProfile: Bool
     //@State private var navigateToPetDetail = false
     
-    init(vm: UserProfileViewModel, pets: [Pet] = [], petType: PetType? = nil, isShowingPetsSheet: Bool = false) {
+    init(vm: UserProfileViewModel, pets: [Pet] = [], petType: PetType? = nil, isShowingPetsSheet: Bool = false, isMyProfile: Bool) {
         self.vm = vm
         self.pets = pets
         self.petType = petType
         self.isShowingPetsSheet = isShowingPetsSheet
+        self.isMyProfile = isMyProfile
     }
     
     var body: some View {
@@ -29,9 +31,11 @@ struct ProfilePetsList: View {
                     .font(.title2)
                     .fontWeight(.semibold)
                 Spacer()
-                Button(action: { isShowingPetsSheet.toggle() }) {
-                    Image(systemName: "plus.square")
-                        .font(.title2)
+                if isMyProfile {
+                    Button(action: { isShowingPetsSheet.toggle() }) {
+                        Image(systemName: "plus.square")
+                            .font(.title2)
+                    }
                 }
 //                Button(action: {
 //                    navigateToPetDetail = true
@@ -47,7 +51,11 @@ struct ProfilePetsList: View {
             
             if !pets.isEmpty {
                 ForEach(pets, id: \.id) { pet in
-                    ProfilePetsRow(vm: vm, pet: pet)
+                    if isMyProfile {
+                        ProfilePetsRow(vm: vm, pet: pet, isMyProfile: true)
+                    } else {
+                        ProfilePetsRow(vm: vm, pet: pet, isMyProfile: false)
+                    }
                 }
             }
         }
@@ -61,5 +69,9 @@ struct ProfilePetsList: View {
 }
 
 #Preview {
-    ProfilePetsList(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
+    ProfilePetsList(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), isMyProfile: true)
+}
+
+#Preview ("another profile") {
+    ProfilePetsList(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), isMyProfile: false)
 }
