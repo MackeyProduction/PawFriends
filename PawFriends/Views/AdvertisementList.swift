@@ -27,6 +27,14 @@ struct AdvertisementList: View {
          */
     }
     
+    @State var heart = "heart"
+    func like() {
+        if heart == "heart" {
+            heart = "heart.fill"
+        } else {
+            heart = "heart"
+        }
+    }
     
     var body: some View {
         ZStack {

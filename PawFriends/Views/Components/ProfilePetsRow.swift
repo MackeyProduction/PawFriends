@@ -13,6 +13,7 @@ struct ProfilePetsRow: View {
     @State private var petType: PetType? = nil
     @State private var isShowingPetsSheet = false
     @State private var navigateToPetDetail = false
+    @State var isMyProfile: Bool
     
     var body: some View {
         ZStack {
@@ -40,10 +41,12 @@ struct ProfilePetsRow: View {
             }
             HStack {
                 Spacer()
-                Button(action: { isShowingPetsSheet.toggle() }) {
-                    Image(systemName: "square.and.pencil")
-                        .font(.title3)
-                        .foregroundStyle(Color(greenColorReverse!))
+                if isMyProfile {
+                    Button(action: { isShowingPetsSheet.toggle() }) {
+                        Image(systemName: "square.and.pencil")
+                            .font(.title3)
+                            .foregroundStyle(Color(greenColorReverse!))
+                    }
                 }
             }
         }
@@ -62,5 +65,9 @@ struct ProfilePetsRow: View {
 }
 
 #Preview {
-    ProfilePetsRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pet: UserProfileViewModel.sampleData[0].pets?.first ?? Pet())
+    ProfilePetsRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pet: UserProfileViewModel.sampleData[0].pets?.first ?? Pet(), isMyProfile: true)
+}
+
+#Preview("another profile") {
+    ProfilePetsRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pet: UserProfileViewModel.sampleData[0].pets?.first ?? Pet(), isMyProfile: false)
 }
