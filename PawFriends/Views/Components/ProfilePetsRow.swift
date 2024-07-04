@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProfilePetsRow: View {
     @ObservedObject var vm: UserProfileViewModel
-    @State var pet: Pet
+    @Binding var pet: Pet
     @State private var petType: PetType? = nil
     @State private var isShowingPetsSheet = false
     @State private var navigateToPetDetail = false
@@ -65,9 +65,9 @@ struct ProfilePetsRow: View {
 }
 
 #Preview {
-    ProfilePetsRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pet: UserProfileViewModel.sampleData[0].pets?.first ?? Pet(), isMyProfile: true)
+    ProfilePetsRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pet: Binding.constant(UserProfileViewModel.sampleData[0].pets?.first ?? Pet()), isMyProfile: true)
 }
 
 #Preview("another profile") {
-    ProfilePetsRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pet: UserProfileViewModel.sampleData[0].pets?.first ?? Pet(), isMyProfile: false)
+    ProfilePetsRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pet: Binding.constant(UserProfileViewModel.sampleData[0].pets?.first ?? Pet()), isMyProfile: false)
 }

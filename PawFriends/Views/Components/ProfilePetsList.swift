@@ -9,16 +9,16 @@ import SwiftUI
 
 struct ProfilePetsList: View {
     @ObservedObject var vm: UserProfileViewModel
-    @State var pets: [Pet]
+    @Binding var pets: [Pet]
     @State private var newPet: Pet = Pet()
     @State private var petType: PetType? = nil
     @State private var isShowingPetsSheet = false
     @State var isMyProfile: Bool
     //@State private var navigateToPetDetail = false
     
-    init(vm: UserProfileViewModel, pets: [Pet] = [], petType: PetType? = nil, isShowingPetsSheet: Bool = false, isMyProfile: Bool) {
+    init(vm: UserProfileViewModel, pets: Binding<[Pet]>, petType: PetType? = nil, isShowingPetsSheet: Bool = false, isMyProfile: Bool) {
         self.vm = vm
-        self.pets = pets
+        self._pets = pets
         self.petType = petType
         self.isShowingPetsSheet = isShowingPetsSheet
         self.isMyProfile = isMyProfile
@@ -50,7 +50,7 @@ struct ProfilePetsList: View {
             }.padding(.bottom, 5)
             
             if !pets.isEmpty {
-                ForEach(pets, id: \.id) { pet in
+                ForEach($pets, id: \.id) { pet in
                     if isMyProfile {
                         ProfilePetsRow(vm: vm, pet: pet, isMyProfile: true)
                     } else {
@@ -69,9 +69,9 @@ struct ProfilePetsList: View {
 }
 
 #Preview {
-    ProfilePetsList(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), isMyProfile: true)
+    ProfilePetsList(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pets: Binding.constant([]), isMyProfile: true)
 }
 
 #Preview ("another profile") {
-    ProfilePetsList(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), isMyProfile: false)
+    ProfilePetsList(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), pets: Binding.constant([]), isMyProfile: false)
 }

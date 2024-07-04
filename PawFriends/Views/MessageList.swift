@@ -33,7 +33,7 @@ struct MessageList: View {
         }
         .background(Color(mainColor!))
         .navigationTitle("Nachrichten")
-        .onAppear {
+        .onReceive(userProfileViewModel.$userProfile, perform: { _ in
             Task {
                 do {
                     try await userProfileViewModel.userProfile?.advertisements?.fetch()
@@ -41,7 +41,7 @@ struct MessageList: View {
                     self.chats = try await filteredChats
                 }
             }
-        }
+        })
     }
     
     var filteredChats: [String: [Chat]] {

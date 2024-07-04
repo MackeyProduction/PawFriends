@@ -22,6 +22,8 @@ struct ProfileView: View {
     @State private var followers: [UserProfileFollower] = []
     @State private var authorId: String? = nil
     @State private var isMyProfile: Bool
+    @State private var pets: [Pet] = []
+    @State private var advertisements: [Advertisement] = []
     
     init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingTagsSheet: Bool = false, isShowingDescriptionSheet: Bool = false, authorId: String? = nil, isMyProfile: Bool, newPet: Pet? = nil) {
         self.userProfileViewModel = userProfileViewModel
@@ -189,24 +191,24 @@ struct ProfileView: View {
                     Divider()
                         .overlay(Color(textColor!))
                     
-                    if let pets = userProfile.pets, userProfile.pets!.isLoaded {
+//                    if !pets.isEmpty {
                         if isMyProfile {
-                            ProfilePetsList(vm: userProfileViewModel, pets: pets.elements, isMyProfile: true)
+                            ProfilePetsList(vm: userProfileViewModel, pets: $pets, isMyProfile: true)
                         } else {
-                            ProfilePetsList(vm: userProfileViewModel, pets: pets.elements, isMyProfile: false)
+                            ProfilePetsList(vm: userProfileViewModel, pets: $pets, isMyProfile: false)
                         }
-                    }
+//                    }
                     
                     Divider()
                         .overlay(Color(textColor!))
                     
-                    if let advertisements = userProfile.advertisements, userProfile.advertisements!.isLoaded {
+//                    if let advertisements = userProfile.advertisements, userProfile.advertisements!.isLoaded {
                         if isMyProfile {
-                            ProfileAdvertisementList(vm: userProfileViewModel, advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData),  advertisements: advertisements.elements, isMyProfile: true)
+                            ProfileAdvertisementList(vm: userProfileViewModel, advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData),  advertisements: $advertisements, isMyProfile: true)
                         } else {
-                            ProfileAdvertisementList(vm: userProfileViewModel, advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData),  advertisements: advertisements.elements, isMyProfile: false)
+                            ProfileAdvertisementList(vm: userProfileViewModel, advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData),  advertisements: $advertisements, isMyProfile: false)
                         }
-                    }
+//                    }
                     
                     Divider()
                                         
@@ -224,26 +226,42 @@ struct ProfileView: View {
             Text("Select an item")
                 .navigationTitle("Profil")
         }
-        .onAppear {
+        .onReceive(userProfileViewModel.$userProfile, perform: { _ in
             Task {
                 do {
                     try await userProfileViewModel.userProfile?.pets?.fetch()
-                    try await userProfileViewModel.userProfile?.advertisements?.fetch()
-                    try await userProfileViewModel.userProfile?.tags?.fetch()
-                    try await userProfileViewModel.userProfile?.followers?.fetch()
-                    try await loadTagCloud()
-                    
-                    // TODO: Fix loading followed author... followed author is always empty
-                    if let author = authorId {
-                        self.authorName = author
-                    } else {
-                        self.authorName = await userProfileViewModel.getAuthorName()
+                    if let pets = userProfileViewModel.userProfile?.pets, pets.isLoaded {
+                        self.pets = pets.elements
                     }
                     
-                    self.followers = userProfileViewModel.userProfile?.followers?.elements ?? []
+                    try await userProfileViewModel.userProfile?.advertisements?.fetch()
+                    if let ads = userProfileViewModel.userProfile?.advertisements, ads.isLoaded {
+                        self.advertisements = ads.elements
+                    }
+                    
+                    try await userProfileViewModel.userProfile?.tags?.fetch()
+                    if let tags = userProfileViewModel.userProfile?.tags, tags.isLoaded {
+                        self.tagCloud = []
+                        try await loadTagCloud()
+                    }
+                    
+                    try await userProfileViewModel.userProfile?.followers?.fetch()
+                    if let followers = userProfileViewModel.userProfile?.followers, followers.isLoaded {
+                        self.followers = followers.elements
+                    }
+                } catch {
+                    
                 }
             }
-            
+        })
+        .onAppear {
+            Task {
+                if let author = authorId {
+                    self.authorName = author
+                } else {
+                    self.authorName = await userProfileViewModel.getAuthorName()
+                }
+            }
         }
     }
     
@@ -269,29 +287,6 @@ struct ProfileView: View {
             await userProfileViewModel.updateProfile(userProfile: userProfileViewModel.userProfile!)
             
             isShowingDescriptionSheet.toggle()
-        }
-    }
-    
-    private func createOrUpdateProfileTags() {
-        do {
-            Task {
-                // load profile tags
-                let profileTags = userProfileViewModel.userProfile?.tags?.elements
-                
-                if let selectedProfileTag = tag {
-                    // format to tag
-                    let formattedTag = tags.first(where: { $0.description == selectedProfileTag })
-                    
-                    // check if profile tags exists
-                    if let pTags = profileTags, pTags.isEmpty {
-                        await userProfileViewModel.createTag(userProfile: userProfileViewModel.userProfile!, tag: formattedTag!)
-                    } else {
-                        let firstUserProfileTag = userProfileViewModel.userProfile?.tags?.first(where: { $0.author == userProfileViewModel.userProfile?.author })
-                        await userProfileViewModel.updateTag(userProfileTag: firstUserProfileTag!, tag: formattedTag!)
-                    }
-                }
-                isShowingTagsSheet.toggle()
-            }
         }
     }
     

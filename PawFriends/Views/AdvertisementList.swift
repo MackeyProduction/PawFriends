@@ -18,13 +18,6 @@ struct AdvertisementList: View {
     init(vm: UserProfileViewModel, advertisementViewModel: AdvertisementViewModel, titleFilter: String = "") {
         self.userProfileViewModel = vm
         self.advertisementViewModel = advertisementViewModel
-        /*
-         let predicate = #Predicate<AdvertisementViewModel> { ad in
-         titleFilter.isEmpty || ad.title.localizedStandardContains(titleFilter)
-         }
-         
-         _advertisementViewModel.$advertisements = Query(filter: predicate, sort: \AdvertisementViewModel.title)
-         */
     }
     
     @State var heart = "heart"
@@ -103,7 +96,19 @@ struct AdvertisementList: View {
                 await advertisementViewModel.listAdvertisements()
             }
             .buttonStyle(.plain)
-        }.searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Suche")
+        }
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Suche")
+        .onChange(of: $searchText) {
+            Task {
+                if searchText == "" {
+                    await advertisementViewModel.listAdvertisements()
+                }
+                
+                advertisementViewModel.advertisements = advertisementViewModel.advertisements.filter { ad in
+                    return ad.title!.starts(with: searchText)
+                }
+            }
+        }
     }
 }
 
