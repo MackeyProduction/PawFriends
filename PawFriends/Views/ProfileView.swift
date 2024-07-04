@@ -244,6 +244,11 @@ struct ProfileView: View {
                         self.tagCloud = []
                         try await loadTagCloud()
                     }
+                    
+                    try await userProfileViewModel.userProfile?.followers?.fetch()
+                    if let followers = userProfileViewModel.userProfile?.followers, followers.isLoaded {
+                        self.followers = followers.elements
+                    }
                 } catch {
                     
                 }
@@ -251,26 +256,10 @@ struct ProfileView: View {
         })
         .onAppear {
             Task {
-                do {
-                    try await userProfileViewModel.userProfile?.pets?.fetch()
-                    try await userProfileViewModel.userProfile?.advertisements?.fetch()
-                    try await userProfileViewModel.userProfile?.tags?.fetch()
-                    try await userProfileViewModel.userProfile?.followers?.fetch()
-                    try await loadTagCloud()
-                    
-                    self.pets = userProfileViewModel.userProfile?.pets?.elements ?? []
-                    self.advertisements = userProfileViewModel.userProfile?.advertisements?.elements ?? []
-                    
-                    // TODO: Fix loading followed author... followed author is always empty
-                    if let author = authorId {
-                        self.authorName = author
-                    } else {
-                        self.authorName = await userProfileViewModel.getAuthorName()
-                    }
-                    
-                    self.followers = userProfileViewModel.userProfile?.followers?.elements ?? []
-                } catch {
-                    
+                if let author = authorId {
+                    self.authorName = author
+                } else {
+                    self.authorName = await userProfileViewModel.getAuthorName()
                 }
             }
         }
