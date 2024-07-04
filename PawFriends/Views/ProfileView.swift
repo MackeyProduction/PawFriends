@@ -132,31 +132,7 @@ struct ProfileView: View {
                                 }
                                 .sheet(isPresented: $isShowingTagsSheet) {
                                     NavigationStack {
-                                        MultiPickerView(userProfileViewModel: userProfileViewModel, isAdvertisement: false)
-                                            
-//                                        Form {
-//                                            Picker("Tags", selection: $tag) {
-//                                                ForEach(tags, id: \.id) { tag in
-//                                                    Text(tag.description ?? "")
-//                                                        .tag(tag.description as String?)
-//                                                }
-//                                            }
-//                                        }
-//                                        .navigationTitle("Tags bearbeiten")
-//                                        .toolbar {
-//                                            ToolbarItem(placement: .confirmationAction) {
-//                                                Button("Done", action: createOrUpdateProfileTags)
-//                                            }
-//                                            
-//                                            ToolbarItem(placement: .cancellationAction) {
-//                                                Button("Cancel", action: { isShowingTagsSheet.toggle() })
-//                                            }
-//                                        }
-//                                        .onAppear {
-//                                            Task {
-//                                                self.tags = await userProfileViewModel.fetchTags()
-//                                            }
-//                                        }
+                                        MultiPickerView(userProfileViewModel: userProfileViewModel, advertisement: Binding.constant(Advertisement()), isAdvertisement: false)
                                     }
                                 }
                             }
@@ -273,10 +249,11 @@ struct ProfileView: View {
     
     private func loadTagCloud() async throws {
         do {
-            let tagItems = userProfileViewModel.userProfile?.tags?.elements
-            for item in tagItems! {
-                let tag = try await item.tag
-                self.tagCloud.append(tag?.description ?? "")
+            if let tagItems = userProfileViewModel.userProfile?.tags?.elements {
+                for item in tagItems {
+                    let tag = try await item.tag
+                    self.tagCloud.append(tag?.description ?? "")
+                }
             }
         } catch {
             print("Could not fetch tags for tag cloud.")

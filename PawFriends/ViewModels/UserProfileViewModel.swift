@@ -253,6 +253,22 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
+    func deleteTag(userProfileTag: UserProfileTag) async {
+        do {
+            let result = try await Amplify.API.mutate(request: .delete(userProfileTag, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let tag):
+                print("Successfully deleted tag: \(tag)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to deleted tag: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
     func createWatchListItem(userProfile: UserProfile, advertisement: Advertisement) async {
         do {
             let newWatchListItem = WatchList(userProfile: userProfile, advertisement: advertisement)

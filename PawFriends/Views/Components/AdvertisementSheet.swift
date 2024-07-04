@@ -87,7 +87,7 @@ struct AdvertisementSheet: View {
                         }
                         .sheet(isPresented: $isShowingTagsSheet) {
                             NavigationStack {
-                                MultiPickerView(advertisementViewModel: advertisementViewModel, isAdvertisement: true)
+                                MultiPickerView(advertisementViewModel: advertisementViewModel, advertisement: $advertisement, isAdvertisement: true)
                             }
                         }
                     }
