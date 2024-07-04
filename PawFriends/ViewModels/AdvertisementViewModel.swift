@@ -113,6 +113,22 @@ class AdvertisementViewModel: ObservableObject {
         }
     }
     
+    func deleteTag(advertisementTag: AdvertisementTag) async {
+        do {
+            let result = try await Amplify.API.mutate(request: .delete(advertisementTag, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let tag):
+                print("Successfully deleted tag: \(tag)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to deleted tag: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
     func fetchTags() async -> [Tag] {
         var tags: [Tag] = []
         let request = GraphQLRequest<PetType>.list(Tag.self, limit: 1000, authMode: .amazonCognitoUserPools)

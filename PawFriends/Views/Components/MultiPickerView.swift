@@ -7,10 +7,12 @@
 
 import SwiftUI
 import MultiPicker
+import Amplify
 
 struct MultiPickerView: View {
     @ObservedObject var advertisementViewModel: AdvertisementViewModel = AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData)
     @ObservedObject var userProfileViewModel: UserProfileViewModel = UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0])
+    @Binding var advertisement: Advertisement
 
     @Environment(\.dismiss) private var dismiss
 
@@ -58,6 +60,7 @@ struct MultiPickerView: View {
             Task {
                 if isAdvertisement {
                     self.tags = await advertisementViewModel.fetchTags()
+                    try await advertisement.tags?.fetch()
                 } else {
                     self.tags = await userProfileViewModel.fetchTags()
                 }
@@ -81,22 +84,26 @@ struct MultiPickerView: View {
         do {
             Task {
                 // load advertisement tags
-                //let advertisementTags = userProfileViewModel.userProfile?.tags?.elements
-                let advertisementTags = advertisementViewModel.advertisement?.tags?.elements
+                let advertisementTags = advertisement.tags?.elements
                 
                 if !stringTags.isEmpty  {
+                    // check if advertisement tags exists, clear in database when tags exists
+                    if let aTags = advertisementTags, !aTags.isEmpty {
+                        await removeAdvertisementTags(advertisementTags: aTags)
+                    }
+                    
+                    // add selected tags to the database
                     for tag in stringTags {
                         let selectedAdvertisementTag = tag
-                        // format to tag
-                        let formattedTag = tags.first(where: { $0.description == selectedAdvertisementTag })
                         
-                        // check if advertisement tags exists
-                        if let aTags = advertisementTags, aTags.isEmpty {
-                            await advertisementViewModel.createTag(advertisement: advertisementViewModel.advertisement!, tag: formattedTag!)
-                        } else {
-                            let firstAdvertisementTag = advertisementViewModel.advertisement?.tags?.first(where: { $0.author == advertisementViewModel.advertisement?.author })
-                            await advertisementViewModel.updateTag(advertisementTag: firstAdvertisementTag!, tag: formattedTag!)
+                        // format to tag
+                        guard let formattedTag = tags.first(where: { $0.description == selectedAdvertisementTag }) else {
+                            print("Error while casting tag.")
+                            return
                         }
+                        
+                        // add formatted tag to the database
+                        await advertisementViewModel.createTag(advertisement: advertisement, tag: formattedTag)
                     }
                 }
             }
@@ -111,18 +118,23 @@ struct MultiPickerView: View {
                 let profileTags = userProfileViewModel.userProfile?.tags?.elements
                 
                 if !stringTags.isEmpty  {
+                    // check if profile tags exists, clear in database when tags exists
+                    if let pTags = profileTags, !pTags.isEmpty {
+                        await removeProfileTags(userProfileTags: pTags)
+                    }
+                    
+                    // add selected tags to the database
                     for tag in stringTags {
                         let selectedProfileTag = tag
-                        // format to tag
-                        let formattedTag = tags.first(where: { $0.description == selectedProfileTag })
                         
-                        // check if profile tags exists
-                        if let pTags = profileTags, pTags.isEmpty {
-                            await userProfileViewModel.createTag(userProfile: userProfileViewModel.userProfile!, tag: formattedTag!)
-                        } else {
-                            let firstUserProfileTag = userProfileViewModel.userProfile?.tags?.first(where: { $0.author == userProfileViewModel.userProfile?.author })
-                            await userProfileViewModel.updateTag(userProfileTag: firstUserProfileTag!, tag: formattedTag!)
+                        // format to tag
+                        guard let formattedTag = tags.first(where: { $0.description == selectedProfileTag }) else {
+                            print("Error while casting tag.")
+                            return
                         }
+                        
+                        // add formatted tag to the database
+                        await userProfileViewModel.createTag(userProfile: userProfileViewModel.userProfile!, tag: formattedTag)
                     }
                 }
             }
@@ -130,13 +142,25 @@ struct MultiPickerView: View {
         dismiss()
     }
     
+    private func removeProfileTags(userProfileTags: [UserProfileTag]) async {
+        for tag in userProfileTags {
+            await userProfileViewModel.deleteTag(userProfileTag: tag)
+        }
+    }
+    
+    private func removeAdvertisementTags(advertisementTags: [AdvertisementTag]) async {
+        for tag in advertisementTags {
+            await advertisementViewModel.deleteTag(advertisementTag: tag)
+        }
+    }
+    
 }
 
 
 #Preview {
-    MultiPickerView(advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData), isAdvertisement: true)
+    MultiPickerView(advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData), advertisement: Binding.constant(Advertisement()), isAdvertisement: true)
 }
 
 #Preview("UserProfile") {
-    MultiPickerView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), isAdvertisement: false)
+    MultiPickerView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisement: Binding.constant(Advertisement()), isAdvertisement: false)
 }
