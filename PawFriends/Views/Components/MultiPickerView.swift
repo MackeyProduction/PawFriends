@@ -136,6 +136,8 @@ struct MultiPickerView: View {
                         // add formatted tag to the database
                         await userProfileViewModel.createTag(userProfile: userProfileViewModel.userProfile!, tag: formattedTag)
                     }
+                    
+                    await userProfileViewModel.fetchUserProfileTags(userProfile: userProfileViewModel.userProfile!)
                 }
             }
         }
