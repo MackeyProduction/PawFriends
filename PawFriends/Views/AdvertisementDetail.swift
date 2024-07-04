@@ -271,7 +271,7 @@ struct AdvertisementDetail: View {
                 }
             }
         }
-        .onAppear {
+        .onReceive(vm.$userProfile, perform: { _ in
             Task {
                 do {
                     try await advertisement.tags?.fetch()
@@ -282,7 +282,7 @@ struct AdvertisementDetail: View {
                     self.advertisementUserProfile = try await advertisement.userProfile
                 }
             }
-        }
+        })
         
     }
     
@@ -361,6 +361,8 @@ struct AdvertisementDetail: View {
             do {
                 if let author = advertisementUserProfile?.author, let up = vm.userProfile {
                     await vm.createChat(message: chatMessage ?? "", recipient: author.uppercased(), userProfile: up, advertisement: advertisement)
+                    
+                    vm.userProfile?.chats = List(elements: await vm.fetchChats(userProfile: vm.userProfile!))
                 }
                 
                 dismiss()
