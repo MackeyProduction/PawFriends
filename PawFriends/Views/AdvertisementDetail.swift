@@ -151,6 +151,7 @@ struct AdvertisementDetail: View {
                             .padding(.trailing, 5)
                             .padding(.top, 4)
                         
+                        //var tagCloud = ["Indoor", "Erdgeschoss", "Katze", "Nicht-Raucherhaushalt", "Einmalig"]
                         TagCloudView(tags: tagCloud)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     }
@@ -372,13 +373,6 @@ struct AdvertisementDetail: View {
     NavigationStack {
         @State var advertisement = UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement()
         AdvertisementDetail(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisement: $advertisement)
-    }
-}
-
-#Preview("New Advertisement") {
-    NavigationStack {
-        @State var advertisement = UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement()
-        AdvertisementDetail(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisement: $advertisement, isNew: true)
     }
 }
 

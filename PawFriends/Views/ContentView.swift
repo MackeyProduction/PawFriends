@@ -81,7 +81,7 @@ struct AppView: View {
                     Label("Nachrichten", systemImage: "message")
                 }
             
-            ProfileView(userProfileViewModel: userProfileViewModel)
+            ProfileView(userProfileViewModel: userProfileViewModel, isMyProfile: true)
                 .tabItem {
                     Label("Profil", systemImage: "person")
                 }

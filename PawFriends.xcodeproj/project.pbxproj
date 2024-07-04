@@ -75,6 +75,8 @@
 		B56684002C31F6ED00AC7022 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56683FF2C31F6ED00AC7022 /* SettingsView.swift */; };
 		B56684042C321BDB00AC7022 /* PetDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56684032C321BDB00AC7022 /* PetDetail.swift */; };
 		B56684062C322CB500AC7022 /* DetailProfileInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56684052C322CB500AC7022 /* DetailProfileInfos.swift */; };
+		B56684092C34286300AC7022 /* MultiPicker in Frameworks */ = {isa = PBXBuildFile; productRef = B56684082C34286300AC7022 /* MultiPicker */; };
+		B566840B2C3429B000AC7022 /* MultiPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566840A2C3429B000AC7022 /* MultiPickerView.swift */; };
 		B5BBB6102C18CE3C000F490F /* AdvertisementDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BBB60F2C18CE3C000F490F /* AdvertisementDetail.swift */; };
 		B5BBB6162C1DD75A000F490F /* FittedImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BBB6152C1DD75A000F490F /* FittedImagesView.swift */; };
 		B5BBB6182C1DEA5E000F490F /* PhotoPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BBB6172C1DEA5E000F490F /* PhotoPickerView.swift */; };
@@ -173,6 +175,7 @@
 		B56683FF2C31F6ED00AC7022 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B56684032C321BDB00AC7022 /* PetDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetDetail.swift; sourceTree = "<group>"; };
 		B56684052C322CB500AC7022 /* DetailProfileInfos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailProfileInfos.swift; sourceTree = "<group>"; };
+		B566840A2C3429B000AC7022 /* MultiPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPickerView.swift; sourceTree = "<group>"; };
 		B5BBB60F2C18CE3C000F490F /* AdvertisementDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvertisementDetail.swift; sourceTree = "<group>"; };
 		B5BBB6152C1DD75A000F490F /* FittedImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FittedImagesView.swift; sourceTree = "<group>"; };
 		B5BBB6172C1DEA5E000F490F /* PhotoPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerView.swift; sourceTree = "<group>"; };
@@ -186,6 +189,7 @@
 				3E00D86B2C21E25500638243 /* AWSAPIPlugin in Frameworks */,
 				3EAC3BAA2C177BDE008129A4 /* Authenticator in Frameworks */,
 				3E69EA7E2C289C04005327B6 /* SlidingTabView in Frameworks */,
+				B56684092C34286300AC7022 /* MultiPicker in Frameworks */,
 				3EAC3BA72C177781008129A4 /* AWSCognitoAuthPlugin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -247,6 +251,7 @@
 				B56684052C322CB500AC7022 /* DetailProfileInfos.swift */,
 				3E53F18C2C32F78E00FB136F /* AdvertisementSheet.swift */,
 				3EA477C12C34435B00ECD60B /* FollowProfileView.swift */,
+				B566840A2C3429B000AC7022 /* MultiPickerView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -424,6 +429,7 @@
 				3EAC3BA92C177BDE008129A4 /* Authenticator */,
 				3E00D86A2C21E25500638243 /* AWSAPIPlugin */,
 				3E69EA7D2C289C04005327B6 /* SlidingTabView */,
+				B56684082C34286300AC7022 /* MultiPicker */,
 			);
 			productName = PawFriends;
 			productReference = 3E9C94E72C07A2FF00F91BFB /* PawFriends.app */;
@@ -501,6 +507,7 @@
 				3EAC3BA52C177780008129A4 /* XCRemoteSwiftPackageReference "amplify-swift" */,
 				3EAC3BA82C177BDE008129A4 /* XCRemoteSwiftPackageReference "amplify-ui-swift-authenticator" */,
 				3E69EA7C2C289C03005327B6 /* XCRemoteSwiftPackageReference "SlidingTabView" */,
+				B56684072C34286300AC7022 /* XCRemoteSwiftPackageReference "MultiPicker" */,
 			);
 			productRefGroup = 3E9C94E82C07A2FF00F91BFB /* Products */;
 			projectDirPath = "";
@@ -595,6 +602,7 @@
 				3E38AD152C21ABA90078899C /* UserProfileTag+Schema.swift in Sources */,
 				3E38AD052C21ABA90078899C /* Chat+Schema.swift in Sources */,
 				3E38AD142C21ABA90078899C /* UserProfileTag.swift in Sources */,
+				B566840B2C3429B000AC7022 /* MultiPickerView.swift in Sources */,
 				3E6F58992C273E3600656CC3 /* UserProfileViewModel.swift in Sources */,
 				3E38AD0C2C21ABA90078899C /* Tag.swift in Sources */,
 				3E38AD092C21ABA90078899C /* PetBreed+Schema.swift in Sources */,
@@ -955,6 +963,14 @@
 				minimumVersion = 1.1.4;
 			};
 		};
+		B56684072C34286300AC7022 /* XCRemoteSwiftPackageReference "MultiPicker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/toastersocks/MultiPicker";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -977,6 +993,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3EAC3BA82C177BDE008129A4 /* XCRemoteSwiftPackageReference "amplify-ui-swift-authenticator" */;
 			productName = Authenticator;
+		};
+		B56684082C34286300AC7022 /* MultiPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B56684072C34286300AC7022 /* XCRemoteSwiftPackageReference "MultiPicker" */;
+			productName = MultiPicker;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

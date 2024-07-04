@@ -21,6 +21,7 @@ struct ProfileView: View {
     @State private var tagCloud: [String] = []
     @State private var followers: [UserProfileFollower] = []
     @State private var authorId: String? = nil
+    @State private var isMyProfile: Bool
     
     init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingTagsSheet: Bool = false, isShowingDescriptionSheet: Bool = false, authorId: String? = nil, newPet: Pet? = nil) {
         self.userProfileViewModel = userProfileViewModel
@@ -30,6 +31,7 @@ struct ProfileView: View {
         self.isShowingDescriptionSheet = isShowingDescriptionSheet
         self.authorId = authorId
         self.newPet = newPet
+        self.isMyProfile = isMyProfile
     }
     
     @State private var navigateToSettings = false
@@ -72,15 +74,17 @@ struct ProfileView: View {
                                 }
                                 .padding(.bottom, 5)
                                 .font(.title2)
-                                Button(action: {
-                                    navigateToSettings = true
-                                }) {
-                                    Label("", systemImage: "gearshape.fill")
+                                if isMyProfile {
+                                    Button(action: {
+                                        navigateToSettings = true
+                                    }) {
+                                        Label("", systemImage: "gearshape.fill")
+                                    }
+                                    .font(.title2)
+                                    .navigationDestination(isPresented: $navigateToSettings) {
+                                        SettingsView()
+                                    }
                                 }
-                                .font(.title2)
-                                .navigationDestination(isPresented: $navigateToSettings) {
-                                                   SettingsView()
-                                               }
                             }
                         }.foregroundStyle(Color(textColor!))
                         
@@ -121,34 +125,38 @@ struct ProfileView: View {
                             
                             TagCloudView(tags: tagCloud)
                             
-                            Button(action: { isShowingTagsSheet.toggle() }) {
-                                Image(systemName: "square.and.pencil")
-                                    .font(.title2)
-                            }
-                            .sheet(isPresented: $isShowingTagsSheet) {
-                                NavigationStack {
-                                    Form {
-                                        Picker("Tags", selection: $tag) {
-                                            ForEach(tags, id: \.id) { tag in
-                                                Text(tag.description ?? "")
-                                                    .tag(tag.description as String?)
-                                            }
-                                        }
-                                    }
-                                    .navigationTitle("Tags bearbeiten")
-                                    .toolbar {
-                                        ToolbarItem(placement: .confirmationAction) {
-                                            Button("Done", action: createOrUpdateProfileTags)
-                                        }
-                                        
-                                        ToolbarItem(placement: .cancellationAction) {
-                                            Button("Cancel", action: { isShowingTagsSheet.toggle() })
-                                        }
-                                    }
-                                    .onAppear {
-                                        Task {
-                                            self.tags = await userProfileViewModel.fetchTags()
-                                        }
+                            if isMyProfile {
+                                Button(action: { isShowingTagsSheet.toggle() }) {
+                                    Image(systemName: "square.and.pencil")
+                                        .font(.title2)
+                                }
+                                .sheet(isPresented: $isShowingTagsSheet) {
+                                    NavigationStack {
+                                        MultiPickerView(userProfileViewModel: userProfileViewModel, isAdvertisement: false)
+                                            
+//                                        Form {
+//                                            Picker("Tags", selection: $tag) {
+//                                                ForEach(tags, id: \.id) { tag in
+//                                                    Text(tag.description ?? "")
+//                                                        .tag(tag.description as String?)
+//                                                }
+//                                            }
+//                                        }
+//                                        .navigationTitle("Tags bearbeiten")
+//                                        .toolbar {
+//                                            ToolbarItem(placement: .confirmationAction) {
+//                                                Button("Done", action: createOrUpdateProfileTags)
+//                                            }
+//                                            
+//                                            ToolbarItem(placement: .cancellationAction) {
+//                                                Button("Cancel", action: { isShowingTagsSheet.toggle() })
+//                                            }
+//                                        }
+//                                        .onAppear {
+//                                            Task {
+//                                                self.tags = await userProfileViewModel.fetchTags()
+//                                            }
+//                                        }
                                     }
                                 }
                             }
@@ -166,32 +174,33 @@ struct ProfileView: View {
                                 .fontWeight(.semibold)
                             Spacer()
                             
-                            Button(action: { isShowingDescriptionSheet.toggle() }) {
-                                Image(systemName: "square.and.pencil")
-                                    .font(.title2)
-                            }
-                            .sheet(isPresented: $isShowingDescriptionSheet) {
-                                NavigationStack {
-                                    Form {
-                                        TextField("Beschreibung", text: Binding(
-                                            get: { userProfile.description ?? "" },
-                                            set: { userProfileViewModel.userProfile?.description = $0 }
-                                        ), axis: .vertical)
-                                        .autocorrectionDisabled()
-                                    }
-                                    .navigationTitle("Beschreibung hinzufügen")
-                                    .toolbar {
-                                        ToolbarItem(placement: .confirmationAction) {
-                                            Button("Done", action: updateProfile)
+                            if isMyProfile {
+                                Button(action: { isShowingDescriptionSheet.toggle() }) {
+                                    Image(systemName: "square.and.pencil")
+                                        .font(.title2)
+                                }
+                                .sheet(isPresented: $isShowingDescriptionSheet) {
+                                    NavigationStack {
+                                        Form {
+                                            TextField("Beschreibung", text: Binding(
+                                                get: { userProfile.description ?? "" },
+                                                set: { userProfileViewModel.userProfile?.description = $0 }
+                                            ), axis: .vertical)
+                                            .autocorrectionDisabled()
                                         }
-                                        
-                                        ToolbarItem(placement: .cancellationAction) {
-                                            Button("Cancel", action: { isShowingDescriptionSheet.toggle() })
+                                        .navigationTitle("Beschreibung hinzufügen")
+                                        .toolbar {
+                                            ToolbarItem(placement: .confirmationAction) {
+                                                Button("Done", action: updateProfile)
+                                            }
+                                            
+                                            ToolbarItem(placement: .cancellationAction) {
+                                                Button("Cancel", action: { isShowingDescriptionSheet.toggle() })
+                                            }
                                         }
                                     }
                                 }
                             }
-                            
                         }
                         
                         HStack {
@@ -205,14 +214,22 @@ struct ProfileView: View {
                         .overlay(Color(textColor!))
                     
                     if let pets = userProfile.pets, userProfile.pets!.isLoaded {
-                        ProfilePetsList(vm: userProfileViewModel, pets: pets.elements)
+                        if isMyProfile {
+                            ProfilePetsList(vm: userProfileViewModel, pets: pets.elements, isMyProfile: true)
+                        } else {
+                            ProfilePetsList(vm: userProfileViewModel, pets: pets.elements, isMyProfile: false)
+                        }
                     }
                     
                     Divider()
                         .overlay(Color(textColor!))
                     
                     if let advertisements = userProfile.advertisements, userProfile.advertisements!.isLoaded {
-                        ProfileAdvertisementList(vm: userProfileViewModel, advertisements: advertisements.elements)
+                        if isMyProfile {
+                            ProfileAdvertisementList(vm: userProfileViewModel, advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData),  advertisements: advertisements.elements, isMyProfile: true)
+                        } else {
+                            ProfileAdvertisementList(vm: userProfileViewModel, advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData),  advertisements: advertisements.elements, isMyProfile: false)
+                        }
                     }
                     
                     Divider()
@@ -296,7 +313,6 @@ struct ProfileView: View {
                         await userProfileViewModel.updateTag(userProfileTag: firstUserProfileTag!, tag: formattedTag!)
                     }
                 }
-                
                 isShowingTagsSheet.toggle()
             }
         }
@@ -305,5 +321,10 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]))
+    ProfileView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), isMyProfile: true)
 }
+
+#Preview ("another profile") {
+    ProfileView(userProfileViewModel: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), isMyProfile: false)
+}
+

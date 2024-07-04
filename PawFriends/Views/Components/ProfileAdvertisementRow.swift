@@ -10,9 +10,11 @@ import Amplify
 
 struct ProfileAdvertisementRow: View {
     @ObservedObject var vm: UserProfileViewModel
+    @ObservedObject var advertisementViewModel: AdvertisementViewModel
     @State var advertisement: Advertisement
     @State private var isShowingAdvertisementSheet = false
     @State private var navigateToAdvertisementDetail = false
+    @State var isMyProfile: Bool
     
     func releaseDateToString(releaseDate: Temporal.DateTime) -> String {
         let relativeDateFormatter = DateFormatter()
@@ -58,16 +60,18 @@ struct ProfileAdvertisementRow: View {
                 .navigationDestination(isPresented: $navigateToAdvertisementDetail) {
                     AdvertisementDetail(vm: vm, advertisement: $advertisement)}
                 Spacer()
-                Button(action: { isShowingAdvertisementSheet.toggle() }) {
-                    Image(systemName: "square.and.pencil")
-                        .font(.title3)
-                        .foregroundStyle(Color(greenColorReverse!))
+                if isMyProfile {
+                    Button(action: { isShowingAdvertisementSheet.toggle() }) {
+                        Image(systemName: "square.and.pencil")
+                            .font(.title3)
+                            .foregroundStyle(Color(greenColorReverse!))
+                    }
                 }
             }
             .padding(.top, 8)
             .sheet(isPresented: $isShowingAdvertisementSheet) {
                 NavigationStack {
-                    ProfileAdvertisementSheet(vm: vm, advertisement: $advertisement)
+                    ProfileAdvertisementSheet(vm: vm, advertisementViewModel: advertisementViewModel, advertisement: $advertisement)
                 }
             }
         }
@@ -75,5 +79,9 @@ struct ProfileAdvertisementRow: View {
 }
 
 #Preview {
-    ProfileAdvertisementRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisement: UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement())
+    ProfileAdvertisementRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData), advertisement: UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement(), isMyProfile: true)
+}
+
+#Preview ("another profile") {
+    ProfileAdvertisementRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData), advertisement: UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement(), isMyProfile: false)
 }

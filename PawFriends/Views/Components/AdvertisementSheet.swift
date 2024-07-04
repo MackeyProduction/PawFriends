@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import MultiPicker
 
 struct AdvertisementSheet: View {
     @ObservedObject var advertisementViewModel: AdvertisementViewModel
@@ -14,7 +15,10 @@ struct AdvertisementSheet: View {
     @StateObject private var photoPickerViewModel: PhotoPickerViewModel = PhotoPickerViewModel()
     @Binding var advertisement: Advertisement
     @State var isNew: Bool = false
+    @State private var isShowingTagsSheet = false
     
+    @State private var tagCloud: [String] = []
+            
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -73,14 +77,26 @@ struct AdvertisementSheet: View {
                 }
                 .listRowBackground(Color(thirdColor!))
                 
-    //            Section { //Multi select, Kategorien sortiert
-    //                Picker("Tags", selection: $tags) {
-    //                    ForEach(tagOptions, id: \.self) {
-    //                        Text($0)
-    //                    }
-    //                }//.pickerStyle()
-    //            }
-    //            .listRowBackground(Color(thirdColor!))
+                Section {
+                    HStack {
+                        Text("Tags")
+                        Spacer()
+                        Button(action: { isShowingTagsSheet.toggle() }) {
+                            Image(systemName: "plus.square")
+                                .font(.title2)
+                        }
+                        .sheet(isPresented: $isShowingTagsSheet) {
+                            NavigationStack {
+                                MultiPickerView(advertisementViewModel: advertisementViewModel, isAdvertisement: true)
+                            }
+                        }
+                    }
+                    
+                    VStack {
+                        TagCloudView(tags: tagCloud)
+                    }
+                }
+                .listRowBackground(Color(thirdColor!))
                 
                 Section {
                     Text("Beschreibung")
@@ -118,6 +134,24 @@ struct AdvertisementSheet: View {
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
         .background(Color(mainColor!))
         .edgesIgnoringSafeArea(.top)
+        .onAppear() {
+            Task {
+                try await loadTagCloud()
+            }
+        }
+        
+    }
+    
+    private func loadTagCloud() async throws {
+        do {
+            let tagItems = advertisement.tags?.elements
+            for item in tagItems! {
+                let tag = try await item.tag
+                self.tagCloud.append(tag?.description ?? "")
+            }
+        } catch {
+            print("Could not fetch tags for tag cloud.")
+        }
     }
     
     private func createOrUpdate() {
@@ -136,6 +170,7 @@ struct AdvertisementSheet: View {
         }
     }
 }
+
 
 #Preview {
     NavigationStack {

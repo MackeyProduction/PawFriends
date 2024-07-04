@@ -8,6 +8,7 @@
 import SwiftUI
 import Amplify
 import class Amplify.List
+import PhotosUI
 
 struct ProfilePetsSheet: View {
     @ObservedObject var vm: UserProfileViewModel
@@ -15,6 +16,9 @@ struct ProfilePetsSheet: View {
     @State var isNew: Bool
     @State private var petTypes: [PetType] = []
     @State private var petType: String? = nil
+    
+    @StateObject private var viewModel = PhotoPickerViewModel()
+    @State var imageSelections: [PhotosPickerItem] = []
     
     @Environment(\.dismiss) private var dismiss
     
@@ -31,61 +35,144 @@ struct ProfilePetsSheet: View {
         return numberFormatter
     }
     
+    func stringToUiimages(strings: [String?]?) -> [UIImage]{
+        var uiimages: [UIImage] = []
+        for string in strings! {
+            let image: Image = Image(string!)
+            uiimages.append(image.asUIImage())
+        }
+        return uiimages
+    }
+    
     var body: some View {
-        Form {
-            TextField("Tiername", text: Binding(
-                get: { pet.name ?? "" },
-                set: { pet.name = $0 }
-            ), axis: .vertical)
-            .autocorrectionDisabled()
-            .listRowBackground(Color(thirdColor!))
-            
-            TextField("Beschreibung", text: Binding(
-                get: { pet.description ?? "" },
-                set: { pet.description = $0 }
-            ), axis: .vertical)
-            .autocorrectionDisabled()
-            .listRowBackground(Color(thirdColor!))
-            
-            TextField("Alter", value: Binding(
-                get: {
-                    if let age = pet.age {
-                        return age
+        VStack(spacing: 10) {
+            if viewModel.selectedImages.isEmpty {
+                ZStack {
+                    Rectangle()
+                        .fill(Color(secondColor!))
+                        .frame(maxWidth: .infinity, maxHeight: 270)
+                    Image(systemName: "photo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity, maxHeight: 250, alignment: .center)
+                        .clipped()
+                        .foregroundStyle(Color(textColor!))
+                        .opacity(0.2)
+                        .overlay(alignment: .bottomTrailing) {
+                            PhotosPicker(selection: $viewModel.imageSelections,
+                                         matching: .images,
+                                         photoLibrary: .shared()) {
+                                PickPhotoButton()
+                                    .padding(.bottom, 5)
+                                    .padding(.trailing, 5)
+                            }
+                                         .buttonStyle(.borderless)
+                        }
+                }
+                .frame(height: 270)
+            } else {
+                //SwipeView(images: viewModel.selectedImages)
+                Image(uiImage: viewModel.selectedImages[0])
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 270, alignment: .top)
+                    .clipped()
+                    .overlay(alignment: .bottomTrailing) {
+                        PhotosPicker(selection: $viewModel.imageSelections,
+                                     matching: .images,
+                                     photoLibrary: .shared()) {
+                            PickPhotoButton()
+                                .padding(.bottom, 5)
+                                .padding(.trailing, 5)
+                        }
+                                     .buttonStyle(.borderless)
                     }
-                    return 1 // Default value if pet.age is nil
-                },
-                set: { newValue in
-                    pet.age = Int(newValue)
+            }
+            
+            Form {
+                Section {
+                    TextField("Name", text: Binding(
+                        get: { pet.name ?? "" },
+                        set: { pet.name = $0 }
+                    ), axis: .vertical)
+                        .autocorrectionDisabled()
                 }
-            ), formatter: numberFormatter)
-                .keyboardType(.numberPad)
                 .listRowBackground(Color(thirdColor!))
-            
-            Picker("Tiertypen", selection: $petType) {
-                Text("None")
-                    .tag(nil as String?)
                 
-                ForEach(petTypes, id: \.id) { petType in
-                    Text(petType.description ?? "")
-                        .tag(petType.description as String?)
+                Section {
+                    Text("Beschreibung")
+                    TextField("", text: Binding(
+                        get: { pet.description ?? "" },
+                        set: { pet.description = $0 }
+                    ), axis: .vertical)
+                        .autocorrectionDisabled()
+                        .lineLimit(9...9)
                 }
-            }.listRowBackground(Color(thirdColor!))
+                .listRowBackground(Color(thirdColor!))
+                
+                Section {
+                    Text("Alter")
+                    TextField("", value: Binding(
+                        get: {
+                            if let age = pet.age {
+                                return age
+                            }
+                            return 1 // Default value if pet.age is nil
+                        },
+                        set: { newValue in
+                            pet.age = Int(newValue)
+                        }
+                    ), formatter: numberFormatter)
+                    .keyboardType(.numberPad)
+                }.listRowBackground(Color(thirdColor!))
+
+                Section {
+                    Picker("Tiertypen", selection: $petType) {
+                        Text("None")
+                            .tag(nil as String?)
+                        
+                        ForEach(petTypes, id: \.id) { petType in
+                            Text(petType.description ?? "")
+                                .tag(petType.description as String?)
+                        }
+                    }
+                }.listRowBackground(Color(thirdColor!))
+                                    
+                Section(footer:
+                            HStack {
+                    Spacer()
+                    Button(action: createOrUpdate) {
+                        Text("Veröffentlichen")
+                            .font(.title2)
+                            .foregroundStyle(Color(mainTextColor!))
+                    }
+                    .padding(10)
+                    .background(RoundedRectangle(cornerRadius: 10).foregroundStyle(Color(greenColor!)))
+                    Spacer()
+                }
+                ) {
+                    EmptyView()
+                }
+            }.scrollContentBackground(.hidden)
+                //.navigationTitle(isNew ? "Haustier hinzufügen" : "Huastier bearbeiten")
+                .toolbar {
+//                        ToolbarItem(placement: .confirmationAction) {
+//                            Button("Done", action: createOrUpdate)
+//                        }
+                    
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Abbrechen", action: { dismiss() })
+                    }
+                }
+                .onAppear {
+                    Task {
+                        self.petTypes = await vm.fetchPetTypes()
+                    }
+                }
         }
-        .navigationTitle(isNew ? "Haustier hinzufügen" : "Haustier bearbeiten")
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Done", action: createOrUpdate)
-            }
-            
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel", action: { dismiss() })
-            }
-        }
-        .onAppear {
-            Task {
-                self.petTypes = await vm.fetchPetTypes()
-            }
-        }
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
+        .background(Color(mainColor!))
+        .edgesIgnoringSafeArea(.top)
     }
     
     private func createOrUpdate() {
