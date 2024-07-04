@@ -120,6 +120,8 @@ struct MessageDetail: View {
         Task {
             if let author = recipient, let up = vm.userProfile, let ad = advertisement {
                 await vm.createChat(message: newMessage, recipient: author.uppercased(), userProfile: up, advertisement: ad)
+                
+                vm.userProfile?.chats = List(elements: await vm.fetchChats(userProfile: vm.userProfile!))
             }
             newMessage = ""
         }
