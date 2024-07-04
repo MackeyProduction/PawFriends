@@ -538,6 +538,27 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
+    func fetchWatchList(userProfile: UserProfile) async {
+        let watchListKeys = WatchList.keys
+        let predicate = watchListKeys.userProfile.eq(userProfile.id)
+        let request = GraphQLRequest<WatchList>.list(WatchList.self, where: predicate, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let watchListResult):
+                print("Successfully retrieved watch list: \(watchListResult)")
+                self.userProfile?.watchLists = watchListResult
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query user watch list: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
     static let sampleData: [UserProfile] = [
         UserProfile(
             id: "11480ab1-4433-4129-b766-c07fda9652bd",
