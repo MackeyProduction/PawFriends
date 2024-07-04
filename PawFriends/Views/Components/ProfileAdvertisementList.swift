@@ -10,17 +10,17 @@ import SwiftUI
 struct ProfileAdvertisementList: View {
     @ObservedObject var vm: UserProfileViewModel
     @ObservedObject var advertisementViewModel: AdvertisementViewModel
-    @State var advertisements: [Advertisement]
+    @Binding var advertisements: [Advertisement]
     @State private var newAdvertisement: Advertisement = Advertisement()
     @State private var isShowingAdvertisementSheet = false
     @State var isMyProfile: Bool
    // @State private var navigateToAdvertisementDetail = false
 
     
-    init(vm: UserProfileViewModel, advertisementViewModel: AdvertisementViewModel, advertisements: [Advertisement] = [], isMyProfile: Bool) {
+    init(vm: UserProfileViewModel, advertisementViewModel: AdvertisementViewModel, advertisements: Binding<[Advertisement]> = Binding.constant([]), isMyProfile: Bool) {
         self.vm = vm
         self.advertisementViewModel = advertisementViewModel
-        self.advertisements = advertisements
+        self._advertisements = advertisements
         self.isMyProfile = isMyProfile
     }
     
@@ -37,20 +37,10 @@ struct ProfileAdvertisementList: View {
                             .font(.title2)
                     }
                 }
-//                Button(action: {
-//                    navigateToAdvertisementDetail = true
-//                }) {
-//                    Label("", systemImage: "plus.square")
-//                }
-//                .padding(.trailing, -8)
-//                .font(.title2)
-//                .navigationDestination(isPresented: $navigateToAdvertisementDetail) {
-//                    AdvertisementDetail(vm: vm, advertisement: $newAdvertisement, isNew: true)
-//                               }
             }.padding(.bottom, 5)
             
             if !advertisements.isEmpty {
-                ForEach(advertisements, id: \.id) { advertisement in
+                ForEach($advertisements, id: \.id) { advertisement in
                     if isMyProfile {
                         ProfileAdvertisementRow(vm: vm, advertisementViewModel: advertisementViewModel, advertisement: advertisement, isMyProfile: true)
                     } else {

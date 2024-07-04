@@ -11,7 +11,7 @@ import Amplify
 struct ProfileAdvertisementRow: View {
     @ObservedObject var vm: UserProfileViewModel
     @ObservedObject var advertisementViewModel: AdvertisementViewModel
-    @State var advertisement: Advertisement
+    @Binding var advertisement: Advertisement
     @State private var isShowingAdvertisementSheet = false
     @State private var navigateToAdvertisementDetail = false
     @State var isMyProfile: Bool
@@ -79,9 +79,9 @@ struct ProfileAdvertisementRow: View {
 }
 
 #Preview {
-    ProfileAdvertisementRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData), advertisement: UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement(), isMyProfile: true)
+    ProfileAdvertisementRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData), advertisement: Binding.constant(UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement()), isMyProfile: true)
 }
 
 #Preview ("another profile") {
-    ProfileAdvertisementRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData), advertisement: UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement(), isMyProfile: false)
+    ProfileAdvertisementRow(vm: UserProfileViewModel(userProfile: UserProfileViewModel.sampleData[0]), advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData), advertisement: Binding.constant(UserProfileViewModel.sampleData[0].advertisements?.first ?? Advertisement()), isMyProfile: false)
 }

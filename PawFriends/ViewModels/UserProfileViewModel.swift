@@ -475,6 +475,69 @@ class UserProfileViewModel: ObservableObject {
         return chats
     }
     
+    func fetchPets(userProfile: UserProfile) async {
+        let petKeys = Pet.keys
+        let predicate = petKeys.userProfile.eq(userProfile.id)
+        let request = GraphQLRequest<WatchList>.list(Pet.self, where: predicate, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let petsResult):
+                print("Successfully retrieved pets: \(petsResult)")
+                self.userProfile?.pets = petsResult
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query pets: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func fetchAdvertisements(userProfile: UserProfile) async {
+        let advertisementKeys = Advertisement.keys
+        let predicate = advertisementKeys.userProfile.eq(userProfile.id)
+        let request = GraphQLRequest<WatchList>.list(Advertisement.self, where: predicate, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let advertisementResult):
+                print("Successfully retrieved ads: \(advertisementResult)")
+                self.userProfile?.advertisements = advertisementResult
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query ads: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func fetchUserProfileTags(userProfile: UserProfile) async {
+        let userProfileTagKeys = UserProfileTag.keys
+        let predicate = userProfileTagKeys.userProfile.eq(userProfile.id)
+        let request = GraphQLRequest<WatchList>.list(UserProfileTag.self, where: predicate, limit: 1000, authMode: .amazonCognitoUserPools)
+        
+        do {
+            let result = try await Amplify.API.query(request: request)
+            switch result {
+            case .success(let userProfileTagResult):
+                print("Successfully retrieved user profile tags: \(userProfileTagResult)")
+                self.userProfile?.tags = userProfileTagResult
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to query user profile tags: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
     static let sampleData: [UserProfile] = [
         UserProfile(
             id: "11480ab1-4433-4129-b766-c07fda9652bd",

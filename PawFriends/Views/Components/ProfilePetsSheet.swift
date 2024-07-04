@@ -192,7 +192,7 @@ struct ProfilePetsSheet: View {
                 }
                 
                 // reload pets
-                try await vm.userProfile?.pets?.fetch()
+                await vm.fetchPets(userProfile: vm.userProfile!)
                 
                 dismiss()
             }

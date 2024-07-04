@@ -172,7 +172,8 @@ struct ProfileAdvertisementSheet: View {
                 }
                 
                 // reload advertisements
-                try await vm.userProfile?.advertisements?.fetch()
+//                try await vm.userProfile?.advertisements?.fetch()
+                await vm.fetchAdvertisements(userProfile: vm.userProfile!)
                 
                 dismiss()
             }
