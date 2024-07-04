@@ -15,7 +15,7 @@ struct FollowProfileView: View {
     var body: some View {
         ZStack {
             if let up = followedUserProfileViewModel, let author = authorId {
-                ProfileView(userProfileViewModel: up, authorId: author)
+                ProfileView(userProfileViewModel: up, authorId: author, isMyProfile: false)
             }
         }
         .task {

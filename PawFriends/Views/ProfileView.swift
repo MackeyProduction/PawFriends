@@ -23,7 +23,7 @@ struct ProfileView: View {
     @State private var authorId: String? = nil
     @State private var isMyProfile: Bool
     
-    init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingTagsSheet: Bool = false, isShowingDescriptionSheet: Bool = false, authorId: String? = nil, newPet: Pet? = nil) {
+    init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingTagsSheet: Bool = false, isShowingDescriptionSheet: Bool = false, authorId: String? = nil, isMyProfile: Bool, newPet: Pet? = nil) {
         self.userProfileViewModel = userProfileViewModel
         self.authorName = authorName
         self.petType = petType
