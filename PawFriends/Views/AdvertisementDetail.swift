@@ -277,12 +277,16 @@ struct AdvertisementDetail: View {
                     try await advertisement.tags?.fetch()
                     try await vm.userProfile?.watchLists?.fetch()
                     try await loadTagCloud()
-                    await fetchLikeItem()
                     await updateVisitor()
                     self.advertisementUserProfile = try await advertisement.userProfile
                 }
             }
         })
+        .onAppear {
+            Task {
+                await fetchLikeItem()
+            }
+        }
         
     }
     
@@ -302,6 +306,8 @@ struct AdvertisementDetail: View {
                     await vm.deleteWatchListItem(watchList: watchListItem)
                 }
             }
+            
+            await vm.fetchWatchList(userProfile: vm.userProfile!)
         }
     }
     
