@@ -78,6 +78,41 @@ class AdvertisementViewModel: ObservableObject {
         }
     }
     
+    func createTag(advertisement: Advertisement, tag: Tag) async {
+        do {
+            let newTag = AdvertisementTag(advertisement: advertisement, tag: tag)
+            let result = try await Amplify.API.mutate(request: .create(newTag, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let tag):
+                print("Successfully created tag: \(tag)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to create tag: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func updateTag(advertisementTag: AdvertisementTag, tag: Tag) async {
+        do {
+            var existingAdvertisementTag = advertisementTag
+            existingAdvertisementTag.setTag(tag)
+            let result = try await Amplify.API.mutate(request: .update(existingAdvertisementTag, authMode: .amazonCognitoUserPools))
+            switch result {
+            case .success(let tag):
+                print("Successfully updated tag: \(tag)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        } catch let error as APIError {
+            print("Failed to updated tag: ", error)
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
     func fetchTags() async -> [Tag] {
         var tags: [Tag] = []
         let request = GraphQLRequest<PetType>.list(Tag.self, limit: 1000, authMode: .amazonCognitoUserPools)

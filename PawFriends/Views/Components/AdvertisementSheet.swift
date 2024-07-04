@@ -15,13 +15,10 @@ struct AdvertisementSheet: View {
     @StateObject private var photoPickerViewModel: PhotoPickerViewModel = PhotoPickerViewModel()
     @Binding var advertisement: Advertisement
     @State var isNew: Bool = false
-    @State private var tags: [Tag] = []
+    @State private var isShowingTagsSheet = false
     
-    @State private var navigateToMultiPickerView = false
-    
-    @State var selection = Set<String>()
-    let items = ["Indoor", "Erdgeschoss", "Katze", "Nicht-Raucherhaushalt", "Einmalig"]
-    
+    @State private var tagCloud: [String] = []
+            
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -84,24 +81,20 @@ struct AdvertisementSheet: View {
                     HStack {
                         Text("Tags")
                         Spacer()
-                        Button(action: {
-                            navigateToMultiPickerView = true
-                        }) {
+                        Button(action: { isShowingTagsSheet.toggle() }) {
                             Image(systemName: "plus.square")
                                 .font(.title2)
                         }
-                        .navigationDestination(isPresented: $navigateToMultiPickerView) {
-                            MultiPickerView(items: items, tags: tags)
-                            //.navigationBarBackButtonHidden(true)
-                        }
-                    }
-                    .onAppear {
-                        Task {
-                            self.tags = await advertisementViewModel.fetchTags()
+                        .sheet(isPresented: $isShowingTagsSheet) {
+                            NavigationStack {
+                                MultiPickerView(advertisementViewModel: advertisementViewModel, isAdvertisement: true)
+                            }
                         }
                     }
                     
-                    TagCloudView(tags: items)
+                    VStack {
+                        TagCloudView(tags: tagCloud)
+                    }
                 }
                 .listRowBackground(Color(thirdColor!))
                 
@@ -141,6 +134,24 @@ struct AdvertisementSheet: View {
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
         .background(Color(mainColor!))
         .edgesIgnoringSafeArea(.top)
+        .onAppear() {
+            Task {
+                try await loadTagCloud()
+            }
+        }
+        
+    }
+    
+    private func loadTagCloud() async throws {
+        do {
+            let tagItems = advertisement.tags?.elements
+            for item in tagItems! {
+                let tag = try await item.tag
+                self.tagCloud.append(tag?.description ?? "")
+            }
+        } catch {
+            print("Could not fetch tags for tag cloud.")
+        }
     }
     
     private func createOrUpdate() {

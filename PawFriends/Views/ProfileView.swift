@@ -130,29 +130,31 @@ struct ProfileView: View {
                                 }
                                 .sheet(isPresented: $isShowingTagsSheet) {
                                     NavigationStack {
-                                        Form {
-                                            Picker("Tags", selection: $tag) {
-                                                ForEach(tags, id: \.id) { tag in
-                                                    Text(tag.description ?? "")
-                                                        .tag(tag.description as String?)
-                                                }
-                                            }
-                                        }
-                                        .navigationTitle("Tags bearbeiten")
-                                        .toolbar {
-                                            ToolbarItem(placement: .confirmationAction) {
-                                                Button("Done", action: createOrUpdateProfileTags)
-                                            }
+                                        MultiPickerView(userProfileViewModel: userProfileViewModel, isAdvertisement: false)
                                             
-                                            ToolbarItem(placement: .cancellationAction) {
-                                                Button("Cancel", action: { isShowingTagsSheet.toggle() })
-                                            }
-                                        }
-                                        .onAppear {
-                                            Task {
-                                                self.tags = await userProfileViewModel.fetchTags()
-                                            }
-                                        }
+//                                        Form {
+//                                            Picker("Tags", selection: $tag) {
+//                                                ForEach(tags, id: \.id) { tag in
+//                                                    Text(tag.description ?? "")
+//                                                        .tag(tag.description as String?)
+//                                                }
+//                                            }
+//                                        }
+//                                        .navigationTitle("Tags bearbeiten")
+//                                        .toolbar {
+//                                            ToolbarItem(placement: .confirmationAction) {
+//                                                Button("Done", action: createOrUpdateProfileTags)
+//                                            }
+//                                            
+//                                            ToolbarItem(placement: .cancellationAction) {
+//                                                Button("Cancel", action: { isShowingTagsSheet.toggle() })
+//                                            }
+//                                        }
+//                                        .onAppear {
+//                                            Task {
+//                                                self.tags = await userProfileViewModel.fetchTags()
+//                                            }
+//                                        }
                                     }
                                 }
                             }
@@ -302,7 +304,6 @@ struct ProfileView: View {
                         await userProfileViewModel.updateTag(userProfileTag: firstUserProfileTag!, tag: formattedTag!)
                     }
                 }
-                
                 isShowingTagsSheet.toggle()
             }
         }

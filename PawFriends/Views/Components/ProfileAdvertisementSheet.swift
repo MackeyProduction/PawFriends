@@ -14,15 +14,14 @@ struct ProfileAdvertisementSheet: View {
     @Binding var advertisement: Advertisement
     @State var isNew: Bool = false
     //@State var tags: [String]
+    @State private var isShowingTagsSheet = false
     
     @StateObject private var photoPickerViewModel = PhotoPickerViewModel()
     @State var imageSelections: [PhotosPickerItem] = []
     
     @State private var navigateToMultiPickerView = false
     
-    @State private var tags: [Tag] = []
-    @State var selection = Set<String>()
-    let items = ["Indoor", "Erdgeschoss", "Katze", "Nicht-Raucherhaushalt", "Einmalig"]
+    @State private var tagCloud: [String] = []
     
     @Environment(\.dismiss) private var dismiss
     
@@ -95,24 +94,20 @@ struct ProfileAdvertisementSheet: View {
                     HStack {
                         Text("Tags")
                         Spacer()
-                        Button(action: {
-                            navigateToMultiPickerView = true
-                        }) {
+                        Button(action: { isShowingTagsSheet.toggle() }) {
                             Image(systemName: "plus.square")
                                 .font(.title2)
                         }
-                        .navigationDestination(isPresented: $navigateToMultiPickerView) {
-                            MultiPickerView(items: items, tags: tags)
-                            //.navigationBarBackButtonHidden(true)
-                        }
-                    }
-                    .onAppear {
-                        Task {
-                            self.tags = await advertisementViewModel.fetchTags()
+                        .sheet(isPresented: $isShowingTagsSheet) {
+                            NavigationStack {
+                                MultiPickerView(advertisementViewModel: advertisementViewModel, isAdvertisement: true)
+                            }
                         }
                     }
                     
-                    TagCloudView(tags: items)
+                    VStack {
+                        TagCloudView(tags: tagCloud)
+                    }
                 }
                 .listRowBackground(Color(thirdColor!))
                 
@@ -152,6 +147,18 @@ struct ProfileAdvertisementSheet: View {
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
         .background(Color(mainColor!))
         .edgesIgnoringSafeArea(.top)
+    }
+    
+    private func loadTagCloud() async throws {
+        do {
+            let tagItems = advertisement.tags?.elements
+            for item in tagItems! {
+                let tag = try await item.tag
+                self.tagCloud.append(tag?.description ?? "")
+            }
+        } catch {
+            print("Could not fetch tags for tag cloud.")
+        }
     }
     
     private func createOrUpdate() {
