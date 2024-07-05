@@ -30,15 +30,11 @@ struct WatchlistView: View {
                                         Text("\(userProfile.location ?? "")")
                                             .font(.subheadline)
                                     }
-                                    Text(releaseDateToString(releaseDate: advertisement.wrappedValue.releaseDate ?? Temporal.DateTime(.distantPast)))
+                                    Text(DateFormatHelper.dateTimeToString(date: advertisement.wrappedValue.releaseDate ?? Temporal.DateTime(.distantPast)))
                                         .font(.subheadline)
                                 }
                                 Spacer()
-                                Button(action: {
-                                    //                                if let index = ads.firstIndex(where: { $0.id == ad.id }) {
-                                    //                                    ads.remove(at: index)
-                                    //                                }
-                                }) {
+                                Button(action: {}) {
                                     Image(systemName: "trash")
                                         .foregroundColor(.red)
                                 }
@@ -83,24 +79,6 @@ struct WatchlistView: View {
         }
         
         return advertisements
-    }
-    
-    func releaseDateToString(releaseDate: Temporal.DateTime) -> String {
-        let relativeDateFormatter = DateFormatter()
-        relativeDateFormatter.timeStyle = .none
-        relativeDateFormatter.dateStyle = .medium
-        relativeDateFormatter.locale = Locale(identifier: "de_DE")
-        relativeDateFormatter.doesRelativeDateFormatting = true
-        
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "HH:mm"
-        
-        //let date = Date(timeIntervalSinceNow: -131231)
-        let timeString = timeFormatter.string(from: releaseDate.foundationDate)
-        let relativeDateString = relativeDateFormatter.string(from: releaseDate.foundationDate)
-        let RelativeDateTimeString = relativeDateString+", "+timeString
-        
-        return RelativeDateTimeString
     }
 }
 

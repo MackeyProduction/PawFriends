@@ -21,32 +21,6 @@ struct TagCloudView: View {
             }
         }
         .frame(height: totalHeight)// << variant for ScrollView/List
-        //.frame(maxHeight: totalHeight) // << variant for VStack
-        
-//        WrappingHStack {
-//            Text("WrappingHStack")
-//                .padding()
-//                .font(.title)
-//                .border(Color.black)
-//            
-//            Text("can handle different element types")
-//            
-//            Image(systemName: "scribble")
-//                .font(.title)
-//                .frame(width: 200, height: 20)
-//                .background(Color.purple)
-//            
-//            Text("and loop")
-//                .bold()
-//            
-//            WrappingHStack(1...20, id:\.self) {
-//                Text("Item: \($0)")
-//                    .padding(3)
-//                    .background(Rectangle().stroke())
-//            }.frame(minWidth: 250)
-//        }
-//        .padding()
-//        .border(Color.black)
     }
 
     private func generateContent(in g: GeometryProxy) -> some View {
@@ -91,13 +65,6 @@ struct TagCloudView: View {
             .font(.body)
             .background(Color(greenColor!))
             .cornerRadius(10)
-//        Text(text)
-//            .font(.subheadline)
-//            .fixedSize(horizontal: true, vertical: false)
-//            .multilineTextAlignment(.center)
-//            .padding()
-//            .frame(maxWidth: .infinity, maxHeight: 35)
-//            .background(RoundedRectangle(cornerRadius: 10).fill(Color.black).opacity(0.4))
     }
 
     private func viewHeightReader(_ binding: Binding<CGFloat>) -> some View {

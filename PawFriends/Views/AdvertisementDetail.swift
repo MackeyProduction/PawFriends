@@ -19,7 +19,6 @@ struct AdvertisementDetail: View {
     
     @StateObject private var viewModel = PhotoPickerViewModel()
     @State var imageSelections: [PhotosPickerItem] = []
-    //var geoRoot: GeometryProxy
     
     @State private var title: String = ""
     @State private var releaseDate: Date = Date()
@@ -42,67 +41,16 @@ struct AdvertisementDetail: View {
         self.description = ""
     }
     
-    func stringToUiimages(strings: [String?]?) -> [UIImage]{
-        var uiimages: [UIImage] = []
-        for string in strings! {
-            let image: Image = Image(string!)
-            uiimages.append(image.asUIImage())
-        }
-        return uiimages
-    }
-    
-    func releaseDateToString(releaseDate: Temporal.DateTime) -> String {
-        let relativeDateFormatter = DateFormatter()
-        relativeDateFormatter.timeStyle = .none
-        relativeDateFormatter.dateStyle = .medium
-        relativeDateFormatter.locale = Locale(identifier: "de_DE")
-        relativeDateFormatter.doesRelativeDateFormatting = true
-        
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "HH:mm"
-        
-        //let date = Date(timeIntervalSinceNow: -131231)
-        let timeString = timeFormatter.string(from: releaseDate.foundationDate)
-        let relativeDateString = relativeDateFormatter.string(from: releaseDate.foundationDate)
-        let RelativeDateTimeString = relativeDateString+", "+timeString
-        
-        return RelativeDateTimeString
-    }
-    
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
                 if advertisement.advertisementImages != nil {
-                    let images: [UIImage] = stringToUiimages(strings: advertisement.advertisementImages)
-                    //SliderView(images: images)
+                    let images: [UIImage] = UIImageHelper.stringToUiimages(strings: advertisement.advertisementImages)
                     Image(uiImage: images[0])
                         .resizable()
                         .scaledToFill()
                         .frame(height: 270, alignment: .top)
                         .clipped()
-                    //                        ZStack {
-                    //                            GeometryReader { geo in
-                    //                                let yOffset = (geoRoot.safeAreaInsets.top - geo.safeAreaInsets.top) / 2
-                    //                                TabView {
-                    //                                    Text("lol")
-                    //                                    //.offset(y: yOffset)
-                    //                                        .border(.brown)
-                    //                                    Image(uiImage: images[0])
-                    //                                        .resizable()
-                    //                                        .scaledToFill()
-                    //                                        .frame(height: 340, alignment: .top)
-                    //                                        .clipped()
-                    //                                    //.offset(y: yOffset)
-                    //                                    Text("lol2")
-                    //                                }
-                    //                                .tabViewStyle(.page(indexDisplayMode: .always))
-                    //                                .frame(maxWidth: .infinity, maxHeight: 275, alignment: .top)
-                    //                                .border(.red)
-                    //                                //SwipeView(images: images)
-                    //                                //SliderView(images: images)
-                    //                            }
-                    //                        }.edgesIgnoringSafeArea(.top)
-                    //                        SliderView(images: stringToUiimages(strings: advertisement.advertisementImages))
                 } else {
                     Image(systemName: "photo")
                         .resizable()
@@ -134,7 +82,7 @@ struct AdvertisementDetail: View {
                             .font(.callout)
                             .frame(width: 10)
                             .padding(.trailing, 5)
-                        Text(releaseDateToString(releaseDate:advertisement.releaseDate ?? Temporal.DateTime(.distantPast)))
+                        Text(DateFormatHelper.dateTimeToString(date:advertisement.releaseDate ?? Temporal.DateTime(.distantPast)))
                         Spacer()
                         Image(systemName: "mappin.and.ellipse")
                             .font(.callout)
@@ -151,7 +99,6 @@ struct AdvertisementDetail: View {
                             .padding(.trailing, 5)
                             .padding(.top, 4)
                         
-                        //var tagCloud = ["Indoor", "Erdgeschoss", "Katze", "Nicht-Raucherhaushalt", "Einmalig"]
                         TagCloudView(tags: tagCloud)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     }
@@ -312,7 +259,7 @@ struct AdvertisementDetail: View {
     }
     
     private func fetchLikeItem() async {
-        if let watchListItem = await vm.fetchWatchListItem(userProfile: vm.userProfile!, advertisement: advertisement) {
+        if let _ = await vm.fetchWatchListItem(userProfile: vm.userProfile!, advertisement: advertisement) {
             toggleLikeItem()
         }
     }

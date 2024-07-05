@@ -30,28 +30,10 @@ struct PetDetail: View {
         self.isNew = isNew
     }
     
-    // Auf Basis von: https://letscode.thomassillmann.de/textfeld-auf-basis-von-zahlenwerten-in-swiftui/
-    private var numberFormatter: NumberFormatter {
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        return numberFormatter
-    }
-    
-    func stringToUiimages(strings: [String?]?) -> [UIImage]{
-        var uiimages: [UIImage] = []
-        for string in strings! {
-            let image: Image = Image(string!)
-            uiimages.append(image.asUIImage())
-        }
-        return uiimages
-    }
-    
     var body: some View {
-        //GeometryReader { g in
         ScrollView {
             VStack(spacing: 10) {
                 if pet.petImage == true {
-                    //                            let images: [UIImage] = stringToUiimages(strings: pet.petImage)
                     let images: [UIImage] = [Image("TestImage2").asUIImage()]
                     Image(uiImage: images[0])
                         .resizable()
@@ -60,12 +42,6 @@ struct PetDetail: View {
                         .clipped()
                     
                 } else {
-                    //                            Image(systemName: "photo")
-                    //                                .resizable()
-                    //                                .scaledToFit()
-                    //                                .frame(maxWidth: .infinity, maxHeight: 250, alignment: .center)
-                    //                                .clipped()
-                    //                                .opacity(0.2)
                     Image("TestImage2")
                         .resizable()
                         .scaledToFill()
@@ -122,7 +98,6 @@ struct PetDetail: View {
                 
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
-            //.edgesIgnoringSafeArea(.top)
         }
         .background(Color(mainColor!))
         .edgesIgnoringSafeArea(.top)

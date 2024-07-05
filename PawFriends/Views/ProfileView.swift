@@ -24,6 +24,7 @@ struct ProfileView: View {
     @State private var isMyProfile: Bool
     @State private var pets: [Pet] = []
     @State private var advertisements: [Advertisement] = []
+    @State private var navigateToSettings = false
     
     init(userProfileViewModel: UserProfileViewModel, authorName: String? = nil, petType: PetType? = nil, isShowingTagsSheet: Bool = false, isShowingDescriptionSheet: Bool = false, authorId: String? = nil, isMyProfile: Bool, newPet: Pet? = nil) {
         self.userProfileViewModel = userProfileViewModel
@@ -34,26 +35,6 @@ struct ProfileView: View {
         self.authorId = authorId
         self.newPet = newPet
         self.isMyProfile = isMyProfile
-    }
-    
-    @State private var navigateToSettings = false
-    
-    func dateToString(releaseDate: Temporal.Date) -> String {
-        let relativeDateFormatter = DateFormatter()
-        relativeDateFormatter.timeStyle = .none
-        relativeDateFormatter.dateStyle = .medium
-        relativeDateFormatter.locale = Locale(identifier: "de_DE")
-        relativeDateFormatter.doesRelativeDateFormatting = true
-        
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "HH:mm"
-        
-        //let date = Date(timeIntervalSinceNow: -131231)
-        let timeString = timeFormatter.string(from: releaseDate.foundationDate)
-        let relativeDateString = relativeDateFormatter.string(from: releaseDate.foundationDate)
-        let RelativeDateTimeString = relativeDateString+", "+timeString
-        
-        return RelativeDateTimeString
     }
     
     var body: some View {
@@ -102,11 +83,10 @@ struct ProfileView: View {
                             
                             VStack(alignment: .leading) {
                                 Text("\(authorName ?? "")")
-                                //Text("Anna")
                                     .font(.largeTitle)
                                 HStack {
                                     Image(systemName: "bookmark")
-                                    Text("Aktiv seit: \(dateToString(releaseDate: userProfile.activeSince ?? Temporal.Date.now()))")
+                                    Text("Aktiv seit: \(DateFormatHelper.dateToString(date: userProfile.activeSince ?? Temporal.Date.now()))")
                                         .foregroundStyle(Color(textColor!))
                                         .padding(.leading, -5)
                                 }
@@ -202,24 +182,12 @@ struct ProfileView: View {
                     Divider()
                         .overlay(Color(textColor!))
                     
-//                    if !pets.isEmpty {
-                        if isMyProfile {
-                            ProfilePetsList(vm: userProfileViewModel, pets: $pets, isMyProfile: true)
-                        } else {
-                            ProfilePetsList(vm: userProfileViewModel, pets: $pets, isMyProfile: false)
-                        }
-//                    }
+                    ProfilePetsList(vm: userProfileViewModel, pets: $pets, isMyProfile: isMyProfile)
                     
                     Divider()
                         .overlay(Color(textColor!))
                     
-//                    if let advertisements = userProfile.advertisements, userProfile.advertisements!.isLoaded {
-                        if isMyProfile {
-                            ProfileAdvertisementList(vm: userProfileViewModel, advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData),  advertisements: $advertisements, isMyProfile: true)
-                        } else {
-                            ProfileAdvertisementList(vm: userProfileViewModel, advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData),  advertisements: $advertisements, isMyProfile: false)
-                        }
-//                    }
+                    ProfileAdvertisementList(vm: userProfileViewModel, advertisementViewModel: AdvertisementViewModel(advertisements: AdvertisementViewModel.sampleData),  advertisements: $advertisements, isMyProfile: isMyProfile)
                     
                     Divider()
                                         

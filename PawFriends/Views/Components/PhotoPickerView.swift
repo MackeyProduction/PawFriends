@@ -34,12 +34,6 @@ final class PhotoPickerViewModel: ObservableObject {
         guard let selection else { return }
         
         Task {
-//            if let data = try? await selection.loadTransferable(type: Data.self) {
-//                if let uiImage = UIImage(data: data) {
-//                    selectedImage = uiImage
-//                    return
-//                }
-//            }
             do {
                 let data = try await selection.loadTransferable(type: Data.self)
                 
@@ -68,35 +62,6 @@ final class PhotoPickerViewModel: ObservableObject {
             selectedImages = images
         }
     }
-//    @Published var imageSelection: PhotosPickerItem? = nil {
-//        didSet {
-//            if let imageSelection {
-//                let progress = loadTransferable(from: imageSelection)
-//                imageState = .loading(progress)
-//            } else {
-//                imageState = .empty
-//            }
-//        }
-//    }
-//    
-//    private func loadTransferable(from ImageSelection: PhotosPickerItem) -> Progress {
-//        return ImageSelection.loadTransferable(type: Image.self) { result in
-//            DispatchQueue.main.async {
-//                guard ImageSelection == self.imageSelection else {
-//                    print("Failed to get the selected item.")
-//                    return
-//                }
-//                switch result {
-//                case .success(let profileImage?):
-//                    self.imageState = .success(profileImage.image)
-//                case .success(nil):
-//                    self.imageState = .empty
-//                case .failure(let error):
-//                    self.imageState = .failure(error)
-//                }
-//            }
-//        }
-//    }
 }
 
 struct PhotoPickerView: View {
@@ -155,7 +120,6 @@ struct PickPhotoButton: View
             .overlay(alignment: .center) {
                 HStack{
                     Image(systemName: "photo.badge.plus")
-                    //.symbolRenderingMode(.multicolor)
                         .font(.system(size: 18))
                         .foregroundColor(.white)
                     Text("Hinzufügen")
@@ -184,7 +148,6 @@ struct TabIcon: View {
 
         UIBezierPath(
             roundedRect: rect,
-            //cornerRadius: self.size.height
             cornerRadius: 10
             ).addClip()
         icon.draw(in: rect)

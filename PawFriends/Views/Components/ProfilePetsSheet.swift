@@ -28,22 +28,6 @@ struct ProfilePetsSheet: View {
         self.isNew = isNew
     }
     
-    // Auf Basis von: https://letscode.thomassillmann.de/textfeld-auf-basis-von-zahlenwerten-in-swiftui/
-    private var numberFormatter: NumberFormatter {
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        return numberFormatter
-    }
-    
-    func stringToUiimages(strings: [String?]?) -> [UIImage]{
-        var uiimages: [UIImage] = []
-        for string in strings! {
-            let image: Image = Image(string!)
-            uiimages.append(image.asUIImage())
-        }
-        return uiimages
-    }
-    
     var body: some View {
         VStack(spacing: 10) {
             if viewModel.selectedImages.isEmpty {
@@ -71,7 +55,6 @@ struct ProfilePetsSheet: View {
                 }
                 .frame(height: 270)
             } else {
-                //SwipeView(images: viewModel.selectedImages)
                 Image(uiImage: viewModel.selectedImages[0])
                     .resizable()
                     .scaledToFill()
@@ -122,7 +105,7 @@ struct ProfilePetsSheet: View {
                         set: { newValue in
                             pet.age = Int(newValue)
                         }
-                    ), formatter: numberFormatter)
+                    ), formatter: NumberFormatHelper.numberFormatter)
                     .keyboardType(.numberPad)
                 }.listRowBackground(Color(thirdColor!))
 
@@ -153,22 +136,19 @@ struct ProfilePetsSheet: View {
                 ) {
                     EmptyView()
                 }
-            }.scrollContentBackground(.hidden)
-                //.navigationTitle(isNew ? "Haustier hinzufügen" : "Huastier bearbeiten")
-                .toolbar {
-//                        ToolbarItem(placement: .confirmationAction) {
-//                            Button("Done", action: createOrUpdate)
-//                        }
-                    
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Abbrechen", action: { dismiss() })
-                    }
+            }
+            .scrollContentBackground(.hidden)
+            .toolbar {
+                
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Abbrechen", action: { dismiss() })
                 }
-                .onAppear {
-                    Task {
-                        self.petTypes = await vm.fetchPetTypes()
-                    }
+            }
+            .onAppear {
+                Task {
+                    self.petTypes = await vm.fetchPetTypes()
                 }
+            }
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
         .background(Color(mainColor!))
