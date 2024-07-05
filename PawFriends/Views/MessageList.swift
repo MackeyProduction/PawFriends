@@ -38,7 +38,9 @@ struct MessageList: View {
                 do {
                     try await userProfileViewModel.userProfile?.advertisements?.fetch()
                     try await userProfileViewModel.userProfile?.chats?.fetch()
-                    self.chats = try await filteredChats
+                    if let chats = userProfileViewModel.userProfile?.chats, chats.isLoaded {
+                        self.chats = try await filteredChats
+                    }
                 }
             }
         })
