@@ -40,7 +40,7 @@ struct MessageDetail: View {
                                         .clipShape(Circle())
                                 }
                                 
-                                Text("\(dateToString(date: chat.updatedAt ?? Temporal.DateTime.now()))")
+                                Text("\(DateFormatHelper.dateTimeToString(date: chat.updatedAt ?? Temporal.DateTime.now()))")
                                     .font(.body)
                                     .padding(.leading)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -59,7 +59,7 @@ struct MessageDetail: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
                                 
-                                Text("\(dateToString(date: chat.updatedAt ?? Temporal.DateTime.now()))")
+                                Text("\(DateFormatHelper.dateTimeToString(date: chat.updatedAt ?? Temporal.DateTime.now()))")
                                     .font(.body)
                                     .padding(.leading)
                                     .frame(maxWidth: .infinity, alignment: .trailing)
@@ -125,23 +125,6 @@ struct MessageDetail: View {
             }
             newMessage = ""
         }
-    }
-    
-    func dateToString(date: Temporal.DateTime) -> String {
-        let relativeDateFormatter = DateFormatter()
-        relativeDateFormatter.timeStyle = .none
-        relativeDateFormatter.dateStyle = .medium
-        relativeDateFormatter.locale = Locale(identifier: "de_DE")
-        relativeDateFormatter.doesRelativeDateFormatting = true
-        
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "HH:mm"
-        
-        let timeString = timeFormatter.string(from: date.foundationDate)
-        let relativeDateString = relativeDateFormatter.string(from: date.foundationDate)
-        let RelativeDateTimeString = relativeDateString+", "+timeString
-        
-        return RelativeDateTimeString
     }
 }
 

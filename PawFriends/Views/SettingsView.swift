@@ -19,7 +19,6 @@ struct SettingsView: View {
                     .fontWeight(.medium)
             }
             List {
-                //Text("Helles / Dunkles Design")
                 Section {
                     Authenticator() { state in
                         Button("Abmelden", systemImage: "rectangle.portrait.and.arrow.right") {
@@ -36,7 +35,6 @@ struct SettingsView: View {
             .scrollContentBackground(.hidden)
             .listRowSpacing(10)
             .frame( maxWidth: .infinity)
-                //.listStyle(GroupedListStyle())
         }
         .background(Color(mainColor!))
     }

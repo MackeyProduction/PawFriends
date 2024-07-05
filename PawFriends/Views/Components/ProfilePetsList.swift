@@ -14,7 +14,6 @@ struct ProfilePetsList: View {
     @State private var petType: PetType? = nil
     @State private var isShowingPetsSheet = false
     @State var isMyProfile: Bool
-    //@State private var navigateToPetDetail = false
     
     init(vm: UserProfileViewModel, pets: Binding<[Pet]>, petType: PetType? = nil, isShowingPetsSheet: Bool = false, isMyProfile: Bool) {
         self.vm = vm
@@ -37,16 +36,6 @@ struct ProfilePetsList: View {
                             .font(.title2)
                     }
                 }
-//                Button(action: {
-//                    navigateToPetDetail = true
-//                }) {
-//                    Label("", systemImage: "plus.square")
-//                }
-//                .padding(.trailing, -8)
-//                .font(.title2)
-//                .navigationDestination(isPresented: $navigateToPetDetail) {
-//                    PetDetail(vm: vm, pet: $newPet, isNew: true).navigationBarBackButtonHidden(true)
-//                               }
             }.padding(.bottom, 5)
             
             if !pets.isEmpty {
@@ -56,6 +45,10 @@ struct ProfilePetsList: View {
                     } else {
                         ProfilePetsRow(vm: vm, pet: pet, isMyProfile: false)
                     }
+                }
+            } else {
+                ContentUnavailableView {
+                    Label("Keine Haustiere vorhanden", systemImage: "pawprint")
                 }
             }
         }

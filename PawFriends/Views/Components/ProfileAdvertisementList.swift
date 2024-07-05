@@ -14,9 +14,7 @@ struct ProfileAdvertisementList: View {
     @State private var newAdvertisement: Advertisement = Advertisement()
     @State private var isShowingAdvertisementSheet = false
     @State var isMyProfile: Bool
-   // @State private var navigateToAdvertisementDetail = false
 
-    
     init(vm: UserProfileViewModel, advertisementViewModel: AdvertisementViewModel, advertisements: Binding<[Advertisement]> = Binding.constant([]), isMyProfile: Bool) {
         self.vm = vm
         self.advertisementViewModel = advertisementViewModel
@@ -47,13 +45,16 @@ struct ProfileAdvertisementList: View {
                         ProfileAdvertisementRow(vm: vm, advertisementViewModel: advertisementViewModel, advertisement: advertisement, isMyProfile: false)
                     }
                 }
+            } else {
+                ContentUnavailableView {
+                    Label("Keine Anzeigen vorhanden", systemImage: "pawprint")
+                }
             }
         }
         .padding(.top, 5).padding(.bottom, 5)
         .sheet(isPresented: $isShowingAdvertisementSheet) {
             NavigationStack {
                 ProfileAdvertisementSheet(vm: vm, advertisementViewModel: advertisementViewModel, advertisement: $newAdvertisement, isNew: true)
-//                AdvertisementSheet(advertisementViewModel: advertisementViewModel, userProfile: vm.userProfile, advertisement: $newAdvertisement, isNew: true)
             }
         }
     }

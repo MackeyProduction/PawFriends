@@ -20,15 +20,6 @@ struct AdvertisementList: View {
         self.advertisementViewModel = advertisementViewModel
     }
     
-    @State var heart = "heart"
-    func like() {
-        if heart == "heart" {
-            heart = "heart.fill"
-        } else {
-            heart = "heart"
-        }
-    }
-    
     var body: some View {
         ZStack {
             Color(mainColor!)
@@ -37,14 +28,9 @@ struct AdvertisementList: View {
                 if !advertisementViewModel.advertisements.isEmpty {
                     List {
                         ForEach($advertisementViewModel.advertisements, id: \.id) { $item in
-                            //GeometryReader { geoRoot in
                             ZStack {
                                 NavigationLink(destination: AdvertisementDetail(vm: userProfileViewModel, advertisement: $item)) {
                                     HStack {
-                                        //                                    Image(item.advertisementImages![0] ?? "TestImage1")
-                                        //                                        .resizable()
-                                        //                                        .frame(width: 80, height: 80)
-                                        //                                        .clipShape(RoundedRectangle(cornerRadius: 10))
                                         Image("TestImage2")
                                             .resizable()
                                             .frame(width: 100, height: 100)

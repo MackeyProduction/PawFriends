@@ -16,19 +16,6 @@ struct ProfileAdvertisementRow: View {
     @State private var navigateToAdvertisementDetail = false
     @State var isMyProfile: Bool
     
-    func releaseDateToString(releaseDate: Temporal.DateTime) -> String {
-        let relativeDateFormatter = DateFormatter()
-        relativeDateFormatter.timeStyle = .none
-        relativeDateFormatter.dateStyle = .medium
-        relativeDateFormatter.locale = Locale(identifier: "de_DE")
-        relativeDateFormatter.doesRelativeDateFormatting = true
-        
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "dd.MM.yyyy"
-        
-        return timeFormatter.string(from: releaseDate.foundationDate)
-    }
-    
     var body: some View {
         VStack {
             HStack {
@@ -51,7 +38,7 @@ struct ProfileAdvertisementRow: View {
                                 .font(.callout)
                                 .frame(width: 10)
                                 .padding(.leading, 5)
-                            Text(releaseDateToString(releaseDate:advertisement.releaseDate ?? Temporal.DateTime(.distantPast)))
+                            Text(DateFormatHelper.releaseDateToString(releaseDate:advertisement.releaseDate ?? Temporal.DateTime(.distantPast)))
                                 .padding(.trailing, 50)
                             Spacer()
                         }.foregroundStyle(Color(textColor!))
