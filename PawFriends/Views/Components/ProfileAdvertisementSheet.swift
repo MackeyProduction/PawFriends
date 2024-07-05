@@ -13,7 +13,6 @@ struct ProfileAdvertisementSheet: View {
     @ObservedObject var advertisementViewModel: AdvertisementViewModel
     @Binding var advertisement: Advertisement
     @State var isNew: Bool = false
-    //@State var tags: [String]
     @State private var isShowingTagsSheet = false
     
     @StateObject private var photoPickerViewModel = PhotoPickerViewModel()
@@ -24,15 +23,6 @@ struct ProfileAdvertisementSheet: View {
     @State private var tagCloud: [String] = []
     
     @Environment(\.dismiss) private var dismiss
-    
-    func stringToUiimages(strings: [String?]?) -> [UIImage]{
-        var uiimages: [UIImage] = []
-        for string in strings! {
-            let image: Image = Image(string!)
-            uiimages.append(image.asUIImage())
-        }
-        return uiimages
-    }
     
     var body: some View {
         VStack(spacing: 10) {
@@ -61,7 +51,6 @@ struct ProfileAdvertisementSheet: View {
                 }
                 .frame(height: 270)
             } else {
-                //SwipeView(images: viewModel.selectedImages)
                 Image(uiImage: photoPickerViewModel.selectedImages[0])
                     .resizable()
                     .scaledToFill()
@@ -81,7 +70,6 @@ struct ProfileAdvertisementSheet: View {
             
             Form {
                 Section {
-                    //Text("Titel")
                     TextField("Titel", text: Binding(
                         get: { advertisement.title ?? "" },
                         set: { advertisement.title = $0 }
@@ -172,7 +160,6 @@ struct ProfileAdvertisementSheet: View {
                 }
                 
                 // reload advertisements
-//                try await vm.userProfile?.advertisements?.fetch()
                 await vm.fetchAdvertisements(userProfile: vm.userProfile!)
                 
                 dismiss()

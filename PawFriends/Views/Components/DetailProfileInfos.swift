@@ -30,7 +30,7 @@ struct DetailProfileInfos: View {
     
     var body: some View {
         VStack {
-            Text(title)  // alles am anbieter fixen (userprofile)
+            Text(title)
                 .font(.title3)
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -41,7 +41,6 @@ struct DetailProfileInfos: View {
                     .font(.system(size: 50))
                     .padding(.trailing, 2)
                     .foregroundColor(Color(firstColor!))
-                //Text("Anna")
                 Text("\(authorName ?? "")")
                     .font(.headline)
                 
@@ -62,8 +61,7 @@ struct DetailProfileInfos: View {
                 Image(systemName: "bookmark")
                     .font(.callout)
                     .frame(width: 10)
-                //Text("Aktiv seit 19.09.19")
-                Text("Aktiv seit: \(dateToString(releaseDate: vm.userProfile?.activeSince ?? Temporal.Date.now()))")
+                Text("Aktiv seit: \(DateFormatHelper.dateToString(date: vm.userProfile?.activeSince ?? Temporal.Date.now()))")
                     .font(.callout)
                 Spacer()
             }
@@ -75,7 +73,6 @@ struct DetailProfileInfos: View {
                     .font(.callout)
                     .frame(maxWidth: 10, maxHeight: .infinity, alignment: .top)
                     .padding(.top, 9)
-                //TagCloudView(tags: ["Nicht-Raucher","sportlich","Katzen-Kenner"])
                 TagCloudView(tags: tagCloud)
             }
         }
@@ -109,24 +106,6 @@ struct DetailProfileInfos: View {
         }
     }
     
-    func dateToString(releaseDate: Temporal.Date) -> String {
-        let relativeDateFormatter = DateFormatter()
-        relativeDateFormatter.timeStyle = .none
-        relativeDateFormatter.dateStyle = .medium
-        relativeDateFormatter.locale = Locale(identifier: "de_DE")
-        relativeDateFormatter.doesRelativeDateFormatting = true
-        
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "HH:mm"
-        
-        //let date = Date(timeIntervalSinceNow: -131231)
-        let timeString = timeFormatter.string(from: releaseDate.foundationDate)
-        let relativeDateString = relativeDateFormatter.string(from: releaseDate.foundationDate)
-        let RelativeDateTimeString = relativeDateString+", "+timeString
-        
-        return RelativeDateTimeString
-    }
-    
     private func toggleFollow() {
         followed = !followed
         followIcon = followed ? "person.fill.checkmark" : "person.badge.plus"
@@ -155,7 +134,7 @@ struct DetailProfileInfos: View {
     
     private func fetchFollow() async {
         let userProfile = await vm.getProfile(id: UUID(uuidString: authorId)!)
-        if let userProfileFollower = await vm.fetchFollow(follower: vm.userProfile!, followed: userProfile!) {
+        if let _ = await vm.fetchFollow(follower: vm.userProfile!, followed: userProfile!) {
             toggleFollow()
         }
     }

@@ -8,7 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		3E00D86B2C21E25500638243 /* AWSAPIPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 3E00D86A2C21E25500638243 /* AWSAPIPlugin */; };
-		3E1FBE022C29B90700E24D4F /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1FBE012C29B90700E24D4F /* extensions.swift */; };
+		3E1FBE022C29B90700E24D4F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1FBE012C29B90700E24D4F /* Extensions.swift */; };
+		3E3403202C384AEE002902BB /* DateFormatHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E34031F2C384AEE002902BB /* DateFormatHelper.swift */; };
+		3E3403222C388C0F002902BB /* UIImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3403212C388C0F002902BB /* UIImageHelper.swift */; };
+		3E3403242C388DA1002902BB /* NumberFormatHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3403232C388DA1002902BB /* NumberFormatHelper.swift */; };
 		3E38ACFF2C21ABA90078899C /* Advertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E38ACE52C21ABA90078899C /* Advertisement.swift */; };
 		3E38AD002C21ABA90078899C /* Advertisement+Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E38ACE62C21ABA90078899C /* Advertisement+Schema.swift */; };
 		3E38AD012C21ABA90078899C /* AdvertisementTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E38ACE72C21ABA90078899C /* AdvertisementTag.swift */; };
@@ -100,7 +103,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3E1FBE012C29B90700E24D4F /* extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
+		3E1FBE012C29B90700E24D4F /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		3E2D3D152C21A86F0049EBFA /* resource.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = resource.ts; sourceTree = "<group>"; };
 		3E2D3D172C21A86F0049EBFA /* resource.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = resource.ts; sourceTree = "<group>"; };
 		3E2D3D1A2C21A86F0049EBFA /* backend.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = backend.ts; sourceTree = "<group>"; };
@@ -108,6 +111,9 @@
 		3E2D3D1C2C21A86F0049EBFA /* tsconfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tsconfig.json; sourceTree = "<group>"; };
 		3E2DAA0F2C21A8700049EBFA /* package-lock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "package-lock.json"; sourceTree = "<group>"; };
 		3E2DAA102C21A8700049EBFA /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
+		3E34031F2C384AEE002902BB /* DateFormatHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatHelper.swift; sourceTree = "<group>"; };
+		3E3403212C388C0F002902BB /* UIImageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageHelper.swift; sourceTree = "<group>"; };
+		3E3403232C388DA1002902BB /* NumberFormatHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatHelper.swift; sourceTree = "<group>"; };
 		3E38ACE52C21ABA90078899C /* Advertisement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Advertisement.swift; sourceTree = "<group>"; };
 		3E38ACE62C21ABA90078899C /* Advertisement+Schema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Advertisement+Schema.swift"; sourceTree = "<group>"; };
 		3E38ACE72C21ABA90078899C /* AdvertisementTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvertisementTag.swift; sourceTree = "<group>"; };
@@ -259,7 +265,10 @@
 		3E1FBE002C29905F00E24D4F /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				3E1FBE012C29B90700E24D4F /* extensions.swift */,
+				3E1FBE012C29B90700E24D4F /* Extensions.swift */,
+				3E34031F2C384AEE002902BB /* DateFormatHelper.swift */,
+				3E3403212C388C0F002902BB /* UIImageHelper.swift */,
+				3E3403232C388DA1002902BB /* NumberFormatHelper.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -586,10 +595,11 @@
 				3E53F18D2C32F78E00FB136F /* AdvertisementSheet.swift in Sources */,
 				3E8012FC2C15DF6E0058144D /* MessageList.swift in Sources */,
 				3E3BC9A62C2DEB4A008ECF01 /* ProfilePetsRow.swift in Sources */,
-				3E1FBE022C29B90700E24D4F /* extensions.swift in Sources */,
+				3E1FBE022C29B90700E24D4F /* Extensions.swift in Sources */,
 				3E38AD0D2C21ABA90078899C /* Tag+Schema.swift in Sources */,
 				3E82B80E2C15D6450059A1BC /* FavoriteList.swift in Sources */,
 				3E38AD162C21ABA90078899C /* WatchList.swift in Sources */,
+				3E3403242C388DA1002902BB /* NumberFormatHelper.swift in Sources */,
 				3E38AD022C21ABA90078899C /* AdvertisementTag+Schema.swift in Sources */,
 				3E6782DC2C2A0DF4009B53DD /* UserProfileFollower.swift in Sources */,
 				3E38AD042C21ABA90078899C /* Chat.swift in Sources */,
@@ -601,11 +611,13 @@
 				3E9C94EB2C07A2FF00F91BFB /* PawFriendsApp.swift in Sources */,
 				3E38AD152C21ABA90078899C /* UserProfileTag+Schema.swift in Sources */,
 				3E38AD052C21ABA90078899C /* Chat+Schema.swift in Sources */,
+				3E3403222C388C0F002902BB /* UIImageHelper.swift in Sources */,
 				3E38AD142C21ABA90078899C /* UserProfileTag.swift in Sources */,
 				B566840B2C3429B000AC7022 /* MultiPickerView.swift in Sources */,
 				3E6F58992C273E3600656CC3 /* UserProfileViewModel.swift in Sources */,
 				3E38AD0C2C21ABA90078899C /* Tag.swift in Sources */,
 				3E38AD092C21ABA90078899C /* PetBreed+Schema.swift in Sources */,
+				3E3403202C384AEE002902BB /* DateFormatHelper.swift in Sources */,
 				B56684042C321BDB00AC7022 /* PetDetail.swift in Sources */,
 				B56684002C31F6ED00AC7022 /* SettingsView.swift in Sources */,
 				3E628CE12C2F52FC008CA852 /* ProfileAdvertisementSheet.swift in Sources */,
