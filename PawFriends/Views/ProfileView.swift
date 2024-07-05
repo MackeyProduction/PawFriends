@@ -160,20 +160,24 @@ struct ProfileView: View {
                                 .sheet(isPresented: $isShowingDescriptionSheet) {
                                     NavigationStack {
                                         Form {
-                                            TextField("Beschreibung", text: Binding(
-                                                get: { userProfile.description ?? "" },
-                                                set: { userProfileViewModel.userProfile?.description = $0 }
-                                            ), axis: .vertical)
-                                            .autocorrectionDisabled()
+                                            Section {
+                                                Text("Beschreibung")
+                                                TextField("", text: Binding(
+                                                    get: { userProfile.description ?? "" },
+                                                    set: { userProfileViewModel.userProfile?.description = $0 }
+                                                ), axis: .vertical)
+                                                .autocorrectionDisabled()
+                                                .lineLimit(9...9)
+                                            }
+                                            .listRowBackground(Color(thirdColor!))
                                         }
-                                        .navigationTitle("Beschreibung hinzufügen")
                                         .toolbar {
                                             ToolbarItem(placement: .confirmationAction) {
-                                                Button("Done", action: updateProfile)
+                                                Button("Fertig", action: updateProfile)
                                             }
                                             
                                             ToolbarItem(placement: .cancellationAction) {
-                                                Button("Cancel", action: { isShowingDescriptionSheet.toggle() })
+                                                Button("Abbrechen", action: { isShowingDescriptionSheet.toggle() })
                                             }
                                         }
                                     }
