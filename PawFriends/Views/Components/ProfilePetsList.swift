@@ -57,6 +57,10 @@ struct ProfilePetsList: View {
                         ProfilePetsRow(vm: vm, pet: pet, isMyProfile: false)
                     }
                 }
+            } else {
+                ContentUnavailableView {
+                    Label("Keine Haustiere vorhanden", systemImage: "pawprint")
+                }
             }
         }
         .padding(.top, 5).padding(.bottom, 5)
