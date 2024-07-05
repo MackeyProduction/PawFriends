@@ -182,7 +182,14 @@ struct ProfileView: View {
                         }
                         
                         HStack {
-                            Text("\(userProfile.description ?? "")")
+                            if userProfile.description != nil {
+                                Text("\(userProfile.description ?? "")")
+                            } else {
+                                ContentUnavailableView {
+                                    Label("Keine Beschreibung vorhanden", systemImage: "person")
+                                }
+                            }
+                            
                             Spacer()
                         }
                         

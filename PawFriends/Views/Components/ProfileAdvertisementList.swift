@@ -47,6 +47,10 @@ struct ProfileAdvertisementList: View {
                         ProfileAdvertisementRow(vm: vm, advertisementViewModel: advertisementViewModel, advertisement: advertisement, isMyProfile: false)
                     }
                 }
+            } else {
+                ContentUnavailableView {
+                    Label("Keine Anzeigen vorhanden", systemImage: "pawprint")
+                }
             }
         }
         .padding(.top, 5).padding(.bottom, 5)
